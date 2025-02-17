@@ -1,4 +1,7 @@
+import 'package:client_1/utils/const/color.dart';
+import 'package:client_1/utils/const/size.dart';
 import 'package:flutter/material.dart';
+
 
 /*
 Class nay dung de dinh nghia cac style cho button trong app
@@ -10,7 +13,7 @@ class CusButtonTheme {
     style: ElevatedButton.styleFrom(
       elevation: 0,
       foregroundColor: Colors.white,
-      backgroundColor: Colors.blue,
+      backgroundColor: CusColor.buttonPrimaryColor,
       disabledBackgroundColor: Colors.grey,
       disabledForegroundColor: Colors.grey,
       shape: RoundedRectangleBorder(
@@ -35,7 +38,7 @@ class CusButtonTheme {
     style: ElevatedButton.styleFrom(
       elevation: 0,
       foregroundColor: Colors.white, // mau chu
-      backgroundColor: Colors.blue, // mau nen
+      backgroundColor: CusColor.buttonPrimaryColor, // mau nen
       disabledBackgroundColor: Colors.grey,
       disabledForegroundColor: Colors.grey,
 
@@ -76,8 +79,8 @@ class CusAppBarTheme {
     centerTitle: false,
 
     scrolledUnderElevation : 0, 
-    iconTheme: IconThemeData(color: Colors.black, size : 24),
-    actionsIconTheme: IconThemeData(color : Colors.black, size : 24),
+    iconTheme: IconThemeData(color: Colors.black, size : CusSize.iconMd),
+    actionsIconTheme: IconThemeData(color : Colors.black, size : CusSize.iconMd),
     titleTextStyle: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w700,
@@ -94,10 +97,10 @@ class CusAppBarTheme {
     centerTitle: false,
 
     scrolledUnderElevation : 0, 
-    iconTheme: IconThemeData(color: Colors.white, size : 24),
-    actionsIconTheme: IconThemeData(color : Colors.white, size : 24),
+    iconTheme: IconThemeData(color: Colors.white, size : CusSize.iconMd),
+    actionsIconTheme: IconThemeData(color : Colors.white, size : CusSize.iconMd),
     titleTextStyle: TextStyle(
-      fontSize: 20,
+      fontSize: CusSize.fontSizeLg,
       fontWeight: FontWeight.w700,
       color: Colors.white,
     ),
@@ -121,7 +124,7 @@ class CusBottomSheetTheme {
     ),
 
     elevation: 0,
-    shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(16) ),
+    shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(CusSize.sm) ),
   );
 
   static BottomSheetThemeData darkBottomSheet = BottomSheetThemeData(
@@ -133,7 +136,7 @@ class CusBottomSheetTheme {
     ),
 
     elevation: 0,
-    shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(16) ),
+    shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(CusSize.sm) ),
   );
 }
 
@@ -146,7 +149,7 @@ class CusCheckboxTheme {
   CusCheckboxTheme._();
 
   static CheckboxThemeData lightCheckboxTheme = CheckboxThemeData(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CusSize.sm)),
     checkColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
         return Colors.white;
@@ -165,7 +168,7 @@ class CusCheckboxTheme {
 
 
   static CheckboxThemeData darkCheckboxTheme = CheckboxThemeData(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CusSize.sm)),
     checkColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
         return Colors.black;
@@ -260,11 +263,11 @@ class CusTextFormFieldTheme {
     ),
     errorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(20),
-      borderSide: const BorderSide(width: 1, color: Colors.red),
+      borderSide: const BorderSide(width: 1, color: CusColor.warning),
     ),
     focusedErrorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(20),
-      borderSide: const BorderSide(width: 2, color: Colors.red),
+      borderSide: const BorderSide(width: 2, color: CusColor.warning),
     ),
   );
 
@@ -292,11 +295,11 @@ class CusTextFormFieldTheme {
     ),
     errorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(20),
-      borderSide: const BorderSide(width: 1, color: Colors.red),
+      borderSide: const BorderSide(width: 1, color: CusColor.warning),
     ),
     focusedErrorBorder: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(20),
-      borderSide: const BorderSide(width: 2, color: Colors.red),
+      borderSide: const BorderSide(width: 2, color: CusColor.warning),
     ),
   );
 

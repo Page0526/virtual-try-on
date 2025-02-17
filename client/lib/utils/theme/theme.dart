@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'text_theme.dart'; 
 import 'component_theme.dart';
-
+import '../const/color.dart';
 /* 
 Class nay dung de dinh nghia 2 loai theme cho app (light + dark) 
 */
@@ -13,8 +13,8 @@ class CusAppTheme {
 
       useMaterial3: true, // enable Material 3
       fontFamily: 'Roboto',
-      primaryColor: const Color.fromARGB(255, 1, 173, 173),
-      scaffoldBackgroundColor: const Color(0xFFF1F2F6),
+      primaryColor: CusColor.primaryColor,
+      scaffoldBackgroundColor: CusColor.lightBackgroundColor,
       brightness: Brightness.light,
 
       // setting mau + kich thuoc cho text
@@ -41,8 +41,8 @@ class CusAppTheme {
 
       useMaterial3: true, // enable Material 3
       fontFamily: 'Roboto',
-      primaryColor: const Color.fromARGB(255, 1, 173, 173),
-      scaffoldBackgroundColor: const Color(0xFF121212),
+      primaryColor: CusColor.primaryColor,
+      scaffoldBackgroundColor: CusColor.darkBackgroundColor,
       brightness: Brightness.dark,
 
       // setting mau + kich thuoc cho text
