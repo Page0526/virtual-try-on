@@ -1,4 +1,6 @@
+import 'package:client_1/features/authen/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'utils/theme/theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -7,13 +9,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       themeMode: ThemeMode.system,
       theme: CusAppTheme.lightTheme,
       darkTheme: CusAppTheme.darkTheme,
-
+      debugShowCheckedModeBanner: false,
       // test
-      home: const MyHomePage(),
+      home: const LoginScreen(),
     );
   }
 }
