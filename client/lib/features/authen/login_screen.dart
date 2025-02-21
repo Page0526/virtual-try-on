@@ -1,10 +1,10 @@
 import 'package:client_1/common/style/spacing.dart';
 import 'package:client_1/features/authen/pass_reset.dart';
 import 'package:client_1/features/authen/sigup_screen.dart';
+import 'package:client_1/features/fashion_agent/agent_screen.dart';
 import 'package:client_1/utils/const/size.dart';
 import 'package:client_1/utils/helper/helper_func.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 
 
@@ -51,7 +51,9 @@ class LoginScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {}, 
+                  onPressed: () {
+                    Get.to (() => ChatScreen());
+                  }, 
                   child: Text("Login"),
                 ),
               ),
@@ -66,9 +68,6 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: CusSize.spaceBtwItems),
-
-
-
               // divider
               LoginDivider(dark: dark), 
 

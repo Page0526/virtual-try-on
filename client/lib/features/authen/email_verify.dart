@@ -8,7 +8,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 // import 'verified_screen.dart'; // Import màn hình xác nhận thành công
 
 class VerifyEmailScreen extends StatelessWidget {
-  const VerifyEmailScreen({Key? key}) : super(key: key);
+  const VerifyEmailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class VerifyEmailScreen extends StatelessWidget {
 
 
 class VerifiedScreen extends StatelessWidget {
-  const VerifiedScreen({Key? key}) : super(key: key);
+  const VerifiedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

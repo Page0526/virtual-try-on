@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 
 
 class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
+
   @override
   _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
 }
@@ -113,7 +115,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
 class VerificationScreen extends StatefulWidget {
   final String email;
-  const VerificationScreen({Key? key, required this.email}) : super(key: key);
+  const VerificationScreen({super.key, required this.email});
 
   @override
   _VerificationScreenState createState() => _VerificationScreenState();
@@ -181,7 +183,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   ),
 
                   const SizedBox(height: CusSize.defaultSpace),
-                  
+
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
