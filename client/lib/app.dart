@@ -1,4 +1,4 @@
-import 'package:client_1/features/authen/login_screen.dart';
+import 'package:client_1/features/authen/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'utils/theme/theme.dart';

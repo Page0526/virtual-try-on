@@ -1,6 +1,6 @@
 import 'package:client_1/common/style/spacing.dart';
-import 'package:client_1/features/authen/pass_reset.dart';
-import 'package:client_1/features/authen/sigup_screen.dart';
+import 'package:client_1/features/authen/screen/pass_reset.dart';
+import 'package:client_1/features/authen/screen/signup_screen.dart';
 import 'package:client_1/features/fashion_agent/agent_screen.dart';
 import 'package:client_1/utils/const/size.dart';
 import 'package:client_1/utils/helper/helper_func.dart';
