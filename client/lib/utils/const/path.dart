@@ -3,7 +3,7 @@
 
 class CusPath {
 
-  static const String animationLoader = 'assests/animation/loader-animation.json';
+  static const String animationLoader = 'assets/animation/loader-animation.json';
 
   static const String darklogo = 'assets/images/dark_logo.png';
   static const String googleLogo = 'assets/images/google_logo.png';

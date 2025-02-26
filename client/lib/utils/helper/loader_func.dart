@@ -26,8 +26,8 @@ class FullScreenLoader {
     );
   }
   
-  static void hideLoader() {
-    Get.back(); // Close the dialog
+  static stopLoading() {
+    Navigator.of(Get.overlayContext!).pop(); // Close the dialog using the Navigator
   }
 
 
