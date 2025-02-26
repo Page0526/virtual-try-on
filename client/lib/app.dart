@@ -1,3 +1,4 @@
+import 'package:client_1/bingdings/general_binding.dart';
 import 'package:client_1/features/authen/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,8 @@ class MyApp extends StatelessWidget {
       theme: CusAppTheme.lightTheme,
       darkTheme: CusAppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
+
+      initialBinding: GeneralBinding(), // binding
       // test
       home: const LoginScreen(),
     );

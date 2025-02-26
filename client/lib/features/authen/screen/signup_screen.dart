@@ -1,5 +1,4 @@
 import 'package:client_1/features/authen/controller/signup_controller.dart';
-import 'package:client_1/features/authen/screen/email_verify.dart';
 import 'package:client_1/features/authen/screen/login_screen.dart';
 import 'package:client_1/utils/const/color.dart';
 import 'package:client_1/utils/const/size.dart';
@@ -118,7 +117,7 @@ class Signup_form extends StatelessWidget {
         // email or phone numer
         TextFormField(
           controller : controller.email,
-          validator : (value) => ValidatorFunc.emailValidation(value),
+          validator : (value) => ValidatorFunc.emailOrPhoneValidation(value),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.email),
             labelText: "Email or phone number",
@@ -131,8 +130,9 @@ class Signup_form extends StatelessWidget {
 
         const SizedBox(height: CusSize.spaceBtwItems),
         // password
-        TextFormField(
+        Obx (() => TextFormField(
           controller : controller.password,
+          obscureText: controller.showpassword.value,
           validator: (value) => ValidatorFunc.passwordValidation(value),
           decoration: InputDecoration(
               prefixIcon: Icon(Icons.lock),
@@ -142,27 +142,35 @@ class Signup_form extends StatelessWidget {
                 color: Colors.grey, // Faded color
               ),
               suffixIcon: IconButton(
-                icon: Icon(Icons.visibility_off),
-                onPressed: () {
-                  // Add functionality to toggle password visibility
-                },
+                icon: Icon(controller.showpassword.value ? Icons.visibility : Icons.visibility_off),
+                onPressed: () =>  controller.showpassword.value = !controller.showpassword.value,
               )),
-        ),
-
-        const SizedBox(height: CusSize.spaceBtwItems),
-        // confirm password
-        TextFormField(
-          controller : controller.confirmPassword,
-          validator: (value) => ValidatorFunc.passwordValidation(value),
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.lock),
-            labelText: "Confirm password",
-            labelStyle: TextStyle(
-              fontSize: CusSize.fontSizeMd, // Smaller font size
-              color: Colors.grey, // Faded color
-            ),
           ),
         ),
+
+
+        const SizedBox(height: CusSize.spaceBtwItems),
+
+
+        // confirm password
+        Obx(() =>  TextFormField(
+            controller : controller.confirmPassword,
+            obscureText: controller.showConfirmPassword.value,
+            validator: (value) => ValidatorFunc.confirmPasswordValidation(value, controller.password.text),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.lock),
+              labelText: "Confirm password",
+              labelStyle: TextStyle(
+                fontSize: CusSize.fontSizeMd, // Smaller font size
+                color: Colors.grey, // Faded color
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(controller.showConfirmPassword.value ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => controller.showConfirmPassword.value = !controller.showConfirmPassword.value,
+              ),
+            ),
+          ),
+        ), 
 
         const SizedBox(height: CusSize.spaceBtwItems),
 
@@ -175,9 +183,7 @@ class Signup_form extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
-              Get.to(() => controller.signUp());
-            },
+            onPressed: () => controller.signUp(),
             child: Text("Create Account"),
           ),
         ),
@@ -187,18 +193,22 @@ class Signup_form extends StatelessWidget {
 }
 
 class TermandCondition extends StatelessWidget {
-  const TermandCondition({
+  TermandCondition({
     super.key,
     required this.dark,
   });
 
   final bool dark;
+  final controller = SignupController.instance;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Checkbox(value: false, onChanged: (value) {}),
+        Obx(() => Checkbox(value: controller.confirmPolicy.value, onChanged: (value) {
+            controller.confirmPolicy.value = !controller.confirmPolicy.value;
+          }),
+        ),
         Text.rich(
           TextSpan(children: [
             TextSpan(
@@ -216,7 +226,7 @@ class TermandCondition extends StatelessWidget {
             TextSpan(text: " and "),
             TextSpan(
               text: "Privacy Policy",
-              style: TextStyle(
+              style: TextStyle( 
                 color: dark
                     ? const Color.fromARGB(255, 141, 141, 141)
                     : CusColor.primaryColor,

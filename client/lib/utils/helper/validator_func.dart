@@ -12,17 +12,19 @@ class ValidatorFunc {
 
 
 
-  // check email validation 
-  static String? emailValidation(String? value) {
+  static String? emailOrPhoneValidation(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required.';
+      return 'Email or phone number is required.';
     }
 
     // Regular expression for email validation
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-    if (!emailRegExp.hasMatch(value)) {
-      return 'Invalid email address.';
+    // Regular expression for phone number validation
+    final phoneRegExp = RegExp(r'^[0-9]{10}$');
+
+    if (!emailRegExp.hasMatch(value) && !phoneRegExp.hasMatch(value)) {
+      return 'Invalid email address or phone number.';
     }
 
     return null;
@@ -61,20 +63,19 @@ class ValidatorFunc {
 
   }
 
-
-  // phonenumber validation
-  static String? phoneNumberValidation(String? value) {
+  static String? confirmPasswordValidation(String? value, String password) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required.';
+      return 'Confirm password is required.';
     }
 
-    // Regular expression for phone number validation
-    final phoneRegExp = RegExp(r'^[0-9]{10}$');
-
-    if (!phoneRegExp.hasMatch(value)) {
-      return 'Invalid phone number.';
+    if (value != password) {
+      return 'Passwords do not match.';
     }
 
     return null;
   }
+
+
+
+
 }
