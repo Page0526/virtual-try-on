@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'package:client_1/utils/helper/snack_bar.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -25,9 +26,7 @@ class NetworkController extends GetxController {
     // dislay warning dialog when network is lost
     if (result == ConnectivityResult.none) {
       // show warning dialog
-
-
-
+      CusSnackBar.errorSnackBar(title: "Opps! Lost connection", message: "Please check your internet connection");
 
     }
 

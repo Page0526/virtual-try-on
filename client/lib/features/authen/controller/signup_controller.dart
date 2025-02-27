@@ -66,18 +66,19 @@ class SignupController extends GetxController {
       final userRepo = Get.put(UserRepo());
       await userRepo.saveUser(newuser);
 
-      FullScreenLoader.stopLoading();
       // show success dialog
       CusSnackBar.successSnackBar(
           title: "Success", message: "Sign up successfully");
 
-      Get.to(() => VerifyEmailScreen());
+      Get.to(() => VerifyEmailScreen(email: email.text.trim()));
+
     } catch (e) {
       // handle with error
       CusSnackBar.errorSnackBar(title: "Error", message: e.toString());
     } finally {
       // handle with error
-      FullScreenLoader.stopLoading();
+        
+      // FullScreenLoader.stopLoading();
     }
   }
 }
