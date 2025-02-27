@@ -15,9 +15,9 @@ class CusSize {
   static const double iconLg = 32.0;
 
   // kich thuoc font
-  static const double fontSizeSm = 14.0;
-  static const double fontSizeMd = 16.0;
-  static const double fontSizeLg = 20.0;
+  static const double fontSizeSm = 12.0;
+  static const double fontSizeMd = 15.0;
+  static const double fontSizeLg = 17.0;
   static const double fontSizeXl = 24.0;
   static const double fontSizeXxl = 32.0;
 

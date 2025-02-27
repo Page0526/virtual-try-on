@@ -4,8 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 
 class FittingRoom extends StatefulWidget{
+  const FittingRoom({super.key});
+  
   @override
-  _FittingRoomState createState() => _FittingRoomState();
+  State<FittingRoom> createState() => _FittingRoomState();
 }
 
 class _FittingRoomState extends State<FittingRoom> {
@@ -77,14 +79,13 @@ class _FittingRoomState extends State<FittingRoom> {
               ),
             ),
             centerTitle: true,
-            backgroundColor: Colors.transparent, // Make it transparent
+            backgroundColor: Colors.transparent,
             elevation: 4,
-            iconTheme: IconThemeData(color: Colors.white), // Drawer icon color
+            iconTheme: IconThemeData(color: Colors.white),
             
-            // 🔹 Add an action button on the right side
             actions: [
               IconButton(
-                icon: Icon(Icons.notifications, color: Colors.white), // White icon
+                icon: Icon(Icons.notifications, color: Colors.white),
                 onPressed: () {
                   // TODO: Add wardrobe
                   
@@ -233,3 +234,4 @@ class _FittingRoomState extends State<FittingRoom> {
     );
   } 
 }
+

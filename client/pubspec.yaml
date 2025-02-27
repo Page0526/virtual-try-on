@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  image_picker: ^1.1.2
 
   cupertino_icons: ^1.0.8
   flutter_native_splash: ^2.4.4
@@ -19,7 +18,7 @@ dependencies:
   flutter_chat_bubble: ^2.0.2
   provider: ^6.1.2
   http: ^1.3.0
-  image_picker: ^1.0.7
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +43,16 @@ flutter:
   - assets/images/facebook_icon.png
   - assets/images/email-verification.png
   - assets/images/reset_password.png
+  - assets/images/chatbot.png
+  - assets/images/clothes-hanger.png
+  - assets/images/home_button.png
+  - assets/images/shopping-cart.png
+  - assets/images/user.png
+  - assets/images/try-on.png
+  - assets/images/wardrobe.png
+  - assets/images/edit.png
+  - assets/images/favorites.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
