@@ -17,7 +17,7 @@ class FullScreenLoader {
           height: double.infinity,
           child: Column(
             children: [
-              const SizedBox(height: 250), // Adjust the spacing as needed
+              const SizedBox(height: 200), // Adjust the spacing as needed
               AnimationLoader(text: text, animation: animation), // load animation 
             ],
           ),
@@ -64,6 +64,7 @@ class AnimationLoader extends StatelessWidget {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        
         children: [
           Lottie.asset(animation, width: MediaQuery.of(context).size.width * 0.8), // Display Lottie animation
           const SizedBox(height: CusSize.defaultSpace),

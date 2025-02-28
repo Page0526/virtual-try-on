@@ -61,81 +61,13 @@ class _FittingRoomState extends State<FittingRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.deepPurple[700]!, Colors.deepPurple[300]!],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: AppBar(
-            title: Text(
-              'Fitting Room',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 4,
-            iconTheme: IconThemeData(color: Colors.white),
-            
-            actions: [
-              IconButton(
-                icon: Icon(Icons.notifications, color: Colors.white),
-                onPressed: () {
-                  // TODO: Add wardrobe
-                  
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        backgroundColor: Colors.white,
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.black),
-              child: Text('Settings', style: TextStyle(color: Colors.white, fontSize: 20)),
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('App Settings'),
-              onTap: () {
-                // TODO: add settings
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text('About'),
-              onTap: () {
-                // TODO: add about
-                Navigator.pushNamed(context, '/about');
-              },
-            ),
-          ],
-        ),
-      ),
-      onDrawerChanged: (isOpen) {
-        if (isOpen) {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-        } else {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-        }
-      },
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
               child: SizedBox(
-                height: 425,
+                height: 400,
                 width: 325,
                 child: Container(
                   decoration: BoxDecoration(
@@ -151,7 +83,7 @@ class _FittingRoomState extends State<FittingRoom> {
                 ),
               ),
             ),
-            const SizedBox(height: 20, width: 20),
+            // const SizedBox(height: 10),
             Center(
               child: _isLoading
                 ? const CircularProgressIndicator() // loading spinner while processing
@@ -169,7 +101,7 @@ class _FittingRoomState extends State<FittingRoom> {
                     ),
             ),
             
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

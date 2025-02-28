@@ -36,5 +36,5 @@ class CusColor {
   static const Color info = Color.fromARGB(255, 0, 0, 255);
 
   // Color of bar
-  static const Color barColor = Color(0xFFDBDFFD);
+  static const Color barColor = Color.fromARGB(255, 245, 234, 247);
 }

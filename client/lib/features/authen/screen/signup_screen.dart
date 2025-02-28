@@ -217,6 +217,7 @@ class TermandCondition extends StatelessWidget {
             TextSpan(
               text: "Terms of Service",
               style: TextStyle(
+                fontSize: 11,
                 color: dark
                     ? const Color.fromARGB(255, 141, 141, 141)
                     : CusColor.primaryColor,
@@ -227,6 +228,7 @@ class TermandCondition extends StatelessWidget {
             TextSpan(
               text: "Privacy Policy",
               style: TextStyle( 
+                fontSize: 11,
                 color: dark
                     ? const Color.fromARGB(255, 141, 141, 141)
                     : CusColor.primaryColor,

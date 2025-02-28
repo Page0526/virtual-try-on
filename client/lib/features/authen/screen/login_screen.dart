@@ -2,6 +2,7 @@ import 'package:client_1/common/style/spacing.dart';
 import 'package:client_1/features/authen/screen/pass_reset.dart';
 import 'package:client_1/features/authen/screen/signup_screen.dart';
 import 'package:client_1/features/fashion_agent/agent_screen.dart';
+import 'package:client_1/navigation_menu.dart';
 import 'package:client_1/utils/const/size.dart';
 import 'package:client_1/utils/helper/helper_func.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class LoginScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.to (() => ChatScreen());
+                    Get.to (() => NavigationMenu());
                   }, 
                   child: Text("Login"),
                 ),

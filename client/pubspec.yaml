@@ -21,7 +21,8 @@ dependencies:
   image_picker: ^1.1.2
   lottie: ^3.3.1
   connectivity_plus: ^5.0.1
-
+  iconsax: ^0.0.8
+  carousel_slider: ^5.0.0
   
   
   get_storage: ^2.1.1
@@ -54,17 +55,15 @@ flutter:
   - assets/images/facebook_icon.png
   - assets/images/email-verification.png
   - assets/images/reset_password.png
-  - assets/images/chatbot.png
-  - assets/images/clothes-hanger.png
-  - assets/images/home_button.png
-  - assets/images/shopping-cart.png
+
   - assets/images/user.png
   - assets/images/try-on.png
   - assets/images/wardrobe.png
   - assets/images/edit.png
   - assets/images/favorites.png
 
-  - assets/animation/loader-animation.json
+  - assets/images/
+  - assets/animation/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
