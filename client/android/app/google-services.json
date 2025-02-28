@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "772642062450",
+    "project_id": "easyfit-8c226",
+    "storage_bucket": "easyfit-8c226.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772642062450:android:c6392a4ef87a1b5a2682eb",
+        "android_client_info": {
+          "package_name": "com.example.client_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772642062450-beukat5jd4e936jfvdrir8sckjo34l4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIj5ZPFrdCrLU17B6pubFtLpMqT7c6Zus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772642062450-beukat5jd4e936jfvdrir8sckjo34l4s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "772642062450-2btpav71bp8u2vco2bbsmnrol1igvfak.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.client1"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

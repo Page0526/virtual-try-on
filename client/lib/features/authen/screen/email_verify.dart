@@ -1,4 +1,6 @@
-import 'package:client_1/features/authen/login_screen.dart';
+import 'package:client_1/features/authen/controller/authen_repo.dart';
+import 'package:client_1/features/authen/controller/verify_controller.dart';
+import 'package:client_1/features/authen/screen/login_screen.dart';
 import 'package:client_1/utils/const/color.dart';
 import 'package:client_1/utils/const/size.dart';
 import 'package:client_1/utils/helper/helper_func.dart';
@@ -8,14 +10,30 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 // import 'verified_screen.dart'; // Import màn hình xác nhận thành công
 
 class VerifyEmailScreen extends StatelessWidget {
-  const VerifyEmailScreen({super.key});
+  const VerifyEmailScreen({super.key, this.email});
+
+  final String? email;
 
   @override
   Widget build(BuildContext context) {
+
     TextEditingController otpController = TextEditingController();
-    
+    final controller = Get.put(VerifyEmailController());
+
     return Scaffold(
-      appBar : AppBar(), 
+      appBar : AppBar(
+        title: const Text("Verify Email"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              AuthenRepo.instance.logout();
+              Get.offAll(() => LoginScreen());
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
+       
       body: Padding(
         padding: const EdgeInsets.all(CusSize.defaultSpace),
         child: Column(
@@ -80,13 +98,23 @@ class VerifyEmailScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.to(() => const VerifiedScreen()); // Chuyển sang màn hình xác nhận thành công
+                  Get.to(() => controller.manuallyEmailVerification()); // Chuyển sang màn hình xác nhận thành công
                 },
                 child: const Text("Confirm"),
               ),
             ),
 
             const SizedBox(height: CusSize.spaceBtwItems),
+
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Get.to(() => controller.sendEmailVerification()); // Chuyển sang màn hình xác nhận thành công
+                },
+                child: const Text("Resent"),
+              ),
+            ),
 
           ],
         ),
@@ -146,7 +174,7 @@ class VerifiedScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.to(() => LoginScreen()); // Chuyển đến trang Dashboard (cần định nghĩa route)
+                    Get.to(() => AuthenRepo.instance.screenRedirect()); // Chuyển đến trang Dashboard (cần định nghĩa route)
                   },
                   child: const Text("Go to Dashboard", style: TextStyle(fontSize: 16)),
                 ),

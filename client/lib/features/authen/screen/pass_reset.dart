@@ -1,4 +1,4 @@
-import 'package:client_1/features/authen/login_screen.dart';
+import 'package:client_1/features/authen/screen/login_screen.dart';
 import 'package:client_1/utils/const/color.dart';
 import 'package:client_1/utils/const/size.dart';
 import 'package:client_1/utils/helper/helper_func.dart';
