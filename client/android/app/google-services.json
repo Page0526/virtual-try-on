@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "452759377542",
+    "project_id": "styleai-cd746",
+    "storage_bucket": "styleai-cd746.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452759377542:android:d2ab0d0c9031e8ee686307",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5x9O2f9Yp6P-X4s-8JYcUeLpDfMxIuos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:myapp/presentation/screens/closet/closet_detail_screen.dart';
-import 'package:myapp/presentation/screens/closet/closet_screen.dart';
-import 'package:myapp/presentation/screens/closet/clothes_detail_screen.dart';
-import 'package:myapp/presentation/screens/fitting_room/fitting_room.dart';
-import 'package:myapp/presentation/screens/home/home_screen.dart';
+import 'feature/closet/screen/closet_detail_screen.dart';
+import 'feature/closet/screen/closet_screen.dart';
+import 'feature/closet/screen/clothes_detail_screen.dart';
+import 'feature/fitting_room/screen/fitting_room.dart';
+import 'feature/home/home_screen.dart';
+import 'utils/themes/app_theme.dart';
 
-import 'shared/themes/app_theme.dart';
+
 
 void main() {
   runApp(MyApp());
