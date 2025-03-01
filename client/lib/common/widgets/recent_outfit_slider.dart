@@ -25,9 +25,9 @@ class RecentOutfitSlider extends StatelessWidget {
         children: [
           CarouselSlider(
             options: CarouselOptions(
-              height: 260,
-              viewportFraction: 0.6,
-              enlargeCenterPage: true,
+              height: 260, 
+              viewportFraction: 0.55,
+              // enlargeCenterPage: true,
               onPageChanged: (index, _) => controller.updatePageIndicator(index)
             ),
             items: banners.map((url) => RoundedImg(imageURL: url)).toList(), 

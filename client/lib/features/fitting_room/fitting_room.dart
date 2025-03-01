@@ -63,20 +63,22 @@ class _FittingRoomState extends State<FittingRoom> {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 20),
             Center(
               child: SizedBox(
-                height: 400,
-                width: 325,
+                height: 350,
+                width: 300,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.black,
-                    borderRadius: BorderRadius.circular(20)
+                    borderRadius: BorderRadius.circular(10)
                   ),
                   child: _selectedImage != null
                   ? ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(10),
                     child: Image.file(_selectedImage!, height: 200, fit: BoxFit.fill,)
                     )
                   : const Icon(Icons.image, size: 100, color: Colors.grey),
@@ -101,65 +103,7 @@ class _FittingRoomState extends State<FittingRoom> {
                     ),
             ),
             
-            // const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    _pickImageFromCamera();
-                  },
-                  child: ShaderMask(
-                    shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                        colors: [Colors.deepPurple.shade200, Colors.deepPurple.shade400, Colors.deepPurple.shade600],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ).createShader(bounds);
-                    },
-                    child: const Icon(Icons.camera_alt, size: 40, color: Colors.white), // White needed for gradient
-                  ),
-                ),
-                const SizedBox(width: 35),
-                Ink(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.deepPurple.shade200, Colors.deepPurple.shade400, Colors.deepPurple.shade600],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      // TODO: Model's API
-
-                    },
-                    borderRadius: BorderRadius.circular(100),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                      child: Icon(Icons.add, size: 20, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                const SizedBox(width: 35),
-                GestureDetector(
-                  onTap: () {
-                    _pickImageFromGallery();
-                  },
-                  child: ShaderMask(
-                    shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                        colors: [Colors.deepPurple.shade200, Colors.deepPurple.shade400, Colors.deepPurple.shade600],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ).createShader(bounds);
-                    },
-                    child: const Icon(Icons.image, size: 40, color: Colors.white), // White needed for gradient
-                  ),
-                ),
-              ],
-            ),
+            
           ],
         )
       ),

@@ -7,7 +7,7 @@ class RoundedImg extends StatelessWidget {
   const RoundedImg({
     super.key,
     this.border,
-    this.width,
+    this.width = 180,
     this.height,
     this.padding,
     this.onPressed,

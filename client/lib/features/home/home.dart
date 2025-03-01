@@ -32,7 +32,7 @@ class _Home extends State<Home> {
               SizedBox(width: 15),
               Padding(
                 padding: const EdgeInsets.only(bottom: 5, top: 5),
-                child: Text('Recent Outfits', style: TextStyle(fontSize: CusSize.fontSizeLg, fontWeight: FontWeight.w700)),
+                child: Text('Recent Outfits', style: TextStyle(fontSize: CusSize.fontSizeLg, fontWeight: FontWeight.w700, color: CusColor.primaryTextColor)),
               ),
             ],
           ),
@@ -43,7 +43,7 @@ class _Home extends State<Home> {
               SizedBox(width: 15),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text('Quick Actions', style: TextStyle(fontSize: CusSize.fontSizeLg,  fontWeight: FontWeight.w700)),
+                child: Text('Quick Actions', style: TextStyle(fontSize: CusSize.fontSizeLg,  fontWeight: FontWeight.w700, color: CusColor.primaryTextColor)),
               ),
             ],
           ),
@@ -69,7 +69,7 @@ PreferredSizeWidget _buildAppBar() {
       leading: Builder(
         builder: (BuildContext context) {
           return IconButton(
-            icon: Icon(Iconsax.profile_circle, size: 30),
+            icon: Icon(Iconsax.profile_circle, size: 30, color: CusColor.buttonPrimaryColor),
             onPressed: () {
               // TODO: add profile screen
             },
@@ -81,21 +81,21 @@ PreferredSizeWidget _buildAppBar() {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Hello Jessica', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+            Text('Hello Jessica', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: CusColor.primaryTextColor)),
             SizedBox(height: 3),
-            Text('What do you want to try on today?',  style: TextStyle(fontSize: CusSize.fontSizeSm, fontWeight: FontWeight.w400))
+            Text('What do you want to try on today?',  style: TextStyle(fontSize: CusSize.fontSizeSm, fontWeight: FontWeight.w400, color: CusColor.primaryTextColor))
           ],
         ),
       actions: [
         IconButton(
-          icon: const Icon(Iconsax.notification),
+          icon: const Icon(Iconsax.notification, color: CusColor.buttonPrimaryColor),
           tooltip: 'Notifications',
           onPressed: () {
             // TODO: add notification
           }
         ),
         IconButton( 
-          icon: Icon(Iconsax.message_question), 
+          icon: Icon(Iconsax.message_question, color: CusColor.buttonPrimaryColor), 
           onPressed: () {
             // TODO: add help
           })

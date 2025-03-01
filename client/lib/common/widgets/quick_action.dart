@@ -28,7 +28,7 @@ class QuickAction extends StatelessWidget {
   final VoidCallback? onPressed;
   final String maintext;
   final String secondtext;
-  final Image icon;
+  final Widget icon;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +49,8 @@ class QuickAction extends StatelessWidget {
           children: [
             icon,
             const SizedBox(height: 10),
-            Text(maintext, style: TextStyle(fontSize: CusSize.fontSizeMd, fontWeight: FontWeight.bold)),
-            Text(secondtext, style: TextStyle(fontSize: CusSize.fontSizeSm, fontWeight: FontWeight.w300)),
+            Text(maintext, style: TextStyle(fontSize: CusSize.fontSizeMd, fontWeight: FontWeight.bold, color: CusColor.primaryTextColor)),
+            Text(secondtext, style: TextStyle(fontSize: CusSize.fontSizeSm, fontWeight: FontWeight.w300, color: CusColor.primaryTextColor)),
           ],
         ),
       ),

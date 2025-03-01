@@ -22,7 +22,7 @@ class CusColor {
   static const Color darkContainerColor = Color.fromARGB(255, 136, 136, 136);
 
   // Mau cua button 
-  static const Color buttonPrimaryColor = Color(0xFF242F9B);
+  static const Color buttonPrimaryColor = Color.fromARGB(255, 0, 0, 0);
   static const Color buttonSecondaryColor = Color(0xFF646FD4);
 
   // Mau cua border 
@@ -36,5 +36,5 @@ class CusColor {
   static const Color info = Color.fromARGB(255, 0, 0, 255);
 
   // Color of bar
-  static const Color barColor = Color.fromARGB(255, 245, 234, 247);
+  static const Color barColor = Color(0xFFFFFDEC);
 }
