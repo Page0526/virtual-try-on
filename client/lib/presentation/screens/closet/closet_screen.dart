@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/navigation_bar.dart';
+import '../../widgets/navigation_bar.dart';
 
 class ClosetScreen extends StatefulWidget {
   const ClosetScreen({super.key});
@@ -10,7 +10,7 @@ class ClosetScreen extends StatefulWidget {
 }
 
 class _ClosetScreenState extends State<ClosetScreen> {
-  int _selectedSubIndex = 0; 
+  int _selectedSubIndex = 0; // Theo dõi tab Closet/Outfit/Packing
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
       ),
       body: Column(
         children: [
+          // Sub-taskbar (Closet/Outfit/Packing)
           Container(
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -38,24 +39,27 @@ class _ClosetScreenState extends State<ClosetScreen> {
               ],
             ),
           ),
+          // Nội dung chính
           Expanded(
             child: _buildContent(),
           ),
         ],
       ),
       bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 1, 
+        selectedIndex: 1, // "Closet" đang được chọn
         onItemTapped: (index) {
           switch (index) {
             case 0:
               context.go('/');
             case 1:
+              // Đã ở Closet, không cần thay đổi
               break;
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // Thêm logic để mở màn hình thêm mới (Closet/Outfit/Packing)
         },
         child: const Icon(Icons.add),
       ),
@@ -108,6 +112,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
   }
 }
 
+// Widget hiển thị nội dung Closet
 class ClosetContent extends StatelessWidget {
   final Function(String) onClosetTapped;
   final VoidCallback onEditPressed;
@@ -128,20 +133,24 @@ class ClosetContent extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
+          // Danh sách Closet
           Expanded(
             child: ListView(
               children: [
+                // Mục "All clothes"
                 _buildClosetItem(
-                  imageUrl: 'assets/images/image1.jpg', 
+                  imageUrl: 'assets/images/image1.jpg', // Ảnh giả lập
                   title: 'All clothes',
                   count: '1 clothes',
                   onEditPressed: onEditPressed,
-                  onTap: () => onClosetTapped('All clothes'), 
+                  onTap: () => onClosetTapped('All clothes'), // Điều hướng khi nhấn
                 ),
+                // Nút tạo Closet mới
                 _buildCreateCloset(),
               ],
             ),
           ),
+          // Nút Archive và Quick Review
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Column(
@@ -185,10 +194,11 @@ class ClosetContent extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       child: InkWell(
-        onTap: onTap, 
+        onTap: onTap, // Bắt sự kiện nhấn để điều hướng
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Hình ảnh món đồ
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Image.asset(
@@ -198,6 +208,7 @@ class ClosetContent extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
+            // Thông tin
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -213,6 +224,7 @@ class ClosetContent extends StatelessWidget {
                 ),
               ),
             ),
+            // Nút Edit
             IconButton(
               icon: const Icon(Icons.edit, color: Colors.grey),
               onPressed: onEditPressed,
@@ -228,6 +240,7 @@ class ClosetContent extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16.0),
       child: InkWell(
         onTap: () {
+          // Logic thêm Closet mới
         },
         child: Container(
           padding: const EdgeInsets.all(16.0),

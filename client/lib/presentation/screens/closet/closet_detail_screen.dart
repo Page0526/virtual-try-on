@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/navigation_bar.dart';
+import '../../widgets/navigation_bar.dart';
 
 class ClosetDetailScreen extends StatefulWidget {
   final String closetName;
@@ -12,10 +12,10 @@ class ClosetDetailScreen extends StatefulWidget {
 }
 
 class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
-  int _selectedSortOption = 0; 
+  // int _selectedSortOption = 0; // Theo dõi tùy chọn sắp xếp
   final List<Map<String, String>> items = [
     {
-      'image': 'assets/images/image1.jpg', 
+      'image': 'assets/images/image1.jpg', // Đường dẫn file giả lập
       'brand': 'No Brand',
       'date': '2/22/2025',
       'type': 'Tops',
@@ -60,9 +60,9 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
                 );
               }).toList(),
               onChanged: (value) {
-                setState(() {
-                  _selectedSortOption = value == 'Recently added' ? 0 : 1;
-                });
+                // setState(() {
+                //   _selectedSortOption = value == 'Recently added' ? 0 : 1;
+                // });
               },
               isExpanded: true,
               underline: Container(
@@ -71,6 +71,7 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
               ),
             ),
           ),
+          // Danh sách món đồ
           Expanded(
             child: ListView.builder(
               itemCount: items.length,
@@ -82,12 +83,13 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
         ],
       ),
       bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 1, 
+        selectedIndex: 1, // "Closet" đang được chọn
         onItemTapped: (index) {
           switch (index) {
             case 0:
               context.go('/');
             case 1:
+              // Đã ở Closet, không cần thay đổi
               break;
           }
         },
@@ -107,6 +109,7 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Hình ảnh món đồ
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Image.asset(
@@ -116,6 +119,7 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
                 fit: BoxFit.cover,
               ),
             ),
+            // Thông tin món đồ
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

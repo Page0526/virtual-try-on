@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myapp/business_logic/blocs/clothing/clothing_event.dart';
 import 'package:myapp/business_logic/blocs/clothing/clothing_bloc.dart';
-import '../../data/models/item.dart';
+import '../../../data/models/item.dart';
 
 class AddClothingItemScreen extends StatefulWidget {
   const AddClothingItemScreen({super.key});
@@ -61,10 +61,10 @@ class _AddClothingItemScreenState extends State<AddClothingItemScreen> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     final newItem = Item(
-                      id: DateTime.now().toString(), 
+                      id: DateTime.now().toString(), // ID tạm thời
                       name: _name,
                       type: _type,
-                      imageUrl: _image?.path ?? '', 
+                      imageUrl: _image?.path ?? '', // Cần upload ảnh lên server
                     );
                     context.read<ClothingBloc>().add(AddClothingItem(newItem));
                     Navigator.pop(context);

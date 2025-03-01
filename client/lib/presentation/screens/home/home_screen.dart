@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/navigation_bar.dart';
+import '../../widgets/navigation_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage('assets/images/user.jpg'), 
+              backgroundImage: AssetImage('assets/images/user.jpg'), // Avatar giả lập
               radius: 20,
             ),
             const SizedBox(width: 8.0),
@@ -46,6 +46,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Phần thời tiết
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
@@ -91,6 +92,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16.0),
+              // Phần Recent Outfits
               const Text(
                 'Recent Outfits',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -100,24 +102,27 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildOutfitCard(
-                      imageUrl: 'assets/images/image2.jpg', 
+                      imageUrl: 'assets/images/image2.jpg', // Ảnh giả lập
                       title: 'Casual Friday',
                       onTap: () {
+                        // Placeholder cho điều hướng đến chi tiết Outfit (có thể mở rộng)
                       },
                     ),
                   ),
                   const SizedBox(width: 8.0),
                   Expanded(
                     child: _buildOutfitCard(
-                      imageUrl: 'assets/images/image2.jpg', 
+                      imageUrl: 'assets/images/image2.jpg', // Ảnh giả lập
                       title: 'Business Meeting',
                       onTap: () {
+                        // Placeholder cho điều hướng đến chi tiết Outfit (có thể mở rộng)
                       },
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16.0),
+              // Phần Quick Actions
               const Text(
                 'Quick Actions',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -134,8 +139,7 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.camera_alt,
                     title: 'Virtual Try-On',
                     color: Colors.lightBlue[100]!,
-                    onTap: () {
-                    },
+                    onTap: () => context.go('/fitting_room'),
                   ),
                   _buildQuickActionCard(
                     icon: Icons.checkroom,
@@ -148,6 +152,7 @@ class HomeScreen extends StatelessWidget {
                     title: 'Style Match',
                     color: Colors.green[100]!,
                     onTap: () {
+                      // Placeholder cho điều hướng (có thể mở rộng)
                     },
                   ),
                   _buildQuickActionCard(
@@ -163,7 +168,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 0, 
+        selectedIndex: 0, // "Home" đang được chọn
         onItemTapped: (index) {
           switch (index) {
             case 0:

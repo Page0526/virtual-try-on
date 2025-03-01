@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/navigation_bar.dart';
+import '../../widgets/navigation_bar.dart';
 
 class ClothesDetailScreen extends StatefulWidget {
   final String itemImage;
@@ -29,7 +29,7 @@ class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, 
+      resizeToAvoidBottomInset: true, // Tránh lỗi khi bàn phím xuất hiện
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -54,12 +54,14 @@ class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Hình ảnh món đồ
             Image.asset(
               widget.itemImage,
               fit: BoxFit.contain,
               width: double.infinity,
-              height: 250, 
+              height: 250, // Giới hạn chiều cao
             ),
+            // Nút Washing và Edit
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -93,6 +95,7 @@ class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
                 ],
               ),
             ),
+            // Thanh tab dạng 2 cột: Information và Outfit
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -162,6 +165,7 @@ class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
     );
   }
 
+  /// Tab "Information"
   Widget _buildInformationTab() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -219,6 +223,7 @@ class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
     );
   }
 
+  /// Tab "Outfit"
   Widget _buildOutfitTab() {
     return const Padding(
       padding: EdgeInsets.all(16.0),

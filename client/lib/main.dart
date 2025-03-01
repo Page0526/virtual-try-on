@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'presentation/screens/home_screen.dart';
-import 'presentation/screens/closet_screen.dart';
-import 'presentation/screens/closet_detail_screen.dart';
-import 'presentation/screens/clothes_detail_screen.dart';
+import 'package:myapp/presentation/screens/closet/closet_detail_screen.dart';
+import 'package:myapp/presentation/screens/closet/closet_screen.dart';
+import 'package:myapp/presentation/screens/closet/clothes_detail_screen.dart';
+import 'package:myapp/presentation/screens/fitting_room/fitting_room.dart';
+import 'package:myapp/presentation/screens/home/home_screen.dart';
+
 import 'shared/themes/app_theme.dart';
 
 void main() {
@@ -23,6 +25,10 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: '/closet',
         builder: (context, state) => const ClosetScreen(),
+      ),
+      GoRoute(
+        path: '/fitting_room',
+        builder: (context, state) => const FittingRoom(),
       ),
       GoRoute(
         path: '/closet/:closetName',
