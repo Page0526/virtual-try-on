@@ -23,20 +23,11 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,21 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB-6ir2Jd456e8SqNICTNzZHQhw__ajzIo',
-    appId: '1:772642062450:web:c5bf0865cd3314742682eb',
-    messagingSenderId: '772642062450',
-    projectId: 'easyfit-8c226',
-    authDomain: 'easyfit-8c226.firebaseapp.com',
-    storageBucket: 'easyfit-8c226.firebasestorage.app',
-    measurementId: 'G-J6WGQGX17G',
+    apiKey: 'AIzaSyDBEM-nXTOQkN31Uq2aMLvyuHc6U_UOXnM',
+    appId: '1:452759377542:web:c0a3b2c791998b1c686307',
+    messagingSenderId: '452759377542',
+    projectId: 'styleai-cd746',
+    authDomain: 'styleai-cd746.firebaseapp.com',
+    storageBucket: 'styleai-cd746.firebasestorage.app',
+    measurementId: 'G-7VV5KYVK4L',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAIj5ZPFrdCrLU17B6pubFtLpMqT7c6Zus',
-    appId: '1:772642062450:android:c6392a4ef87a1b5a2682eb',
-    messagingSenderId: '772642062450',
-    projectId: 'easyfit-8c226',
-    storageBucket: 'easyfit-8c226.firebasestorage.app',
+    apiKey: 'AIzaSyA5x9O2f9Yp6P-X4s-8JYcUeLpDfMxIuos',
+    appId: '1:452759377542:android:d2ab0d0c9031e8ee686307',
+    messagingSenderId: '452759377542',
+    projectId: 'styleai-cd746',
+    storageBucket: 'styleai-cd746.firebasestorage.app',
   );
 
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAlcYmpkbyMr578PKL7SdcOpnqF1dEbgWY',
+    appId: '1:452759377542:ios:5c829d283df3516f686307',
+    messagingSenderId: '452759377542',
+    projectId: 'styleai-cd746',
+    storageBucket: 'styleai-cd746.firebasestorage.app',
+    iosBundleId: 'com.example.myapp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAlcYmpkbyMr578PKL7SdcOpnqF1dEbgWY',
+    appId: '1:452759377542:ios:5c829d283df3516f686307',
+    messagingSenderId: '452759377542',
+    projectId: 'styleai-cd746',
+    storageBucket: 'styleai-cd746.firebasestorage.app',
+    iosBundleId: 'com.example.myapp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDBEM-nXTOQkN31Uq2aMLvyuHc6U_UOXnM',
+    appId: '1:452759377542:web:29e41ab69b56fe32686307',
+    messagingSenderId: '452759377542',
+    projectId: 'styleai-cd746',
+    authDomain: 'styleai-cd746.firebaseapp.com',
+    storageBucket: 'styleai-cd746.firebasestorage.app',
+    measurementId: 'G-QE3KLZPSQQ',
+  );
 }

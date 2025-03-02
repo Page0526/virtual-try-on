@@ -1,9 +1,9 @@
 
 import 'dart:async';
-import 'package:client_1/utils/helper/snack_bar.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'snack_bar.dart';
 
 // manage network connectivity and provide a method to handle network changes 
 class NetworkController extends GetxController {
@@ -39,7 +39,7 @@ class NetworkController extends GetxController {
 
       final ConnectivityResult result = await _connectivity.checkConnectivity();
       return result != ConnectivityResult.none;
-    } on PlatformException catch (e) {
+    } on PlatformException {
 
       // handling with lost connection 
       // print(e.toString());
