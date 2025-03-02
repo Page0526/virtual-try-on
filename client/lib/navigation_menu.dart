@@ -1,7 +1,7 @@
-import 'package:client_1/features/fashion_agent/agent_screen.dart';
-import 'package:client_1/features/fitting_room/fitting_room.dart';
-import 'package:client_1/features/home/home.dart';
-import 'package:client_1/utils/const/color.dart';
+import 'package:myapp/features/fashion_agent/agent_screen.dart';
+import 'package:myapp/features/fitting_room/fitting_room.dart';
+import 'package:myapp/features/home/screens/home.dart';
+import 'package:myapp/utils/const/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -46,7 +46,7 @@ class NavigationController extends GetxController{
   final Rx<int> selectedIndex = 0.obs;
 
   final screens = [
-    const Home(), 
+    const HomeScreen(), 
     Container(color: Colors.purple),
     const FittingRoom(),
     Container(color: Colors.yellow),

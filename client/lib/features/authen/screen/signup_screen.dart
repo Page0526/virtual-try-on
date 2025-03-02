@@ -1,9 +1,9 @@
-import 'package:client_1/features/authen/controller/signup_controller.dart';
-import 'package:client_1/features/authen/screen/login_screen.dart';
-import 'package:client_1/utils/const/color.dart';
-import 'package:client_1/utils/const/size.dart';
-import 'package:client_1/utils/helper/helper_func.dart';
-import 'package:client_1/utils/helper/validator_func.dart';
+import 'package:myapp/features/authen/controller/signup_controller.dart';
+import 'package:myapp/features/authen/screen/login_screen.dart';
+import 'package:myapp/utils/const/color.dart';
+import 'package:myapp/utils/const/size.dart';
+import 'package:myapp/utils/helper/helper_func.dart';
+import 'package:myapp/utils/helper/validator_func.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

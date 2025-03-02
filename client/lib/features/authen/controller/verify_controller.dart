@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:client_1/features/authen/controller/authen_repo.dart';
-import 'package:client_1/features/authen/screen/email_verify.dart';
-import 'package:client_1/utils/helper/snack_bar.dart';
+import 'package:myapp/features/authen/controller/authen_repo.dart';
+import 'package:myapp/features/authen/screen/email_verify.dart';
+import 'package:myapp/utils/helper/snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 

@@ -1,9 +1,9 @@
-import 'package:client_1/features/authen/controller/authen_repo.dart';
-import 'package:client_1/features/authen/controller/verify_controller.dart';
-import 'package:client_1/features/authen/screen/login_screen.dart';
-import 'package:client_1/utils/const/color.dart';
-import 'package:client_1/utils/const/size.dart';
-import 'package:client_1/utils/helper/helper_func.dart';
+import 'package:myapp/features/authen/controller/authen_repo.dart';
+import 'package:myapp/features/authen/controller/verify_controller.dart';
+import 'package:myapp/features/authen/screen/login_screen.dart';
+import 'package:myapp/utils/const/color.dart';
+import 'package:myapp/utils/const/size.dart';
+import 'package:myapp/utils/helper/helper_func.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';

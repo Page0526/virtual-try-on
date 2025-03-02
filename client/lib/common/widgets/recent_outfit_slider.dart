@@ -1,9 +1,9 @@
-import 'package:client_1/features/home/controllers/home_controller.dart';
-import 'package:client_1/common/widgets/rounded_image.dart';
+import 'package:myapp/features/home/controllers/home_controller.dart';
+import 'package:myapp/common/widgets/rounded_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:client_1/common/widgets/circular_container.dart';
-import 'package:client_1/utils/const/size.dart';
-import 'package:client_1/utils/const/color.dart';
+import 'package:myapp/common/widgets/circular_container.dart';
+import 'package:myapp/utils/const/size.dart';
+import 'package:myapp/utils/const/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

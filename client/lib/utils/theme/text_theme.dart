@@ -1,5 +1,5 @@
 
-import 'package:client_1/utils/const/size.dart';
+import 'package:myapp/utils/const/size.dart';
 import 'package:flutter/material.dart';
 
 /*

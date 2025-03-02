@@ -1,6 +1,6 @@
-import 'package:client_1/features/authen/screen/email_verify.dart';
-import 'package:client_1/features/authen/screen/login_screen.dart';
-import 'package:client_1/features/home/screens/home_screen.dart';
+import 'package:myapp/features/authen/screen/email_verify.dart';
+import 'package:myapp/features/authen/screen/login_screen.dart';
+import 'package:myapp/features/home/screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';

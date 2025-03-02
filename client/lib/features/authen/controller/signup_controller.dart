@@ -1,11 +1,11 @@
-import 'package:client_1/features/authen/controller/authen_repo.dart';
-import 'package:client_1/features/authen/controller/user_repo.dart';
-import 'package:client_1/features/authen/model/usermodel.dart';
-import 'package:client_1/features/authen/screen/email_verify.dart';
-import 'package:client_1/utils/const/path.dart';
-import 'package:client_1/utils/helper/loader_func.dart';
-import 'package:client_1/utils/helper/network_controller.dart';
-import 'package:client_1/utils/helper/snack_bar.dart';
+import 'package:myapp/features/authen/controller/authen_repo.dart';
+import 'package:myapp/features/authen/controller/user_repo.dart';
+import 'package:myapp/features/authen/model/usermodel.dart';
+import 'package:myapp/features/authen/screen/email_verify.dart';
+import 'package:myapp/utils/const/path.dart';
+import 'package:myapp/utils/helper/loader_func.dart';
+import 'package:myapp/utils/helper/network_controller.dart';
+import 'package:myapp/utils/helper/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

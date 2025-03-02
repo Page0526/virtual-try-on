@@ -1,6 +1,6 @@
-import 'package:client_1/bingdings/general_binding.dart';
-import 'package:client_1/features/authen/screen/login_screen.dart';
-import 'package:client_1/features/routes/app_routes.dart';
+import 'package:myapp/bingdings/general_binding.dart';
+import 'package:myapp/features/authen/screen/login_screen.dart';
+import 'package:myapp/features/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'utils/theme/theme.dart';

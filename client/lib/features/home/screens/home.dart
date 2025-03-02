@@ -1,21 +1,21 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:client_1/common/widgets/quick_action_slider.dart';
-import 'package:client_1/utils/const/path.dart';
+import 'package:myapp/common/widgets/quick_action_slider.dart';
+import 'package:myapp/utils/const/path.dart';
 import 'package:flutter/material.dart';
-import 'package:client_1/utils/const/color.dart';
-import 'package:client_1/utils/const/size.dart';
+import 'package:myapp/utils/const/color.dart';
+import 'package:myapp/utils/const/size.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:client_1/common/widgets/recent_outfit_slider.dart';
+import 'package:myapp/common/widgets/recent_outfit_slider.dart';
 
-class Home extends StatefulWidget
+class HomeScreen extends StatefulWidget
 {
-  const Home({super.key});
+  const HomeScreen({super.key});
   @override
-  State<Home> createState() => _Home();
+  State<HomeScreen> createState() => _HomeScreen();
   
 }
 
-class _Home extends State<Home> {
+class _HomeScreen extends State<HomeScreen> {
     
   @override
   Widget build(BuildContext context) {
