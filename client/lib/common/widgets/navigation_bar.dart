@@ -27,8 +27,8 @@ class CustomNavigationBar extends StatelessWidget {
           label: 'Explore',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark_border),
-          label: 'Saved',
+          icon: Icon(Icons.shopping_cart),
+          label: 'Shop',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),

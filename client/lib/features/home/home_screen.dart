@@ -156,10 +156,10 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                   _buildQuickActionCard(
-                    icon: Icons.favorite_border,
-                    title: 'Favorites',
+                    icon: Icons.shopping_cart,
+                    title: 'Shopping List',
                     color: Colors.pink[100]!,
-                    onTap: () => context.go('/saved'),
+                    onTap: () => context.go('/shop'),
                   ),
                 ],
               ),
@@ -175,6 +175,12 @@ class HomeScreen extends StatelessWidget {
               context.go('/');
             case 1:
               context.go('/closet');
+            case 2:
+              break;
+            case 3:
+              context.go('/shop');
+            case 4:
+              break;
           }
         },
       ),

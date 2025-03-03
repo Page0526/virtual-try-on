@@ -46,13 +46,18 @@ class _ClosetScreenState extends State<ClosetScreen> {
         ],
       ),
       bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 1, // "Closet" đang được chọn
+        selectedIndex: 1, 
         onItemTapped: (index) {
           switch (index) {
             case 0:
               context.go('/');
             case 1:
-              // Đã ở Closet, không cần thay đổi
+              break;
+            case 2:
+              break;
+            case 3:
+              context.go('/shop');
+            case 4:
               break;
           }
         },

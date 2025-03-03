@@ -7,10 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 
 // Giả sử các file BLoC và service đã được tạo
-import '../controller/try_on_bloc.dart';
-import '../controller/try_on_event.dart';
-import '../controller/try_on_state.dart';
-import '../controller/try_on_service.dart';
+import '/features/fitting_room/controller/try_on_bloc.dart';
+import '/features/fitting_room/controller/try_on_event.dart';
+import '/features/fitting_room/controller/try_on_state.dart';
+import '/features/fitting_room/controller/try_on_service.dart';
 
 class FittingRoom extends StatefulWidget {
   const FittingRoom({super.key});
