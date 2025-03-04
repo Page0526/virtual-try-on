@@ -21,7 +21,7 @@ class KnowledgeDB:
 
     
         self.embedding_model = GoogleGenerativeAIEmbeddings(
-            model = "text-embedding-004", 
+            model = "text-embedding-001", 
             api_key = GEMINI_API_KEY
         )
         self.llm_model = GoogleGenerativeAIEmbeddings(
