@@ -1,26 +1,32 @@
+// lib/features/closet/screen/closet_detail_screen.dart
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../common/widgets/navigation_bar.dart';
+import 'package:myapp/features/closet/controller/clothing_bloc.dart';
+import 'package:myapp/features/closet/controller/clothing_event.dart';
+import 'package:myapp/features/closet/controller/clothing_state.dart';
 
 class ClosetDetailScreen extends StatefulWidget {
+  final String closetId;
   final String closetName;
 
-  const ClosetDetailScreen({super.key, required this.closetName});
+  const ClosetDetailScreen({
+    super.key,
+    required this.closetId,
+    required this.closetName,
+  });
 
   @override
   State<ClosetDetailScreen> createState() => _ClosetDetailScreenState();
 }
 
 class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
-  // int _selectedSortOption = 0; // Theo dõi tùy chọn sắp xếp
-  final List<Map<String, String>> items = [
-    {
-      'image': 'assets/images/image1.jpg', // Đường dẫn file giả lập
-      'brand': 'No Brand',
-      'date': '2/22/2025',
-      'type': 'Tops',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    context.read<ClothingBloc>().add(LoadClothingItems(widget.closetId));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,104 +52,101 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Bộ lọc (Dropdown)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DropdownButton<String>(
-              value: 'Recently added',
-              items: ['Recently added', 'Price', 'Date'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (value) {
-                // setState(() {
-                //   _selectedSortOption = value == 'Recently added' ? 0 : 1;
-                // });
-              },
-              isExpanded: true,
-              underline: Container(
-                height: 1,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          // Danh sách món đồ
-          Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return _buildItemCard(items[index], context);
-              },
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 1, // "Closet" đang được chọn
-        onItemTapped: (index) {
-          switch (index) {
-            case 0:
-              context.go('/');
-            case 1:
-              // Đã ở Closet, không cần thay đổi
-              break;
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildItemCard(Map<String, String> item, BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: InkWell(
-        onTap: () {
-          context.push(
-            '/clothes?itemImage=${Uri.encodeComponent(item['image']!)}&brand=${Uri.encodeComponent(item['brand']!)}&date=${Uri.encodeComponent(item['date']!)}&type=${Uri.encodeComponent(item['type']!)}',
-          );
-        },
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hình ảnh món đồ
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                item['image']!,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
-            ),
-            // Thông tin món đồ
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item['type']!,
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+      body: BlocBuilder<ClothingBloc, ClothingState>(
+        builder: (context, state) {
+          if (state is ClothingLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is ClothingLoaded) {
+            final items = state.items;
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: DropdownButton<String>(
+                    value: 'Recently added',
+                    items: ['Recently added', 'Price', 'Date'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {},
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.grey,
                     ),
-                    Text(
-                      item['brand']!,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      item['date']!,
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        child: InkWell(
+                          onTap: () => context.push(
+                            '/clothes?itemImage=${Uri.encodeComponent(item.imageUrl)}&brand=${Uri.encodeComponent(item.brand ?? 'No Brand')}&date=${Uri.encodeComponent(item.date ?? '')}&type=${Uri.encodeComponent(item.type)}',
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.file(
+                                  File(item.imageUrl),
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.image_not_supported, size: 100);
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.type,
+                                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                      ),
+                                      Text(
+                                        item.brand ?? 'No Brand',
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        item.date ?? '',
+                                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          } else if (state is ClothingError) {
+            return Center(child: Text('Error: ${state.message}'));
+          }
+          return const Center(child: Text('Chưa có món đồ nào'));
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await context.push('/closet/add-clothing-item?closetId=${widget.closetId}');
+          context.read<ClothingBloc>().add(LoadClothingItems(widget.closetId));
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

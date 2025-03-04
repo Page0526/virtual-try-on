@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '/common/widgets/navigation_bar.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -24,7 +23,7 @@ class _CartScreenState extends State<CartScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            context.go('/item'); // Note: Requires parameters in a real app
+            context.pop(); // Note: Requires parameters in a real app
           },
         ),
         title: const Text('Cart'),
@@ -51,10 +50,6 @@ class _CartScreenState extends State<CartScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: Image.network(
-                  'https://upload.wikimedia.org/wikipedia/commons/5/5e/Mastercard-logo.png',
-                  width: 40,
-                ),
                 title: const Text('Shopping Card - 2022'),
                 trailing: const Icon(Icons.arrow_forward_ios),
               ),
@@ -96,27 +91,6 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 3,
-        onItemTapped: (index) {
-          switch (index) {
-            case 0:
-              context.go('/');
-              break;
-            case 1:
-              context.go('/closet');
-              break;
-            case 2:
-              break;
-            case 3:
-              context.go('/'); // Navigate back to shop page
-              break;
-            case 4:
-              // Navigate to settings (not implemented)
-              break;
-          }
-        },
       ),
     );
   }

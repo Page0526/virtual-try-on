@@ -1,22 +1,34 @@
+// lib/features/closet/model/outfit.dart
+import 'package:myapp/features/closet/model/item.dart';
 
-import 'item.dart';
-// lib/data/models/outfit.dart
 class Outfit {
   final String id;
+  final String name;
+  final String categoryId;
+  final String? imageUrl; // Thêm thuộc tính imageUrl để lưu đường dẫn hình ảnh
   final List<Item> items;
-  final String occasion; // Ví dụ: "công sở", "dạo phố"
 
-  Outfit({
+  const Outfit({
     required this.id,
-    required this.items,
-    required this.occasion,
+    required this.name,
+    required this.categoryId,
+    this.imageUrl,
+    this.items = const [],
   });
 
-  factory Outfit.fromJson(Map<String, dynamic> json) {
+  Outfit copyWith({
+    String? id,
+    String? name,
+    String? categoryId,
+    String? imageUrl,
+    List<Item>? items,
+  }) {
     return Outfit(
-      id: json['id'],
-      items: (json['items'] as List).map((i) => Item.fromJson(i)).toList(),
-      occasion: json['occasion'],
+      id: id ?? this.id,
+      name: name ?? this.name,
+      categoryId: categoryId ?? this.categoryId,
+      imageUrl: imageUrl ?? this.imageUrl,
+      items: items ?? this.items,
     );
   }
 }

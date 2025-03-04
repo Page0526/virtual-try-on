@@ -1,32 +1,27 @@
-// lib/business_logic/bloc/clothing_event.dart
-import 'package:equatable/equatable.dart';
-import '../model/outfit.dart';
-import '../model/item.dart';
+// lib/features/closet/controller/clothing_event.dart
+import 'package:myapp/features/closet/model/item.dart';
 
+abstract class ClothingEvent {}
 
-abstract class ClothingEvent extends Equatable {
-  const ClothingEvent();
-  @override
-  List<Object> get props => [];
+class LoadClothingItems extends ClothingEvent {
+  final String closetId;
+  LoadClothingItems(this.closetId);
 }
 
-class LoadClothingItems extends ClothingEvent {}
 class AddClothingItem extends ClothingEvent {
+  final String closetId;
   final Item item;
-  const AddClothingItem(this.item);
-  @override
-  List<Object> get props => [item];
+  AddClothingItem(this.closetId, this.item);
 }
+
 class UpdateClothingItem extends ClothingEvent {
-  final String id;
-  final Item item;
-  const UpdateClothingItem(this.id, this.item);
-  @override
-  List<Object> get props => [id, item];
+  final String closetId;
+  final Item updatedItem;
+  UpdateClothingItem(this.closetId, this.updatedItem);
 }
-class SaveOutfit extends ClothingEvent {
-  final Outfit outfit;
-  const SaveOutfit(this.outfit);
-  @override
-  List<Object> get props => [outfit];
+
+class DeleteClothingItem extends ClothingEvent {
+  final String closetId;
+  final String itemId;
+  DeleteClothingItem(this.closetId, this.itemId);
 }

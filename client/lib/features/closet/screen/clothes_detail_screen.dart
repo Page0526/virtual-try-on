@@ -1,8 +1,9 @@
+// lib/features/closet/screen/clothes_detail_screen.dart
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../common/widgets/navigation_bar.dart';
 
-class ClothesDetailScreen extends StatefulWidget {
+class ClothesDetailScreen extends StatelessWidget {
   final String itemImage;
   final String brand;
   final String date;
@@ -17,19 +18,8 @@ class ClothesDetailScreen extends StatefulWidget {
   });
 
   @override
-  State<ClothesDetailScreen> createState() => _ClothesDetailScreenState();
-}
-
-class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
-  int _selectedTab = 0;
-  List<String> seasons = ['Spring', 'Summer', 'Fall', 'Winter'];
-  String? selectedSeason = 'Winter';
-  String? selectedOccasion;
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // Tránh lỗi khi bàn phím xuất hiện
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -54,14 +44,13 @@ class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Hình ảnh món đồ
-            Image.asset(
-              widget.itemImage,
+            Image.file(
+              File(itemImage),
               fit: BoxFit.contain,
               width: double.infinity,
-              height: 250, // Giới hạn chiều cao
+              height: 250,
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported, size: 250),
             ),
-            // Nút Washing và Edit
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -95,139 +84,20 @@ class _ClothesDetailScreenState extends State<ClothesDetailScreen> {
                 ],
               ),
             ),
-            // Thanh tab dạng 2 cột: Information và Outfit
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedTab = 0),
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _selectedTab == 0 ? Colors.blue : Colors.grey,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'Information',
-                          style: TextStyle(
-                            color: _selectedTab == 0 ? Colors.black : Colors.grey,
-                            fontWeight: _selectedTab == 0 ? FontWeight.bold : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedTab = 1),
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: _selectedTab == 1 ? Colors.blue : Colors.grey,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'Outfit',
-                          style: TextStyle(
-                            color: _selectedTab == 1 ? Colors.black : Colors.grey,
-                            fontWeight: _selectedTab == 1 ? FontWeight.bold : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  Text('Type: $type'),
+                  Text('Brand: $brand'),
+                  Text('Date: $date'),
                 ],
               ),
             ),
-            // Nội dung tab
-            _selectedTab == 0 ? _buildInformationTab() : _buildOutfitTab(),
           ],
         ),
       ),
-      bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 1,
-        onItemTapped: (index) {
-          if (index == 0) context.go('/');
-        },
-      ),
-    );
-  }
-
-  /// Tab "Information"
-  Widget _buildInformationTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Occasion info', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8.0),
-          const Text('Season', style: TextStyle(color: Colors.black)),
-          const SizedBox(height: 8.0),
-          Wrap(
-            spacing: 8.0,
-            children: seasons.map((season) {
-              return ChoiceChip(
-              label: Text(season),
-              selected: selectedSeason == season,
-              onSelected: (selected) {
-                setState(() {
-                selectedSeason = selected ? season : null;
-                });
-              },
-              selectedColor: Colors.blue,
-              backgroundColor: Colors.grey[200],
-              labelStyle: TextStyle(
-                color: selectedSeason == season ? Colors.white : Colors.black,
-              ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 16.0),
-          const Text('Occasions', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8.0),
-          DropdownButton<String>(
-            hint: const Text('Select occasion'),
-            value: selectedOccasion,
-            items: ['Casual', 'Formal', 'Party'].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedOccasion = value;
-              });
-            },
-            isExpanded: true,
-            underline: Container(
-              height: 1,
-              color: Colors.grey,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Tab "Outfit"
-  Widget _buildOutfitTab() {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Center(child: Text('Outfit details coming soon')),
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'helper_func.dart';
-import '../constants/size.dart';
+import 'package:myapp/utils/const/graphic/size.dart';
 
 class FullScreenLoader {
   static void showLoader(String text, String animation) {  

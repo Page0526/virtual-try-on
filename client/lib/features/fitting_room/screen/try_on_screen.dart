@@ -1,3 +1,4 @@
+// lib/features/fitting_room/fitting_room.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,8 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
-
-// Giả sử các file BLoC và service đã được tạo
 import '/features/fitting_room/controller/try_on_bloc.dart';
 import '/features/fitting_room/controller/try_on_event.dart';
 import '/features/fitting_room/controller/try_on_state.dart';
@@ -24,7 +23,6 @@ class _FittingRoomState extends State<FittingRoom> {
   File? _clothImage;  // Ảnh quần áo
   CameraController? _cameraController;
   final ImagePicker _picker = ImagePicker();
-  bool _isLoading = false;
   int _currentStep = 0; // 0: Chọn ảnh quần áo, 1: Chọn ảnh người, 2: Xác nhận cuối
 
   @override
@@ -35,19 +33,31 @@ class _FittingRoomState extends State<FittingRoom> {
 
   // Khởi tạo camera
   Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    if (cameras.isNotEmpty) {
-      _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
-      await _cameraController!.initialize();
-      if (mounted) {
-        setState(() {});
+    try {
+      final cameras = await availableCameras();
+      if (cameras.isNotEmpty) {
+        _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
+        await _cameraController!.initialize();
+        if (mounted) {
+          setState(() {});
+        }
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi khi khởi tạo camera: $e')),
+      );
     }
   }
 
   // Chụp ảnh từ camera
   Future<void> _captureImageFromCamera() async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) return;
+    if (_cameraController == null || !_cameraController!.value.isInitialized) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Camera chưa sẵn sàng')),
+      );
+      return;
+    }
+
     try {
       final XFile photo = await _cameraController!.takePicture();
       setState(() {
@@ -79,7 +89,7 @@ class _FittingRoomState extends State<FittingRoom> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi khi chọn ảnh: $e')),
+        SnackBar(content: Text('Lỗi khi chọn ảnh từ thư viện: $e')),
       );
     }
   }
@@ -87,13 +97,19 @@ class _FittingRoomState extends State<FittingRoom> {
   // Lấy ảnh từ dữ liệu app (giả lập)
   Future<void> _pickImageFromAppData() async {
     // Giả lập: Thay bằng logic lấy ảnh từ dữ liệu app
-    setState(() {
-      if (_currentStep == 0) {
-        _clothImage = File('path/to/default/cloth_image.jpg'); // Thay bằng đường dẫn thực tế
-      } else if (_currentStep == 1) {
-        _personImage = File('path/to/default/person_image.jpg'); // Thay bằng đường dẫn thực tế
-      }
-    });
+    try {
+      setState(() {
+        if (_currentStep == 0) {
+          _clothImage = File('path/to/default/cloth_image.jpg'); // Thay bằng đường dẫn thực tế
+        } else if (_currentStep == 1) {
+          _personImage = File('path/to/default/person_image.jpg'); // Thay bằng đường dẫn thực tế
+        }
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi khi chọn ảnh từ dữ liệu app: $e')),
+      );
+    }
   }
 
   @override
@@ -110,9 +126,9 @@ class _FittingRoomState extends State<FittingRoom> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.deepPurple[700]!, Colors.deepPurple[300]!],
+                colors: [Colors.blueAccent, Colors.blueAccent],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -147,12 +163,10 @@ class _FittingRoomState extends State<FittingRoom> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
               );
-              setState(() {
-                _isLoading = false;
-              });
             } else if (state is TryOnSuccess) {
               setState(() {
-                _isLoading = false;
+                context.push('/fitting-room/result', extra: state.resultImageBytes);
+                context.read<TryOnBloc>().add(ResetTryOn());
                 _currentStep = 0; // Quay lại bước đầu sau khi thành công
                 _clothImage = null;
                 _personImage = null;
@@ -163,276 +177,49 @@ class _FittingRoomState extends State<FittingRoom> {
             return SafeArea(
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (_currentStep != 2) // Ẩn khung lớn ở bước xác nhận cuối
-                      Center(
-                        child: SizedBox(
-                          height: 425,
-                          width: 325,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: _isLoading
-                                ? const Center(child: CircularProgressIndicator())
-                                : state is TryOnSuccess
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Image.memory(
-                                          Uint8List.fromList(state.resultImageBytes),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      )
-                                    : (_currentStep < 2 && _clothImage == null && _personImage == null) ||
-                                            (_currentStep == 1 && _personImage == null)
-                                        ? (_cameraController != null && _cameraController!.value.isInitialized
-                                            ? ClipRRect(
-                                                borderRadius: BorderRadius.circular(20),
-                                                child: CameraPreview(_cameraController!),
-                                              )
-                                            : const Center(child: CircularProgressIndicator()))
-                                        : ClipRRect(
-                                            borderRadius: BorderRadius.circular(20),
-                                            child: Image.file(
-                                              _currentStep == 0
-                                                  ? _clothImage!
-                                                  : _personImage ?? _clothImage!,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                          ),
-                        ),
-                      ),
+                    _buildStepIndicator(),
                     const SizedBox(height: 20),
-                    if (_currentStep == 2) ...[
-                      // Bước xác nhận cuối: Chỉ hiển thị hai ảnh và các nút
-                      Center(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Image.file(_personImage!, fit: BoxFit.cover),
+                    if (_currentStep == 0) ...[
+                      Step0Widget(
+                        clothImage: _clothImage,
+                        cameraController: _cameraController,
+                        onSelectGallery: _pickImageFromGallery,
+                        onCaptureCamera: _captureImageFromCamera,
+                        onSelectAppData: _pickImageFromAppData,
+                        onContinue: () => setState(() => _currentStep = 1),
+                        onBack: () => setState(() => _clothImage = null),
+                      ),
+                    ] else if (_currentStep == 1) ...[
+                      Step1Widget(
+                        personImage: _personImage,
+                        clothImage: _clothImage,
+                        cameraController: _cameraController,
+                        onSelectGallery: _pickImageFromGallery,
+                        onCaptureCamera: _captureImageFromCamera,
+                        onSelectAppData: _pickImageFromAppData,
+                        onContinue: () => setState(() => _currentStep = 2),
+                        onBack: () => setState(() => _personImage = null),
+                      ),
+                    ] else if (_currentStep == 2) ...[
+                      Step2Widget(
+                        personImage: _personImage!,
+                        clothImage: _clothImage!,
+                        isLoading: state is TryOnLoading,
+                        resultImageBytes: state is TryOnSuccess ? state.resultImageBytes : null,
+                        onGenerate: () {
+                          context.read<TryOnBloc>().add(
+                                TryOnRequested(
+                                  personImage: _personImage!,
+                                  clothImage: _clothImage!,
                                 ),
-                                const SizedBox(width: 20),
-                                Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Image.file(_clothImage!, fit: BoxFit.cover),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                context.read<TryOnBloc>().add(
-                                      TryOnRequested(
-                                        personImage: _personImage!,
-                                        clothImage: _clothImage!,
-                                      ),
-                                    );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepPurple,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Text('Tạo ảnh'),
-                            ),
-                            const SizedBox(height: 10),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _currentStep = 0; // Bắt đầu lại từ đầu
-                                  _clothImage = null;
-                                  _personImage = null;
-                                });
-                              },
-                              child: const Text('Bắt đầu lại từ đầu'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ] else if (_currentStep == 0 && _clothImage != null) ...[
-                      // Bước xác nhận ảnh quần áo
-                      Center(
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Ảnh quần áo đã chọn',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Hãy kiểm tra ảnh quần áo bạn vừa chọn. Nhấn "Tiếp tục" để chọn ảnh người.',
-                              style: TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  _currentStep = 1; // Chuyển sang bước chọn ảnh người
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepPurple,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Text('Tiếp tục'),
-                            ),
-                            const SizedBox(height: 10),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _clothImage = null; // Xóa ảnh quần áo để chọn lại
-                                });
-                              },
-                              child: const Text('Quay lại'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ] else if (_currentStep == 1 && _personImage != null) ...[
-                      // Bước xác nhận ảnh người
-                      Center(
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Ảnh người đã chọn',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Hãy kiểm tra ảnh người bạn vừa chọn. Nhấn "Tiếp tục" để xác nhận cả hai ảnh.',
-                              style: TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  _currentStep = 2; // Chuyển sang bước xác nhận cuối
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepPurple,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Text('Tiếp tục'),
-                            ),
-                            const SizedBox(height: 10),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _personImage = null; // Xóa ảnh người để chọn lại
-                                });
-                              },
-                              child: const Text('Quay lại'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ] else ...[
-                      // Giao diện chọn ảnh với camera và mô tả
-                      Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              _currentStep == 0
-                                  ? 'Chụp hoặc chọn ảnh quần áo'
-                                  : 'Chụp hoặc chọn ảnh người',
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              _currentStep == 0
-                                  ? 'Hãy chụp ảnh quần áo bằng camera hoặc chọn từ thư viện/dữ liệu app.'
-                                  : 'Hãy chụp ảnh người bằng camera hoặc chọn từ thư viện/dữ liệu app. Đảm bảo ảnh rõ nét, toàn thân.',
-                              style: const TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: _pickImageFromGallery,
-                            child: ShaderMask(
-                              shaderCallback: (Rect bounds) {
-                                return LinearGradient(
-                                  colors: [
-                                    Colors.deepPurple.shade200,
-                                    Colors.deepPurple.shade400,
-                                    Colors.deepPurple.shade600
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ).createShader(bounds);
-                              },
-                              child: const Icon(Icons.image, size: 40, color: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(width: 35),
-                          Ink(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.deepPurple.shade200,
-                                  Colors.deepPurple.shade400,
-                                  Colors.deepPurple.shade600
-                                ],
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: InkWell(
-                              onTap: _captureImageFromCamera,
-                              borderRadius: BorderRadius.circular(100),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                child: Icon(Icons.camera_alt, size: 20, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 35),
-                          GestureDetector(
-                            onTap: _pickImageFromAppData,
-                            child: ShaderMask(
-                              shaderCallback: (Rect bounds) {
-                                return LinearGradient(
-                                  colors: [
-                                    Colors.deepPurple.shade200,
-                                    Colors.deepPurple.shade400,
-                                    Colors.deepPurple.shade600
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ).createShader(bounds);
-                              },
-                              child: const Icon(Icons.storage, size: 40, color: Colors.white),
-                            ),
-                          ),
-                        ],
+                              );
+                        },
+                        onReset: () => setState(() {
+                          _currentStep = 0;
+                          _clothImage = null;
+                          _personImage = null;
+                        }),
                       ),
                     ],
                   ],
@@ -442,6 +229,470 @@ class _FittingRoomState extends State<FittingRoom> {
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildStepIndicator() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildStepCircle(0, 'Cloth'),
+          _buildStepLine(),
+          _buildStepCircle(1, 'Person'),
+          _buildStepLine(),
+          _buildStepCircle(2, 'Confirm'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStepCircle(int step, String label) {
+    final isActive = _currentStep == step;
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 15,
+          backgroundColor: isActive ? Colors.blueAccent : Colors.grey,
+          child: Text(
+            '${step + 1}',
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            color: isActive ? Colors.blueAccent : Colors.grey,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepLine() {
+    return Container(
+      width: 50,
+      height: 2,
+      color: Colors.grey,
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+    );
+  }
+}
+
+// Widget cho bước 0: Chọn ảnh quần áo
+class Step0Widget extends StatelessWidget {
+  final File? clothImage;
+  final CameraController? cameraController;
+  final VoidCallback onSelectGallery;
+  final VoidCallback onCaptureCamera;
+  final VoidCallback onSelectAppData;
+  final VoidCallback onContinue;
+  final VoidCallback onBack;
+
+  const Step0Widget({
+    super.key,
+    this.clothImage,
+    this.cameraController,
+    required this.onSelectGallery,
+    required this.onCaptureCamera,
+    required this.onSelectAppData,
+    required this.onContinue,
+    required this.onBack,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (clothImage != null) {
+      return Column(
+        children: [
+          Center(
+            child: SizedBox(
+              height: 425,
+              width: 325,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.file(
+                    clothImage!,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Ảnh quần áo đã chọn',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Hãy kiểm tra ảnh quần áo bạn vừa chọn. Nhấn "Tiếp tục" để chọn ảnh người.',
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: onContinue,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Tiếp tục'),
+          ),
+          const SizedBox(height: 10),
+          TextButton(
+            onPressed: onBack,
+            child: const Text('Quay lại'),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        CameraPreviewWidget(cameraController: cameraController),
+        const SizedBox(height: 20),
+        const Text(
+          'Chụp hoặc chọn ảnh quần áo',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          'Hãy chụp ảnh quần áo bằng camera hoặc chọn từ thư viện/dữ liệu app.',
+          style: TextStyle(fontSize: 14),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+        ImageSelectionWidget(
+          onSelectGallery: onSelectGallery,
+          onCaptureCamera: onCaptureCamera,
+          onSelectAppData: onSelectAppData,
+        ),
+      ],
+    );
+  }
+}
+
+// Widget cho bước 1: Chọn ảnh người
+class Step1Widget extends StatelessWidget {
+  final File? personImage;
+  final File? clothImage;
+  final CameraController? cameraController;
+  final VoidCallback onSelectGallery;
+  final VoidCallback onCaptureCamera;
+  final VoidCallback onSelectAppData;
+  final VoidCallback onContinue;
+  final VoidCallback onBack;
+
+  const Step1Widget({
+    super.key,
+    this.personImage,
+    this.clothImage,
+    this.cameraController,
+    required this.onSelectGallery,
+    required this.onCaptureCamera,
+    required this.onSelectAppData,
+    required this.onContinue,
+    required this.onBack,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (personImage != null) {
+      return Column(
+        children: [
+          Center(
+            child: SizedBox(
+              height: 425,
+              width: 325,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.file(
+                    personImage!,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Ảnh người đã chọn',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Hãy kiểm tra ảnh người bạn vừa chọn. Nhấn "Tiếp tục" để xác nhận cả hai ảnh.',
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: onContinue,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Tiếp tục'),
+          ),
+          const SizedBox(height: 10),
+          TextButton(
+            onPressed: onBack,
+            child: const Text('Quay lại'),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        CameraPreviewWidget(cameraController: cameraController),
+        const SizedBox(height: 20),
+        const Text(
+          'Chụp hoặc chọn ảnh người',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          'Hãy chụp ảnh người bằng camera hoặc chọn từ thư viện/dữ liệu app. Đảm bảo ảnh rõ nét, toàn thân.',
+          style: TextStyle(fontSize: 14),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+        ImageSelectionWidget(
+          onSelectGallery: onSelectGallery,
+          onCaptureCamera: onCaptureCamera,
+          onSelectAppData: onSelectAppData,
+        ),
+      ],
+    );
+  }
+}
+
+// Widget cho bước 2: Xác nhận và gửi yêu cầu API
+class Step2Widget extends StatelessWidget {
+  final File personImage;
+  final File clothImage;
+  final bool isLoading;
+  final List<int>? resultImageBytes;
+  final VoidCallback onGenerate;
+  final VoidCallback onReset;
+
+  const Step2Widget({
+    super.key,
+    required this.personImage,
+    required this.clothImage,
+    required this.isLoading,
+    this.resultImageBytes,
+    required this.onGenerate,
+    required this.onReset,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (resultImageBytes != null) {
+      return Column(
+        children: [
+          Center(
+            child: SizedBox(
+              height: 425,
+              width: 325,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.memory(
+                    Uint8List.fromList(resultImageBytes!),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: onReset,
+            child: const Text('Bắt đầu lại từ đầu'),
+          ),
+        ],
+      );
+    }
+
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Image.file(personImage, fit: BoxFit.cover),
+              ),
+              const SizedBox(width: 20),
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Image.file(clothImage, fit: BoxFit.cover),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: onGenerate,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Tạo ảnh'),
+          ),
+          const SizedBox(height: 10),
+          TextButton(
+            onPressed: onReset,
+            child: const Text('Bắt đầu lại từ đầu'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Widget hiển thị camera preview
+class CameraPreviewWidget extends StatelessWidget {
+  final CameraController? cameraController;
+
+  const CameraPreviewWidget({super.key, this.cameraController});
+
+  @override
+  Widget build(BuildContext context) {
+    if (cameraController == null || !cameraController!.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Center(
+      child: SizedBox(
+        height: 425,
+        width: 325,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: CameraPreview(cameraController!),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Widget hiển thị các nút chọn ảnh
+class ImageSelectionWidget extends StatelessWidget {
+  final VoidCallback onSelectGallery;
+  final VoidCallback onCaptureCamera;
+  final VoidCallback onSelectAppData;
+
+  const ImageSelectionWidget({
+    super.key,
+    required this.onSelectGallery,
+    required this.onCaptureCamera,
+    required this.onSelectAppData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: onSelectGallery,
+          child: ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                colors: [
+                  Colors.blueAccent.shade200,
+                  Colors.blueAccent.shade400,
+                  Colors.blueAccent.shade100,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds);
+            },
+            child: const Icon(Icons.image, size: 40, color: Colors.white),
+          ),
+        ),
+        const SizedBox(width: 35),
+        Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.blueAccent.shade200,
+                Colors.blueAccent.shade400,
+                Colors.blueAccent.shade100,
+              ],
+              begin: Alignment.bottomLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: InkWell(
+            onTap: onCaptureCamera,
+            borderRadius: BorderRadius.circular(100),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              child: Icon(Icons.camera_alt, size: 20, color: Colors.white),
+            ),
+          ),
+        ),
+        const SizedBox(width: 35),
+        GestureDetector(
+          onTap: onSelectAppData,
+          child: ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                colors: [
+                  Colors.blueAccent.shade200,
+                  Colors.blueAccent.shade400,
+                  Colors.blueAccent.shade100,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds);
+            },
+            child: const Icon(Icons.storage, size: 40, color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 }

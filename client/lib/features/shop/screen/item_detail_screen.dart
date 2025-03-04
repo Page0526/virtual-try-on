@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '/common/widgets/navigation_bar.dart';
 
 class ShopClothesDetailScreen extends StatefulWidget {
   final String itemImage;
@@ -31,7 +30,7 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
-            context.go('/');
+            context.pop();
           },
         ),
         title: const Text('Product Details'),
@@ -135,27 +134,6 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 3,
-        onItemTapped: (index) {
-          switch (index) {
-            case 0:
-              context.go('/');
-              break;
-            case 1:
-              context.go('/closet');
-              break;
-            case 2:
-              break;
-            case 3:
-              context.go('/'); // Navigate back to shop page
-              break;
-            case 4:
-              // Navigate to settings (not implemented)
-              break;
-          }
-        },
       ),
     );
   }

@@ -1,20 +1,22 @@
-// lib/business_logic/bloc/try_on_event.dart
+// lib/features/fitting_room/controller/try_on_event.dart
 import 'dart:io';
-import 'package:equatable/equatable.dart';
 
-abstract class TryOnEvent extends Equatable {
-  const TryOnEvent();
+abstract class TryOnEvent {}
 
-  @override
-  List<Object> get props => [];
+class SelectClothImage extends TryOnEvent {
+  final File clothImage;
+  SelectClothImage(this.clothImage);
+}
+
+class SelectPersonImage extends TryOnEvent {
+  final File personImage;
+  SelectPersonImage(this.personImage);
 }
 
 class TryOnRequested extends TryOnEvent {
   final File personImage;
   final File clothImage;
-
-  const TryOnRequested({required this.personImage, required this.clothImage});
-
-  @override
-  List<Object> get props => [personImage, clothImage];
+  TryOnRequested({required this.personImage, required this.clothImage});
 }
+
+class ResetTryOn extends TryOnEvent {}

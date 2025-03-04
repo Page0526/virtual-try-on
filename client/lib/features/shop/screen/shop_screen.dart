@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '/common/widgets/navigation_bar.dart';
+
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -18,7 +18,7 @@ class _ShopState extends State<Shop> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => context.go('/closet'),
+          onPressed: () => context.pop(),
         ),
         title: const Text('Clothes Store'),
         centerTitle: true,
@@ -128,27 +128,6 @@ class _ShopState extends State<Shop> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 3,
-        onItemTapped: (index) {
-          switch (index) {
-            case 0:
-              context.go('/');
-              break;
-            case 1:
-              context.go('/closet');
-              break;
-            case 2:
-              break;
-            case 3:
-              // Already on the shop page
-              break;
-            case 4:
-              // Navigate to settings (not implemented)
-              break;
-          }
-        },
       ),
     );
   }

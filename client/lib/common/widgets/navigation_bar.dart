@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   final int selectedIndex;
-  final ValueChanged<int> onItemTapped;
+  final Function(int) onItemTapped;
 
   const CustomNavigationBar({
     super.key,
@@ -23,8 +23,8 @@ class CustomNavigationBar extends StatelessWidget {
           label: 'Closet',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.explore),
-          label: 'Explore',
+          icon: Icon(Icons.remove_red_eye),
+          label: 'Try On',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart),
