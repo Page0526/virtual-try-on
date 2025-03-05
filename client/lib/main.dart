@@ -7,6 +7,7 @@ import 'package:myapp/features/closet/controller/clothing_bloc.dart';
 import 'package:myapp/features/closet/controller/clothing_service.dart';
 import 'package:myapp/features/closet/controller/outfit_bloc.dart';
 import 'package:myapp/features/closet/controller/outfit_service.dart';
+import 'package:myapp/features/fashion_agent/chat_provider.dart';
 import 'package:myapp/features/routes/navigation_provider.dart';
 import 'package:myapp/features/routes/router.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ void main() {
         Provider(create: (_) => NavigationProvider()),
         Provider(create: (_) => ClosetService()),
         Provider(create: (_) => OutfitService()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
       ],
       child: MultiBlocProvider(
         providers: [

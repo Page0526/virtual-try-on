@@ -37,7 +37,10 @@ class SignUpScreen extends StatelessWidget {
                     // social button
                     SocialLogin(dark: dark),
                   ],
-                ))));
+                )
+              )
+            )
+          );
   }
 }
 
