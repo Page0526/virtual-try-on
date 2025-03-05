@@ -28,7 +28,7 @@ class _ClosetScreenState extends State<ClosetScreen> with SingleTickerProviderSt
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     context.read<ClosetBloc>().add(LoadClosets());
-    context.read<OutfitBloc>().add(LoadOutfitCategories());
+    context.read<OutfitBloc>().add(LoadOutfits());
   }
 
   @override
