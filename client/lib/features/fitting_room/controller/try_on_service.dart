@@ -12,7 +12,7 @@ class TryOnService {
       // Giả lập độ trễ của API
       await Future.delayed(const Duration(seconds: 2));
 
-      ByteData data = await rootBundle.load('assets/images/image2.jpg');
+      ByteData data = await rootBundle.load('assets/images/test.jpg');
       List<int> fakeImageBytes = data.buffer.asUint8List();
 
       // Trả về dữ liệu giả lập

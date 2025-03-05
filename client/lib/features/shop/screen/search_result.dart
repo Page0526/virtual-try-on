@@ -1,4 +1,4 @@
-// lib/features/shop/screen/shop_screen.dart
+// lib/features/shop/screen/search_results_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,19 +21,11 @@ class Product {
   });
 }
 
-class Shop extends StatefulWidget {
-  const Shop({super.key});
+class SearchResultsScreen extends StatelessWidget {
+  const SearchResultsScreen({super.key});
 
-  @override
-  State<Shop> createState() => _ShopState();
-}
-
-class _ShopState extends State<Shop> {
-  String _selectedCategory = 'ALL'; // State to track the selected category
-  final TextEditingController _searchController = TextEditingController();
-
-  // Danh sách sản phẩm giả lập
-  final List<Product> _products = [
+  // Danh sách sản phẩm cố định
+  static List<Product> _products = [
     Product(
       name: 'Black Crew Neck T-Shirt',
       price: 100,
@@ -58,7 +50,7 @@ class _ShopState extends State<Shop> {
       date: '2023',
       type: 'T-Shirt',
     ),
-    Product(
+     Product(
       name: 'Blue Jeans',
       price: 150,
       itemImage: 'assets/images/blue_jeans.jpg',
@@ -66,7 +58,7 @@ class _ShopState extends State<Shop> {
       date: '2023',
       type: 'Jeans',
     ),
-    Product(
+     Product(
       name: 'Black Jacket',
       price: 200,
       itemImage: 'assets/images/black_jacket.jpg',
@@ -74,7 +66,7 @@ class _ShopState extends State<Shop> {
       date: '2023',
       type: 'Outer',
     ),
-    Product(
+     Product(
       name: 'Denim Jacket',
       price: 180,
       itemImage: 'assets/images/denim_jacket.jpg',
@@ -85,12 +77,6 @@ class _ShopState extends State<Shop> {
   ];
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -98,7 +84,7 @@ class _ShopState extends State<Shop> {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Clothes Store'),
+        title: const Text('Kết quả tìm kiếm'),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -106,83 +92,29 @@ class _ShopState extends State<Shop> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Search bar
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search clothes...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                ),
-                onSubmitted: (value) {
-                  // Điều hướng đến SearchResultsScreen khi nhấn Enter
-                  context.push('/shop/search');
-                },
-              ),
-              const SizedBox(height: 16),
-              // Category tabs
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildCategoryTab(context, 'ALL'),
-                  _buildCategoryTab(context, 'T-Shirt'),
-                  _buildCategoryTab(context, 'Jeans'),
-                  _buildCategoryTab(context, 'Outer'),
-                ],
-              ),
-              const SizedBox(height: 16),
               // Product grid
               Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.7,
-                  children: _products.map((product) {
-                    return _buildProductCard(
-                      context,
-                      name: product.name,
-                      price: product.price,
-                      itemImage: product.itemImage,
-                      brand: product.brand,
-                      date: product.date,
-                      type: product.type,
-                    );
-                  }).toList(),
-                ),
+                child: _products.isEmpty
+                    ? const Center(child: Text('Không có sản phẩm nào.'))
+                    : GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.7,
+                        children: _products.map((product) {
+                          return _buildProductCard(
+                            context,
+                            name: product.name,
+                            price: product.price,
+                            itemImage: product.itemImage,
+                            brand: product.brand,
+                            date: product.date,
+                            type: product.type,
+                          );
+                        }).toList(),
+                      ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryTab(BuildContext context, String title) {
-    bool isActive = _selectedCategory == title;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedCategory = title;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive ? Colors.black : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey[300]!),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: isActive ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold,
           ),
         ),
       ),

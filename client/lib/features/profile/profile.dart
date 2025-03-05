@@ -78,17 +78,6 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildStatColumn('122', 'followers'),
-                const SizedBox(width: 32),
-                _buildStatColumn('67', 'following'),
-                const SizedBox(width: 32),
-                _buildStatColumn('37K', 'Likes'),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
                 ElevatedButton(
                   onPressed: () {
                     context.go(AppRoutes.editProfile);
@@ -129,8 +118,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               unselectedLabelColor: Colors.grey,
               indicatorColor: Colors.black,
               tabs: const [
-                Tab(text: 'Photos'),
-                Tab(text: 'Likes'),
+                Tab(text: 'Clothes'),
+                Tab(text: 'Outfits'),
               ],
             ),
             Expanded(

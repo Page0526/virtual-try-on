@@ -31,6 +31,10 @@ class CustomNavigationBar extends StatelessWidget {
           label: 'Shop',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.chat),
+          label: 'AI Stylist',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Profile',
         ),

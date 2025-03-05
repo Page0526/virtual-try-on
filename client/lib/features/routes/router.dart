@@ -8,6 +8,7 @@ import 'package:myapp/features/closet/screen/closet_detail_screen.dart';
 import 'package:myapp/features/closet/screen/closet_screen.dart';
 import 'package:myapp/features/closet/screen/clothes_detail_screen.dart';
 import 'package:myapp/features/closet/screen/outfit_detail_screen.dart';
+import 'package:myapp/features/fashion_agent/agent_screen.dart';
 import 'package:myapp/features/fitting_room/screen/result_screen.dart';
 import 'package:myapp/features/fitting_room/screen/try_on_screen.dart';
 import 'package:myapp/features/home/screens/home_screen.dart';
@@ -18,6 +19,7 @@ import 'package:myapp/features/routes/routes.dart';
 import 'package:myapp/features/setting/settings.dart';
 import 'package:myapp/features/shop/screen/cart_screen.dart';
 import 'package:myapp/features/shop/screen/item_detail_screen.dart';
+import 'package:myapp/features/shop/screen/search_result.dart';
 import 'package:myapp/features/shop/screen/shop_screen.dart';
 
 GoRouter createRouter(NavigationProvider navigationProvider) {
@@ -117,6 +119,16 @@ GoRouter createRouter(NavigationProvider navigationProvider) {
                 builder: (context, state) => const Shop(),
               ),
               GoRoute(
+                path: AppRoutes.shop,
+                builder: (context, state) => const Shop(),
+                routes: [
+                  GoRoute(
+                    path: 'search',
+                    builder: (context, state) => const SearchResultsScreen(),
+                  ),
+                ],
+              ),
+              GoRoute(
                 path: AppRoutes.item,
                 builder: (context, state) {
                   final itemImage = state.uri.queryParameters['itemImage'] ?? '';
@@ -134,6 +146,15 @@ GoRouter createRouter(NavigationProvider navigationProvider) {
               GoRoute(
                 path: AppRoutes.cart,
                 builder: (context, state) => const CartScreen(),
+              ),
+            ],
+          ),
+          
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.aiagent,
+                builder: (context, state) => ChatScreen(),
               ),
             ],
           ),

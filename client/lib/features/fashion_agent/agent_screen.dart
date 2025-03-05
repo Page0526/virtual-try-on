@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:myapp/utils/const/graphic/color.dart';
 import 'package:myapp/utils/const/graphic/size.dart';
 import 'package:myapp/utils/helper/helper_func.dart';
@@ -39,7 +40,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
     final dark = Helper.isDarkMode(context);
     return Scaffold(
-      appBar: AppBar(title: Text("FitAgent")),
+      
+      appBar: AppBar(
+        leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: () => context.go('/'),
+              ),
+        title: Text("FitAgent")),
       body: Column(
         children: [
           Expanded(

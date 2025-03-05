@@ -25,19 +25,19 @@ class SuggestionScreen extends StatelessWidget {
   List<SuggestedItem> _getSuggestedItems() {
     return [
       SuggestedItem(
-        name: 'Áo thun trắng',
+        name: 'Áo thun',
         type: 'Áo thun',
-        imageUrl: 'path/to/suggested_item1.jpg', // Thay bằng đường dẫn thực tế
+        imageUrl: 'assets/images/rcm.png', // Thay bằng đường dẫn thực tế
       ),
       SuggestedItem(
-        name: 'Quần jeans xanh',
-        type: 'Quần jeans',
-        imageUrl: 'path/to/suggested_item2.jpg',
+        name: 'Áo Phao',
+        type: 'Áo',
+        imageUrl: 'assets/images/rcm1.png',
       ),
       SuggestedItem(
-        name: 'Giày thể thao trắng',
-        type: 'Giày',
-        imageUrl: 'path/to/suggested_item3.jpg',
+        name: 'Mũ',
+        type: 'Mũ',
+        imageUrl: 'assets/images/rcm2.png',
       ),
     ];
   }
@@ -119,7 +119,7 @@ class SuggestionScreen extends StatelessWidget {
                         leading: SizedBox(
                           width: 60,
                           height: 60,
-                          child: Image.network(
+                          child: Image.asset(
                             item.imageUrl,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
