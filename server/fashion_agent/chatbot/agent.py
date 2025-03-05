@@ -122,10 +122,7 @@ class FashionAgent:
                     chat_history = self.memory.load_memory_variables({})["chat_history"],
                     question = query
                 )
-                print(prompt)
                 response = self.model.invoke(prompt)
-
-                print(response)
                 
                 self.memory.save_context({"input": query}, {"response": response.content})
                 return response.content

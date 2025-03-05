@@ -41,8 +41,37 @@ class KnowledgeDB:
         self.vector_description = {
             "style": "Fashion styles, aesthetics, style guides, subcultures, categories of fashion", 
             "news": "Recent fashion news, trends, fashion weeks, brand updates, new collections, industry news", 
-            "product": "Product vector store"
+            "product": "Information about fashion products, brands, pricing, product specifications, and availability"
         }
+
+    def update_or_create_productstore(self, directory: str, data: pd.DataFrame):
+        if directory not in self.vector_directory:
+            raise ValueError(f"Directory '{directory}' not found in available directories: {list(self.vector_directory.keys())}")
+        
+        persist_dir = self.vector_directory[directory]
+        os.makedirs(persist_dir, exist_ok=True)
+
+        documents = []
+
+        for _, row in data.iterrows():
+            text = f"Title : {row['title']} \n Description: {row['description']} \n Brand: {row['brand']} \n Price: {row['price']}"
+            metadata = {col: row[col] for col in data.columns if col not in ['title', 'description', 'brand', 'price']}
+            doc = Document(page_content=text, metadata=metadata)
+            documents.append(doc)
+
+        if persist_dir in self.vector_store:
+            self.vector_store[directory].add_documents(documents)
+        else:
+            self.vector_store[directory] = Chroma.from_documents(
+            documents,
+            embedding=self.embedding_model,
+            persist_directory=persist_dir
+            )
+        
+
+        self.vector_store[directory].persist()
+        print(f"Vector store successfully saved to {persist_dir}")
+
 
         
     def update_or_create_vectorstore(self, directory: str, data: pd.DataFrame):
@@ -114,7 +143,7 @@ class KnowledgeDB:
 
         USER QUERY: "{query}"
 
-        Respond with just the category name (e.g., "news", "style", etc.) that best matches the query.
+        Respond with just the category name (e.g., "news", "style", "product") that best matches the query.
         If the query could fit multiple categories, choose the most relevant one.
         If the query doesn't match any of these categories, respond with only "None". """
 
@@ -143,10 +172,10 @@ class KnowledgeDB:
         Hàm thực hiện load vector store từ disk
         """
         try:
-            with open("../data_collector/raw-data/elle_data.json", "r", encoding="utf-8") as f:
+            with open("data_collector/raw-data/elle_data.json", "r", encoding="utf-8") as f:
                 elle_data = json.load(f)
             
-            with open("../data_collector/raw-data/vogue_data.json", "r", encoding="utf-8") as f:
+            with open("data_collector/raw-data/vogue_data.json", "r", encoding="utf-8") as f:
                 vogue_data = json.load(f)
             
             combined_data = elle_data + vogue_data
@@ -155,12 +184,18 @@ class KnowledgeDB:
             self.update_or_create_vectorstore("news", df)
             print("News vector store created")
 
-            with open("../data_collector/raw-data/styling_data_vs.json", "r", encoding="utf-8") as f:
+            with open("data_collector/raw-data/styling_data_vs.json", "r", encoding="utf-8") as f:
                 styling_data = json.load(f)
             df = pd.DataFrame(styling_data)
             self.update_or_create_vectorstore("style", df)
-        
             print("Style vector store created")
+
+            with open("data_collector/raw-data/product_data.json", "r", encoding="utf-8") as f:
+                product_data = json.load(f)
+            df = pd.DataFrame(product_data)
+            self.update_or_create_productstore("product", df)
+        
+            print("Product vector store created")
         
         
         except FileNotFoundError as e:
@@ -174,33 +209,7 @@ if __name__ == '__main__':
 
     # test code 
     db = KnowledgeDB()
-
-
-    try:
-        with open("../data_collector/raw-data/elle_data.json", "r", encoding="utf-8") as f:
-            elle_data = json.load(f)
-        
-        with open("../data_collector/raw-data/vogue_data.json", "r", encoding="utf-8") as f:
-            vogue_data = json.load(f)
-        
-        combined_data = elle_data + vogue_data
-        df = pd.DataFrame(combined_data)
-        
-        db.update_or_create_vectorstore("news", df)
-        print("News vector store created")
-
-        with open("../data_collector/raw-data/styling_data_vs.json", "r", encoding="utf-8") as f:
-            styling_data = json.load(f)
-        df = pd.DataFrame(styling_data)
-        db.update_or_create_vectorstore("style", df)
-        print("Style vector store created")
-        
-        
-    except FileNotFoundError as e:
-        print(f"Error: {e}")
-    except json.JSONDecodeError as e:
-        print(f"JSON parsing error: {e}")
-    
+    db.loading_vector_store()
 
 
 
