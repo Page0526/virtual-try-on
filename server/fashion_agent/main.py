@@ -80,8 +80,8 @@ def get_or_create_session(session_id: Optional[str] = None) -> tuple:
         logger.info(f"Created new session: {new_session_id}")
         return agent, new_session_id
     except Exception as e:
-        logger.error(f"Error creating session: {e}")
-        raise HTTPException(status_code=500, detail="Could not create chat session")
+        logger.error(f"Error creating session: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Could not create chat session: {str(e)}")
 
 def cleanup_old_sessions(max_age_hours: int = 2):
     """
