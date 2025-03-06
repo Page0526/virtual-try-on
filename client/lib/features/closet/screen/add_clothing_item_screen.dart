@@ -52,26 +52,38 @@ class _AddClothingItemScreenState extends State<AddClothingItemScreen> {
                 onSaved: (value) => _name = value ?? '',
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập tên' : null,
               ),
+              SizedBox(height: 15),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Loại (jeans, shirt...)'),
                 onSaved: (value) => _type = value ?? '',
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập loại' : null,
               ),
+              SizedBox(height: 15),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Thương hiệu'),
                 onSaved: (value) => _brand = value ?? '',
                 validator: (value) => value!.isEmpty ? 'Vui lòng nhập thương hiệu' : null,
               ),
+              SizedBox(height: 15),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Ngày mua (dd/mm/yyyy)'),
                 onSaved: (value) => _date = value ?? '',
               ),
+              SizedBox(height: 25),
               ElevatedButton(
                 onPressed: _pickImage,
+                
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFB3D8A8),
+                ),
                 child: const Text('Chọn Ảnh'),
               ),
               if (_image != null) Image.file(_image!, height: 200),
+              SizedBox(height: 5),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFB3D8A8),
+                ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();

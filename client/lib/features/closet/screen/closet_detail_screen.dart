@@ -61,20 +61,26 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: DropdownButton<String>(
-                    value: 'Recently added',
-                    items: ['Recently added', 'Price', 'Date'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (value) {},
-                    isExpanded: true,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.grey,
+                  padding: const EdgeInsets.all(13.0),
+                  child: SizedBox(
+                    width: 250,
+                    child: DropdownButton<String>(
+                      
+                      value: 'Recently added',
+                      items: ['Recently added', 'Price', 'Date'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                          
+                        );
+                      }).toList(),
+                      onChanged: (value) {},
+                      isExpanded: true,
+                      dropdownColor: Color(0xFFFFFDEC),
+                      underline: Container(
+                        height: 1,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -142,11 +148,12 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFFB3D8A8),
         onPressed: () async {
           await context.push('/closet/add-clothing-item?closetId=${widget.closetId}');
           context.read<ClothingBloc>().add(LoadClothingItems(widget.closetId));
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Color(0xFFFFFDEC)),
       ),
     );
   }

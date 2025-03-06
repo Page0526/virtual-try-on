@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
@@ -128,7 +129,7 @@ class _FittingRoomState extends State<FittingRoom> {
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.blueAccent, Colors.blueAccent],
+                colors: [Color(0xFFFFFDEC), Color(0xFFFFF2AF)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -140,15 +141,15 @@ class _FittingRoomState extends State<FittingRoom> {
               ),
               title: const Text(
                 'Fitting Room',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
               centerTitle: true,
               backgroundColor: Colors.transparent,
               elevation: 4,
-              iconTheme: const IconThemeData(color: Colors.white),
+              iconTheme: const IconThemeData(color: Colors.black),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.notifications, color: Colors.white),
+                  icon: const Icon(Icons.notifications, color: Colors.black),
                   onPressed: () {
                     // TODO: Add wardrobe
                   },
@@ -238,7 +239,7 @@ class _FittingRoomState extends State<FittingRoom> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildStepCircle(0, 'Cloth'),
+          _buildStepCircle(0, 'Clothes'),
           _buildStepLine(),
           _buildStepCircle(1, 'Person'),
           _buildStepLine(),
@@ -254,18 +255,19 @@ class _FittingRoomState extends State<FittingRoom> {
       children: [
         CircleAvatar(
           radius: 15,
-          backgroundColor: isActive ? Colors.blueAccent : Colors.grey,
+          backgroundColor: isActive ? Color(0xFFFFF2AF): Colors.grey,
           child: Text(
             '${step + 1}',
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.black),
           ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
           style: TextStyle(
-            color: isActive ? Colors.blueAccent : Colors.grey,
+            color: isActive ? Colors.black : Colors.grey,
             fontSize: 12,
+            fontWeight: FontWeight.w500
           ),
         ),
       ],
@@ -342,10 +344,10 @@ class Step0Widget extends StatelessWidget {
           ElevatedButton(
             onPressed: onContinue,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color(0xFFFFF2AF),
               foregroundColor: Colors.white,
             ),
-            child: const Text('Tiếp tục'),
+            child: const Text('Tiếp tục', style: TextStyle(color: Colors.black),),
           ),
           const SizedBox(height: 10),
           TextButton(
@@ -443,10 +445,10 @@ class Step1Widget extends StatelessWidget {
           ElevatedButton(
             onPressed: onContinue,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color(0xFFFFF2AF),
               foregroundColor: Colors.white,
             ),
-            child: const Text('Tiếp tục'),
+            child: const Text('Tiếp tục', style: TextStyle(color: Colors.black)),
           ),
           const SizedBox(height: 10),
           TextButton(
@@ -569,15 +571,15 @@ class Step2Widget extends StatelessWidget {
           ElevatedButton(
             onPressed: onGenerate,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color(0xFFFFF2AF),
               foregroundColor: Colors.white,
             ),
-            child: const Text('Tạo ảnh'),
+            child: const Text('Tạo ảnh', style: TextStyle(color: Colors.black)),
           ),
           const SizedBox(height: 10),
           TextButton(
             onPressed: onReset,
-            child: const Text('Bắt đầu lại từ đầu'),
+            child: const Text('Bắt đầu lại từ đầu', style: TextStyle(color: Colors.black)),
           ),
         ],
       ),
@@ -640,15 +642,14 @@ class ImageSelectionWidget extends StatelessWidget {
             shaderCallback: (Rect bounds) {
               return LinearGradient(
                 colors: [
-                  Colors.blueAccent.shade200,
-                  Colors.blueAccent.shade400,
-                  Colors.blueAccent.shade100,
+                Color(0xFFFFF2AF),
+                Color.fromARGB(255, 243, 230, 113),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ).createShader(bounds);
             },
-            child: const Icon(Icons.image, size: 40, color: Colors.white),
+            child: const Icon(Iconsax.image, size: 40, color: Colors.black),
           ),
         ),
         const SizedBox(width: 35),
@@ -656,9 +657,8 @@ class ImageSelectionWidget extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.blueAccent.shade200,
-                Colors.blueAccent.shade400,
-                Colors.blueAccent.shade100,
+                Color(0xFFFFF2AF),
+                Color.fromARGB(255, 243, 230, 113),
               ],
               begin: Alignment.bottomLeft,
               end: Alignment.bottomRight,
@@ -670,7 +670,7 @@ class ImageSelectionWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: Icon(Icons.camera_alt, size: 20, color: Colors.white),
+              child: Icon(Iconsax.instagram, size: 25, color: Colors.black),
             ),
           ),
         ),
@@ -681,15 +681,14 @@ class ImageSelectionWidget extends StatelessWidget {
             shaderCallback: (Rect bounds) {
               return LinearGradient(
                 colors: [
-                  Colors.blueAccent.shade200,
-                  Colors.blueAccent.shade400,
-                  Colors.blueAccent.shade100,
+                Color(0xFFFFF2AF),
+                Color.fromARGB(255, 243, 230, 113),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ).createShader(bounds);
             },
-            child: const Icon(Icons.storage, size: 40, color: Colors.white),
+            child: const Icon(Iconsax.category, size: 40, color: Colors.black),
           ),
         ),
       ],

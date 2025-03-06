@@ -35,7 +35,7 @@ class ResultScreen extends StatelessWidget {
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.blueAccent],
+              colors: [Color(0xFFFFFDEC), Color(0xFFFFF2AF)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -47,12 +47,12 @@ class ResultScreen extends StatelessWidget {
             ),
             title: const Text(
               'Kết quả thử đồ',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 4,
-            iconTheme: const IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.black),
           ),
         ),
       ),
@@ -87,8 +87,8 @@ class ResultScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () => _saveImage(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFFFFF2AF),
+                      foregroundColor: Colors.black,
                     ),
                     child: const Text('Lưu ảnh'),
                   ),
@@ -99,8 +99,8 @@ class ResultScreen extends StatelessWidget {
                       context.push('/suggestion', extra: resultImageBytes);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFFFFF2AF),
+                      foregroundColor: Colors.black,
                     ),
                     child: const Text('Nhận gợi ý về trang phục'),
                   ),
@@ -109,7 +109,7 @@ class ResultScreen extends StatelessWidget {
               const SizedBox(height: 10),
               TextButton(
                 onPressed: () => context.pop(),
-                child: const Text('Quay lại'),
+                child: const Text('Quay lại', style: TextStyle(color: Colors.black),),
               ),
             ],
           ),

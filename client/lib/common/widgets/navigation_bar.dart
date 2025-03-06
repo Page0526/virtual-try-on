@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -15,37 +17,32 @@ class CustomNavigationBar extends StatelessWidget {
     return BottomNavigationBar(
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+          icon: Icon(Iconsax.home, size: 20, color: CusColor.buttonPrimaryColor), label: 'Home'
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.local_mall),
-          label: 'Closet',
+          icon: Icon(Iconsax.heart, size: 20, color: CusColor.buttonPrimaryColor), label: 'Closet'
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.remove_red_eye),
-          label: 'Try On',
+          icon: Icon(Iconsax.instagram, size: 20, color: CusColor.buttonPrimaryColor), label: 'Try-on'
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart),
-          label: 'Shop',
+          icon: Icon(Iconsax.shop, size: 20, color: CusColor.buttonPrimaryColor), label: 'Shop'
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat),
-          label: 'AI Stylist',
+          icon: Icon(Iconsax.message_edit, size: 20, color: CusColor.buttonPrimaryColor), label: 'AIStylist'
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
+          icon: Icon(Iconsax.profile_add, size: 20, color: CusColor.buttonPrimaryColor), label: 'Profile'
         ),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: Colors.blue,
+      selectedItemColor: Colors.black,
       unselectedItemColor: Colors.grey,
       onTap: onItemTapped,
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: true,
       showUnselectedLabels: true,
+      backgroundColor: CusColor.barColor,
     );
   }
 }

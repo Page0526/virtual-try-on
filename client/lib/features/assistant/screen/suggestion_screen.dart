@@ -52,7 +52,7 @@ class SuggestionScreen extends StatelessWidget {
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.blueAccent],
+              colors: [Color(0xFFFFFDEC), Color(0xFFFFF2AF)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -64,12 +64,12 @@ class SuggestionScreen extends StatelessWidget {
             ),
             title: const Text(
               'Gợi ý trang phục',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 4,
-            iconTheme: const IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.black),
           ),
         ),
       ),
@@ -114,6 +114,7 @@ class SuggestionScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = suggestedItems[index];
                     return Card(
+                      color: Color(0xFFFFF2AF),
                       margin: const EdgeInsets.only(bottom: 16.0),
                       child: ListTile(
                         leading: SizedBox(

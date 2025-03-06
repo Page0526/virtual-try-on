@@ -11,6 +11,7 @@ import 'package:myapp/features/closet/screen/outfit_tab_screen.dart';
 import 'package:myapp/features/closet/screen/packing_tab_screen.dart';
 import 'package:myapp/features/routes/navigation_provider.dart';
 import 'package:myapp/features/routes/routes.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 import 'package:provider/provider.dart';
 
 class ClosetScreen extends StatefulWidget {
@@ -41,6 +42,7 @@ class _ClosetScreenState extends State<ClosetScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: CusColor.barColor,
         title: const Text('Tủ Quần Áo Số'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -65,9 +67,11 @@ class _ClosetScreenState extends State<ClosetScreen> with SingleTickerProviderSt
             Tab(text: 'Outfit'),
             Tab(text: 'Packing'),
           ],
+          
           labelColor: Colors.black,
           unselectedLabelColor: Colors.grey,
           indicatorColor: Colors.black,
+          labelStyle:  TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
       body: TabBarView(

@@ -6,7 +6,7 @@ class CusColor {
 
 
   // Mau chu de cua app 
-  static const Color primaryColor = Color.fromARGB(255, 87, 16, 181);
+  static const Color primaryColor = Color.fromARGB(255, 240, 230, 140);
   static const Color secondaryColor = Color.fromARGB(255, 86, 202, 135);
   static const Color accentColor = Color.fromARGB(255, 38, 110, 112);
 

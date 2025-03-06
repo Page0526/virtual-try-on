@@ -47,6 +47,7 @@ class ClosetTabScreen extends StatelessWidget {
 
   Widget _buildClosetItem(Closet closet, BuildContext context) {
     return Card(
+      color: Color(0xFFB3D8A8),
       margin: const EdgeInsets.only(bottom: 16.0),
       child: InkWell(
         onTap: () => context.go('/closet/${closet.id}?closetName=${Uri.encodeComponent(closet.name)}'),
@@ -54,26 +55,26 @@ class ClosetTabScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: const Icon(Icons.image, size: 100), // Placeholder image
+              padding: const EdgeInsets.all(2.0),
+              child: const Icon(Icons.image, size: 100, color: Color(0xFF3D8D7A)), // Placeholder image
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       closet.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                    Text('${closet.items.length} clothes', style: const TextStyle(color: Colors.grey)),
+                    Text('${closet.items.length} clothes', style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 12)),
                   ],
                 ),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.edit, color: Colors.grey),
+              icon: const Icon(Icons.edit, color: Colors.grey, size: 20),
               onPressed: () {},
             ),
           ],
@@ -93,18 +94,22 @@ class ClosetTabScreen extends StatelessWidget {
             context: context,
             builder: (context) {
               return AlertDialog(
+                backgroundColor: Color(0xFFD1F8EF),
                 title: const Text('Tạo Tủ Quần Áo Mới'),
-                content: TextField(
-                  controller: _closetNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Tên tủ quần áo',
-                    hintText: 'Nhập tên tủ quần áo',
+                content: DefaultTextStyle(
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                  child: TextField(
+                    controller: _closetNameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Tên tủ quần áo',
+                      hintText: 'Nhập tên tủ quần áo',
+                    ),
                   ),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Hủy'),
+                    child: const Text('Hủy', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black)),
                   ),
                   TextButton(
                     onPressed: () {
@@ -115,7 +120,7 @@ class ClosetTabScreen extends StatelessWidget {
                         Navigator.pop(context);
                       }
                     },
-                    child: const Text('Tạo'),
+                    child: const Text('Tạo', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black)),
                   ),
                 ],
               );
@@ -125,15 +130,17 @@ class ClosetTabScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, style: BorderStyle.solid),
+            color: Color(0xFFB3D8A8),
+            border: Border.all(color: Colors.black, style: BorderStyle.solid),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
-              Icon(Icons.add, color: Colors.grey),
-              SizedBox(width: 8.0),
-              Text('Create a closet', style: TextStyle(color: Colors.grey)),
+              Icon(Icons.add, color: Colors.black),
+              SizedBox(width: 2.0),
+              Text('Create a closet', style: TextStyle(color: Colors.black, fontSize: 13)),
             ],
           ),
         ),

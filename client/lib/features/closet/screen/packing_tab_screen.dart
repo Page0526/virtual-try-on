@@ -6,6 +6,6 @@ class PackingTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Packing content coming soon'));
+    return const Center(child: Text('Packing content coming soon!', style: TextStyle(fontSize: 20)));
   }
 }
