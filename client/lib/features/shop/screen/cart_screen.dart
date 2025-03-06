@@ -2,17 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+  final String name;
+  final String imageUrl;
+  final double price;
+
+  const CartScreen({
+    super.key,
+    required this.name,
+    required this.imageUrl,
+    required this.price,
+  });
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final List<Map<String, dynamic>> _cartItems = [
-    {'name': 'Black Crew Neck T-Shirt', 'price': 100.0},
-    {'name': 'Pink Crew Neck T-Shirt', 'price': 100.0},
-  ];
+  List<Map<String, dynamic>> _cartItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _cartItems.add({'name': widget.name, 'price': widget.price, 'imageUrl': widget.imageUrl});
+  }
 
   double get _totalPrice => _cartItems.fold(0, (sum, item) => sum + item['price']);
 
@@ -20,100 +32,167 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            context.pop(); // Note: Requires parameters in a real app
-          },
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.indigo],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
         ),
-        title: const Text('Cart'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => context.pop(),
+        ),
+        title: const Text(
+          'Giỏ Hàng',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         centerTitle: true,
+        elevation: 8,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ..._cartItems.asMap().entries.map((entry) {
-              int index = entry.key;
-              var item = entry.value;
-              return _buildCartItem(item['name'], item['price'], index);
-            }).toList(),
-            const SizedBox(height: 16),
-            const Text(
-              'PAYMENT METHODS',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Cart Items
+              Expanded(
+                child: _cartItems.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'Giỏ hàng trống',
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: _cartItems.length,
+                        itemBuilder: (context, index) {
+                          var item = _cartItems[index];
+                          return _buildCartItem(item['name'], item['price'], item['imageUrl'], index);
+                        },
+                      ),
               ),
-              child: ListTile(
-                title: const Text('Shopping Card - 2022'),
-                trailing: const Icon(Icons.arrow_forward_ios),
+              const SizedBox(height: 24),
+              // Payment Methods
+              const Text(
+                'Phương Thức Thanh Toán',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'TOTAL ORDER',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+              const SizedBox(height: 12),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  title: const Text(
+                    'Thẻ Mua Sắm - 2022',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  onTap: () {
+                    // Có thể mở rộng để chọn phương thức thanh toán
+                  },
                 ),
-                Text(
-                  '\$${_totalPrice.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 24),
+              // Total Order
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Tổng Thanh Toán',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  Text(
+                    '\$${_totalPrice.toStringAsFixed(2)}',
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              // Checkout Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _cartItems.isEmpty
+                      ? null
+                      : () {
+                          // Logic thanh toán có thể thêm ở đây
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 6,
+                  ),
+                  child: const Text(
+                    'Thanh Toán',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-              ],
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Checkout',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildCartItem(String name, double price, int index) {
+  Widget _buildCartItem(String name, double price, String imageUrl, int index) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        leading: Container(
-          width: 50,
-          height: 50,
-          color: Colors.grey[200],
-          child: const Center(child: Text('Image')),
-        ),
-        title: Text(name),
-        subtitle: Text('\$$price'),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: () {
-            setState(() {
-              _cartItems.removeAt(index);
-            });
-          },
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                imageUrl,
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 70,
+                  height: 70,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image, size: 30, color: Colors.grey),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '\$${price.toStringAsFixed(2)}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                setState(() {
+                  _cartItems.removeAt(index);
+                });
+              },
+            ),
+          ],
         ),
       ),
     );

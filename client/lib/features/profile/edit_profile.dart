@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
@@ -28,18 +27,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            context.go('/settings');
-          },
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.indigo],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
         ),
-        title: const Text('Edit Profile'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => context.go('/settings'),
+        ),
+        title: const Text(
+          'Chỉnh Sửa Hồ Sơ',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         centerTitle: true,
+        elevation: 8,
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,22 +58,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Center(
                   child: Stack(
                     children: [
-                      const CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey,
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.white,
                         child: CircleAvatar(
-                          radius: 46,
-                          backgroundColor: Colors.grey,
-                          child: Text('Profile Image'),
+                          radius: 56,
+                          backgroundColor: Colors.grey[200],
+                          child: const Text(
+                            'Profile Image',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
                         ),
                       ),
                       Positioned(
                         bottom: 0,
                         right: 0,
                         child: CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.grey[300],
-                          child: const Icon(Icons.camera_alt, size: 16),
+                          radius: 18,
+                          backgroundColor: Colors.blueAccent,
+                          child: const Icon(Icons.camera_alt, size: 18, color: Colors.white),
                         ),
                       ),
                     ],
@@ -71,67 +84,71 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: 24),
                 // Name field
-                const Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Tên', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    hintText: 'Nhập tên của bạn',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    filled: true,
+                    fillColor: Colors.grey[100],
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Email field
-                const Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Email', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    hintText: 'Nhập email của bạn',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    filled: true,
+                    fillColor: Colors.grey[100],
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Password field
-                const Text('Password', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Mật khẩu', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    hintText: 'Nhập mật khẩu mới',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    filled: true,
+                    fillColor: Colors.grey[100],
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Date of Birth field
-                const Text('Date of Birth', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Ngày sinh', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: () {
-                    // Implement date picker
+                    // Implement date picker logic here
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey[100],
+                      border: Border.all(color: Colors.grey[300]!),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(_dateOfBirth),
-                        const Icon(Icons.arrow_drop_down),
+                        Text(_dateOfBirth, style: const TextStyle(fontSize: 16)),
+                        const Icon(Icons.calendar_today, color: Colors.grey),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Country/Region field
-                const Text('Country/Region', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Quốc gia/Khu vực', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   value: _country,
@@ -140,37 +157,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       _country = value!;
                     });
                   },
-                  items: ['Nigeria', 'USA', 'UK', 'Canada']
-                      .map((country) => DropdownMenuItem(
-                            value: country,
-                            child: Text(country),
-                          ))
-                      .toList(),
+                  items: ['Nigeria', 'USA', 'UK', 'Canada'].map((country) {
+                    return DropdownMenuItem(value: country, child: Text(country, style: const TextStyle(fontSize: 16)));
+                  }).toList(),
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    filled: true,
+                    fillColor: Colors.grey[100],
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
                 // Save Changes button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Save changes logic
-                      context.go('/profile');
-                    },
+                    onPressed: () => context.go('/profile'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[800],
+                      backgroundColor: Colors.blueAccent,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 6,
                     ),
                     child: const Text(
-                      'SAVE CHANGES',
-                      style: TextStyle(color: Colors.white),
+                      'Lưu Thay Đổi',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 ),

@@ -1,18 +1,21 @@
-// lib/features/fitting_room/suggestion_screen.dart
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/features/routes/routes.dart';
 
-// Mô hình dữ liệu cho món đồ gợi ý
 class SuggestedItem {
   final String name;
-  final String type;
+  final String brand;
+  final String date;
   final String imageUrl;
+  final String recommended;
 
   SuggestedItem({
     required this.name,
-    required this.type,
+    required this.brand,
+    required this.date,
     required this.imageUrl,
+    this.recommended = '',
   });
 }
 
@@ -21,23 +24,28 @@ class SuggestionScreen extends StatelessWidget {
 
   const SuggestionScreen({super.key, required this.resultImageBytes});
 
-  // Dữ liệu giả lập cho danh sách gợi ý
   List<SuggestedItem> _getSuggestedItems() {
     return [
       SuggestedItem(
         name: 'Áo thun',
-        type: 'Áo thun',
-        imageUrl: 'assets/images/rcm.png', // Thay bằng đường dẫn thực tế
+        brand: 'Uniqlo',
+        imageUrl: 'assets/images/rcm.png',
+        recommended: 'Phù hợp với phong cách năng động',
+        date: '2023',
       ),
       SuggestedItem(
         name: 'Áo Phao',
-        type: 'Áo',
+        brand: 'The North Face',
         imageUrl: 'assets/images/rcm1.png',
+        recommended: 'Giữ ấm tốt, hợp mùa đông',
+        date: '2023',
       ),
       SuggestedItem(
-        name: 'Mũ',
-        type: 'Mũ',
+        name: 'Mũ Lưỡi Trai',
+        brand: 'Nike',
         imageUrl: 'assets/images/rcm2.png',
+        recommended: 'Thêm điểm nhấn cá tính',
+        date: '2023',
       ),
     ];
   }
@@ -47,103 +55,181 @@ class SuggestionScreen extends StatelessWidget {
     final suggestedItems = _getSuggestedItems();
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50.0),
-        child: Container(
+      appBar: AppBar(
+        flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.blueAccent],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              colors: [Colors.blueAccent, Colors.indigo],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-          ),
-          child: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () => context.pop(),
-            ),
-            title: const Text(
-              'Gợi ý trang phục',
-              style: TextStyle(color: Colors.white),
-            ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 4,
-            iconTheme: const IconThemeData(color: Colors.white),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => context.pop(),
+        ),
+        title: const Text(
+          'Gợi Ý Trang Phục',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 8,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              // Hiển thị ảnh kết quả
+              // Hình ảnh kết quả
               Center(
-                child: SizedBox(
-                  height: 425,
-                  width: 325,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.memory(
-                        Uint8List.fromList(resultImageBytes),
-                        fit: BoxFit.fill,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.memory(
+                      Uint8List.fromList(resultImageBytes),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.broken_image, size: 50),
+                        );
+                      },
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
+              // Tiêu đề gợi ý
               const Text(
-                'Gợi ý trang phục phù hợp',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              // Danh sách gợi ý quần áo
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: suggestedItems.length,
-                  itemBuilder: (context, index) {
-                    final item = suggestedItems[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      child: ListTile(
-                        leading: SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Image.asset(
-                            item.imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(
-                                Icons.broken_image,
-                                size: 60,
-                                color: Colors.grey,
-                              );
-                            },
-                          ),
-                        ),
-                        title: Text(item.name),
-                        subtitle: Text(item.type),
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Đã chọn ${item.name}')),
-                          );
-                        },
-                      ),
-                    );
-                  },
+                'Trang Phục Phù Hợp Với Bạn',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+              // Danh sách gợi ý
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: suggestedItems.length,
+                itemBuilder: (context, index) {
+                  final item = suggestedItems[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          context.push(
+                            Uri(
+                              path: AppRoutes.item,
+                              queryParameters: {
+                                'itemImage': item.imageUrl,
+                                'brand': item.brand,
+                                'date': item.date,
+                                'type': item.name,
+                              },
+                            ).toString(),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              // Hình ảnh sản phẩm
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset(
+                                  item.imageUrl,
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      width: 70,
+                                      height: 70,
+                                      color: Colors.grey[300],
+                                      child: const Icon(Icons.broken_image),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Thông tin sản phẩm
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.name,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item.brand,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueAccent.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        item.recommended,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.blueAccent,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),

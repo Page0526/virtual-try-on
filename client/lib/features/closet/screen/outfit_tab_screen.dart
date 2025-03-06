@@ -1,6 +1,4 @@
-// lib/features/closet/screen/outfit_tab_screen.dart
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -16,43 +14,60 @@ class OutfitTabScreen extends StatelessWidget {
     return BlocBuilder<OutfitBloc, OutfitState>(
       builder: (context, state) {
         if (state is OutfitLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: Colors.blueAccent));
         } else if (state is OutfitLoaded) {
           final outfits = state.outfits;
           if (outfits.isEmpty) {
-            return const Center(child: Text('Không có outfit nào.'));
+            return const Center(
+              child: Text(
+                'Chưa có outfit nào',
+                style: TextStyle(fontSize: 18, color: Colors.grey),
+              ),
+            );
           }
           return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20),
             itemCount: outfits.length,
             itemBuilder: (context, index) {
               final outfit = outfits[index];
               return Card(
-                margin: const EdgeInsets.only(bottom: 16.0),
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                margin: const EdgeInsets.only(bottom: 12),
                 child: ListTile(
                   leading: outfit.imageBytes != null
-                      ? SizedBox(
-                          width: 60,
-                          height: 60,
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
                           child: Image.memory(
                             Uint8List.fromList(outfit.imageBytes!),
+                            width: 70,
+                            height: 70,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(
-                                Icons.broken_image,
-                                size: 60,
-                                color: Colors.grey,
-                              );
-                            },
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              width: 70,
+                              height: 70,
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.broken_image, size: 30, color: Colors.grey),
+                            ),
                           ),
                         )
-                      : const Icon(
-                          Icons.image,
-                          size: 60,
-                          color: Colors.grey,
+                      : Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.image, size: 30, color: Colors.grey),
                         ),
-                  title: Text(outfit.name),
-                  subtitle: Text(outfit.categoryId),
+                  title: Text(
+                    outfit.name,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  subtitle: Text(
+                    outfit.categoryId,
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
                   onTap: () {
                     context.push('/closet/outfit/${outfit.id}');
                   },
@@ -61,9 +76,19 @@ class OutfitTabScreen extends StatelessWidget {
             },
           );
         } else if (state is OutfitError) {
-          return Center(child: Text('Lỗi: ${state.message}'));
+          return Center(
+            child: Text(
+              'Lỗi: ${state.message}',
+              style: const TextStyle(fontSize: 16, color: Colors.red),
+            ),
+          );
         }
-        return const Center(child: Text('Không có dữ liệu outfit.'));
+        return const Center(
+          child: Text(
+            'Không có dữ liệu outfit',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+        );
       },
     );
   }

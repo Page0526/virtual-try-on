@@ -145,7 +145,16 @@ GoRouter createRouter(NavigationProvider navigationProvider) {
               ),
               GoRoute(
                 path: AppRoutes.cart,
-                builder: (context, state) => const CartScreen(),
+                builder: (context, state) {
+                  final name = state.uri.queryParameters['name'] ?? '';
+                  final price = state.uri.queryParameters['price'] ?? '';
+                  final imageUrl = state.uri.queryParameters['imageUrl'] ?? '';
+                  return CartScreen(
+                    name: name,
+                    price: double.parse(price),
+                    imageUrl: imageUrl,
+                  );
+                },
               ),
             ],
           ),
