@@ -1,4 +1,3 @@
-// lib/features/fitting_room/result_screen.dart
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -18,11 +17,17 @@ class ResultScreen extends StatelessWidget {
       await file.writeAsBytes(resultImageBytes);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ảnh đã được lưu tại: $path')),
+        SnackBar(
+          content: Text('Ảnh đã được lưu tại: $path'),
+          backgroundColor: Colors.green,
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi khi lưu ảnh: $e')),
+        SnackBar(
+          content: Text('Lỗi khi lưu ảnh: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -30,9 +35,8 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50.0),
-        child: Container(
+      appBar: AppBar(
+        flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFFFFDEC), Color(0xFFFFF2AF)],
@@ -58,46 +62,60 @@ class ResultScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
+              // Hình ảnh kết quả
               Center(
-                child: SizedBox(
-                  height: 425,
-                  width: 325,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.memory(
-                        Uint8List.fromList(resultImageBytes),
-                        fit: BoxFit.fill,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.memory(
+                      Uint8List.fromList(resultImageBytes),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.broken_image, size: 50),
+                        );
+                      },
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
+              // Nút hành động
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     onPressed: () => _saveImage(context),
+                    icon: const Icon(Icons.save, size: 20),
+                    label: const Text('Lưu Ảnh'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFFFF2AF),
                       foregroundColor: Colors.black,
                     ),
                     child: const Text('Lưu ảnh'),
                   ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Điều hướng đến SuggestionScreen
-                      context.push('/suggestion', extra: resultImageBytes);
-                    },
+                  const SizedBox(width: 16),
+                  ElevatedButton.icon(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(Icons.arrow_back, size: 20),
+                    label: const Text('Quay Lại'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFFFF2AF),
                       foregroundColor: Colors.black,

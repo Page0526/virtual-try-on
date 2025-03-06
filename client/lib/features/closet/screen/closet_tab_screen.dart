@@ -1,4 +1,3 @@
-// lib/features/closet/screen/closet_tab_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,11 +14,11 @@ class ClosetTabScreen extends StatelessWidget {
     return BlocBuilder<ClosetBloc, ClosetState>(
       builder: (context, state) {
         if (state is ClosetLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: Colors.blueAccent));
         } else if (state is ClosetLoaded) {
           final closets = state.closets;
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 Expanded(
@@ -38,9 +37,19 @@ class ClosetTabScreen extends StatelessWidget {
             ),
           );
         } else if (state is ClosetError) {
-          return Center(child: Text('Error: ${state.message}'));
+          return Center(
+            child: Text(
+              'Lỗi: ${state.message}',
+              style: const TextStyle(fontSize: 16, color: Colors.red),
+            ),
+          );
         }
-        return const Center(child: Text('Chưa có tủ quần áo nào'));
+        return const Center(
+          child: Text(
+            'Chưa có tủ quần áo nào',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+        );
       },
     );
   }
@@ -87,7 +96,9 @@ class ClosetTabScreen extends StatelessWidget {
     final TextEditingController _closetNameController = TextEditingController();
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
           showDialog(
@@ -111,7 +122,7 @@ class ClosetTabScreen extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     child: const Text('Hủy', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black)),
                   ),
-                  TextButton(
+                  ElevatedButton(
                     onPressed: () {
                       final name = _closetNameController.text.trim();
                       if (name.isNotEmpty) {
@@ -128,7 +139,7 @@ class ClosetTabScreen extends StatelessWidget {
           );
         },
         child: Container(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Color(0xFFB3D8A8),
             border: Border.all(color: Colors.black, style: BorderStyle.solid),

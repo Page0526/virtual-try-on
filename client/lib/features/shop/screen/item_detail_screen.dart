@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/features/routes/routes.dart';
 
 class ShopClothesDetailScreen extends StatefulWidget {
   final String itemImage;
@@ -27,111 +28,178 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            context.pop();
-          },
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.indigo],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
         ),
-        title: const Text('Product Details'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => context.pop(),
+        ),
+        title: const Text(
+          'Chi Tiết Sản Phẩm',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         centerTitle: true,
+        elevation: 8,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Product image (using the itemImage parameter)
-              Expanded(
-                child: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product image
+                Center(
                   child: Container(
-                    color: Colors.grey[200],
-                    child: Text(widget.itemImage.isNotEmpty
-                        ? 'Image: ${widget.itemImage}'
-                        : 'Image Placeholder'),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Product details (using type, brand, and date parameters)
-              Text(
-                widget.type,
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              Text(
-                '${widget.brand} Crew Neck T-Shirt',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Released: ${widget.date}',
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 8),
-              // Color options
-              Row(
-                children: [
-                  _buildColorOption(Colors.black),
-                  const SizedBox(width: 8),
-                  _buildColorOption(Colors.pink),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Quantity selector
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() {
-                        if (_quantity > 1) _quantity--;
-                      });
-                    },
-                  ),
-                  Text('$_quantity', style: const TextStyle(fontSize: 18)),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        _quantity++;
-                      });
-                    },
-                  ),
-                  const Spacer(),
-                  const Text(
-                    '\$100',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Description
-              const Text(
-                'Fashion is form of self-expression and autonomy at a particular period & place and in a specific context',
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 16),
-              // Add to Cart button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.go('/cart');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    width: MediaQuery.of(context).size.width * 0.85,
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Image.asset(
+                        widget.itemImage,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.broken_image, size: 50),
+                        ),
+                      ),
                     ),
                   ),
-                  child: const Text(
-                    'Add To Cart',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                const SizedBox(height: 24),
+                // Product details
+                Text(
+                  widget.type,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${widget.brand} ${widget.type}',
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Phát hành: ${widget.date}',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                ),
+                const SizedBox(height: 16),
+                // Color options
+                Row(
+                  children: [
+                    const Text(
+                      'Màu sắc: ',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+                    ),
+                    _buildColorOption(Colors.black),
+                    const SizedBox(width: 12),
+                    _buildColorOption(Colors.pink),
+                    const SizedBox(width: 12),
+                    _buildColorOption(Colors.blue),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Quantity selector
+                Row(
+                  children: [
+                    const Text(
+                      'Số lượng: ',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey[100],
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove, color: Colors.black87),
+                            onPressed: () {
+                              setState(() {
+                                if (_quantity > 1) _quantity--;
+                              });
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Text(
+                              '$_quantity',
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add, color: Colors.black87),
+                            onPressed: () {
+                              setState(() {
+                                _quantity++;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    const Text(
+                      '\$100',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                // Description
+                const Text(
+                  'Thời trang là hình thức thể hiện bản thân và sự tự do trong một thời điểm, địa điểm và bối cảnh cụ thể.',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                const SizedBox(height: 32),
+                // Add to Cart button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.push(
+                        Uri(
+                          path: AppRoutes.cart,
+                          queryParameters: {
+                            'name': widget.type,
+                            'price': '100',
+                            'imageUrl': widget.itemImage,
+                          },
+                        ).toString(),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 6,
+                    ),
+                    child: const Text(
+                      'Thêm Vào Giỏ Hàng',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -147,15 +215,18 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
         });
       },
       child: Container(
-        width: 24,
-        height: 24,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
           border: Border.all(
-            color: isSelected ? Colors.black : Colors.transparent,
+            color: isSelected ? Colors.black87 : Colors.grey[300]!,
             width: 2,
           ),
+          boxShadow: isSelected
+              ? [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 4, offset: const Offset(0, 2))]
+              : null,
         ),
       ),
     );

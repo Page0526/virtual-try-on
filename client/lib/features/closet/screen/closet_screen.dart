@@ -1,4 +1,3 @@
-// lib/features/closet/screen/closet_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -45,27 +44,38 @@ class _ClosetScreenState extends State<ClosetScreen> with SingleTickerProviderSt
         backgroundColor: CusColor.barColor,
         title: const Text('Tủ Quần Áo Số'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Provider.of<NavigationProvider>(context, listen: false).setIndex(0);
             context.go(AppRoutes.home);
           },
         ),
+        title: const Text(
+          'Tủ Quần Áo Số',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.person, color: Colors.black),
+            icon: const Icon(Icons.person, color: Colors.white),
             onPressed: () {
               Provider.of<NavigationProvider>(context, listen: false).setIndex(4);
               context.go(AppRoutes.profile);
             },
           ),
         ],
+        elevation: 8,
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          indicatorColor: Colors.white,
+          indicatorWeight: 3,
+          labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          unselectedLabelStyle: const TextStyle(fontSize: 14),
           tabs: const [
-            Tab(text: 'Closet'),
+            Tab(text: 'Tủ Đồ'),
             Tab(text: 'Outfit'),
-            Tab(text: 'Packing'),
+            Tab(text: 'Đóng Gói'),
           ],
           
           labelColor: Colors.black,

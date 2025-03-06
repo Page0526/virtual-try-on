@@ -29,7 +29,7 @@ class SearchResultsScreen extends StatelessWidget {
     Product(
       name: 'Black Crew Neck T-Shirt',
       price: 100,
-      itemImage: 'assets/images/black_crew_neck_tshirt.jpg',
+      itemImage: 'assets/images/shop1.png',
       brand: 'Generic',
       date: '2023',
       type: 'T-Shirt',
@@ -37,7 +37,7 @@ class SearchResultsScreen extends StatelessWidget {
     Product(
       name: 'White Crew Neck T-Shirt',
       price: 100,
-      itemImage: 'assets/images/white_crew_neck_tshirt.jpg',
+      itemImage: 'assets/images/shop1.png',
       brand: 'Generic',
       date: '2023',
       type: 'T-Shirt',
@@ -45,7 +45,7 @@ class SearchResultsScreen extends StatelessWidget {
     Product(
       name: 'Pink Crew Neck T-Shirt',
       price: 100,
-      itemImage: 'assets/images/pink_crew_neck_tshirt.jpg',
+      itemImage: 'assets/images/shop1.png',
       brand: 'Generic',
       date: '2023',
       type: 'T-Shirt',
@@ -53,7 +53,7 @@ class SearchResultsScreen extends StatelessWidget {
      Product(
       name: 'Blue Jeans',
       price: 150,
-      itemImage: 'assets/images/blue_jeans.jpg',
+      itemImage: 'assets/images/shop1.png',
       brand: 'Levi\'s',
       date: '2023',
       type: 'Jeans',
@@ -61,7 +61,7 @@ class SearchResultsScreen extends StatelessWidget {
      Product(
       name: 'Black Jacket',
       price: 200,
-      itemImage: 'assets/images/black_jacket.jpg',
+      itemImage: 'assets/images/shop1.png',
       brand: 'Zara',
       date: '2023',
       type: 'Outer',
@@ -69,7 +69,7 @@ class SearchResultsScreen extends StatelessWidget {
      Product(
       name: 'Denim Jacket',
       price: 180,
-      itemImage: 'assets/images/denim_jacket.jpg',
+      itemImage: 'assets/images/shop1.png',
       brand: 'H&M',
       date: '2023',
       type: 'Outer',

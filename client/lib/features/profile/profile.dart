@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/routes/routes.dart';
 
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -31,122 +30,165 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       body: SafeArea(
         child: Column(
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: 150,
-                  color: Colors.grey[200],
-                  child: const Center(child: Text('Background Image Placeholder')),
+            // Header with background and avatar
+            Container(
+              height: 180,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blueAccent, Colors.indigo],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    bottom: 0,
                     child: CircleAvatar(
-                      radius: 46,
-                      backgroundColor: Colors.grey[200],
-                      child: const Text('Profile Image'),
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
+                        radius: 56,
+                        backgroundColor: Colors.grey[200],
+                        child: const Text(
+                          'Profile Image',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
+            // User info
             const Text(
               'Melissa Peters',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const Text(
-              'Interior designer',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             const SizedBox(height: 4),
-            const Row(
+            const Text(
+              'Nhà thiết kế nội thất',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 8),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.location_on, size: 16, color: Colors.grey),
-                SizedBox(width: 4),
+                const Icon(Icons.location_on, size: 18, color: Colors.grey),
+                const SizedBox(width: 6),
                 Text(
                   'Lagos, Nigeria',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
+            // Action buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    context.go(AppRoutes.editProfile);
-                  },
+                  onPressed: () => context.go(AppRoutes.editProfile),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[800],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 4,
                   ),
                   child: const Text(
-                    'Edit profile',
-                    style: TextStyle(color: Colors.white),
+                    'Chỉnh sửa hồ sơ',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton(
-                  onPressed: () {
-                    context.go(AppRoutes.settings);
-                  },
+                  onPressed: () => context.go(AppRoutes.settings),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[800],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    backgroundColor: Colors.grey[700],
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 4,
                   ),
                   child: const Text(
-                    'Settings',
-                    style: TextStyle(color: Colors.white),
+                    'Cài đặt',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
+            // TabBar
             TabBar(
               controller: _tabController,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.black,
+              labelColor: Colors.black87,
+              unselectedLabelColor: Colors.grey[600],
+              indicatorColor: Colors.blueAccent,
+              indicatorWeight: 3,
+              labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              unselectedLabelStyle: const TextStyle(fontSize: 14),
               tabs: const [
-                Tab(text: 'Clothes'),
-                Tab(text: 'Outfits'),
+                Tab(text: 'Quần Áo'),
+                Tab(text: 'Outfit'),
               ],
             ),
+            // TabBarView
             Expanded(
               child: TabBarView(
                 controller: _tabController,
                 children: [
                   GridView.count(
                     crossAxisCount: 3,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                    padding: const EdgeInsets.all(8),
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    padding: const EdgeInsets.all(20),
                     children: List.generate(3, (index) {
                       return Container(
-                        color: Colors.grey[200],
-                        child: Center(child: Text('Photo $index')),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Ảnh $index',
+                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          ),
+                        ),
                       );
                     }),
                   ),
                   GridView.count(
                     crossAxisCount: 3,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                    padding: const EdgeInsets.all(8),
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    padding: const EdgeInsets.all(20),
                     children: List.generate(3, (index) {
                       return Container(
-                        color: Colors.grey[200],
-                        child: Center(child: Text('Liked Photo $index')),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Outfit $index',
+                            style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          ),
+                        ),
                       );
                     }),
                   ),
@@ -156,21 +198,6 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatColumn(String value, String label) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.grey),
-        ),
-      ],
     );
   }
 }

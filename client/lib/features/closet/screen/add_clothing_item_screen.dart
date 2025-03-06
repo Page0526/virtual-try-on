@@ -1,4 +1,3 @@
-// lib/features/closet/screen/add_clothing_item_screen.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,13 +35,27 @@ class _AddClothingItemScreenState extends State<AddClothingItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Sử dụng GoRouterState.of(context) để lấy closetId từ query parameters
     final closetId = GoRouterState.of(context).uri.queryParameters['closetId'] ?? '1';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Thêm Món Đồ Mới')),
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.indigo],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: const Text(
+          'Thêm Món Đồ Mới',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        elevation: 8,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: ListView(

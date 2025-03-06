@@ -1,18 +1,21 @@
-// lib/features/fitting_room/suggestion_screen.dart
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/features/routes/routes.dart';
 
-// Mô hình dữ liệu cho món đồ gợi ý
 class SuggestedItem {
   final String name;
-  final String type;
+  final String brand;
+  final String date;
   final String imageUrl;
+  final String recommended;
 
   SuggestedItem({
     required this.name,
-    required this.type,
+    required this.brand,
+    required this.date,
     required this.imageUrl,
+    this.recommended = '',
   });
 }
 
@@ -21,23 +24,28 @@ class SuggestionScreen extends StatelessWidget {
 
   const SuggestionScreen({super.key, required this.resultImageBytes});
 
-  // Dữ liệu giả lập cho danh sách gợi ý
   List<SuggestedItem> _getSuggestedItems() {
     return [
       SuggestedItem(
         name: 'Áo thun',
-        type: 'Áo thun',
-        imageUrl: 'assets/images/rcm.png', // Thay bằng đường dẫn thực tế
+        brand: 'Uniqlo',
+        imageUrl: 'assets/images/rcm.png',
+        recommended: 'Phù hợp với phong cách năng động',
+        date: '2023',
       ),
       SuggestedItem(
         name: 'Áo Phao',
-        type: 'Áo',
+        brand: 'The North Face',
         imageUrl: 'assets/images/rcm1.png',
+        recommended: 'Giữ ấm tốt, hợp mùa đông',
+        date: '2023',
       ),
       SuggestedItem(
-        name: 'Mũ',
-        type: 'Mũ',
+        name: 'Mũ Lưỡi Trai',
+        brand: 'Nike',
         imageUrl: 'assets/images/rcm2.png',
+        recommended: 'Thêm điểm nhấn cá tính',
+        date: '2023',
       ),
     ];
   }
@@ -47,9 +55,8 @@ class SuggestionScreen extends StatelessWidget {
     final suggestedItems = _getSuggestedItems();
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50.0),
-        child: Container(
+      appBar: AppBar(
+        flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFFFFDEC), Color(0xFFFFF2AF)],
@@ -75,30 +82,42 @@ class SuggestionScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              // Hiển thị ảnh kết quả
+              // Hình ảnh kết quả
               Center(
-                child: SizedBox(
-                  height: 425,
-                  width: 325,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.memory(
-                        Uint8List.fromList(resultImageBytes),
-                        fit: BoxFit.fill,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.memory(
+                      Uint8List.fromList(resultImageBytes),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.broken_image, size: 50),
+                        );
+                      },
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
+              // Tiêu đề gợi ý
               const Text(
                 'Gợi ý trang phục phù hợp',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -144,7 +163,6 @@ class SuggestionScreen extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
