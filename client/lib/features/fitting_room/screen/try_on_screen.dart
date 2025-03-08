@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 import '/features/fitting_room/controller/try_on_bloc.dart';
 import '/features/fitting_room/controller/try_on_event.dart';
 import '/features/fitting_room/controller/try_on_state.dart';
@@ -109,35 +109,25 @@ class _FittingRoomState extends State<FittingRoom> {
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFFFFDEC), Color(0xFFFFF2AF)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                onPressed: () => context.go('/'),
-              ),
-              title: const Text(
-                'Fitting Room',
-                style: TextStyle(color: Colors.black),
-              ),
-              centerTitle: true,
-              backgroundColor: Colors.transparent,
-              elevation: 4,
-              iconTheme: const IconThemeData(color: Colors.black),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.notifications, color: Colors.black),
-                  onPressed: () {
-                    // TODO: Add wardrobe
-                  },
-                ),
-              ],
+              color: CusColor.barColor,
             ),
           ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: CusColor.primaryTextColor),
+            onPressed: () => context.go('/'),
+          ),
+          title: const Text(
+            'Phòng Thử Đồ Ảo',
+            style: TextStyle(color: CusColor.primaryTextColor, fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          centerTitle: true,
+          elevation: 8,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.notifications, color: CusColor.primaryTextColor),
+              onPressed: () {},
+            ),
+          ],
         ),
         body: BlocConsumer<TryOnBloc, TryOnState>(
           listener: (context, state) {
@@ -211,18 +201,15 @@ class _FittingRoomState extends State<FittingRoom> {
   }
 
   Widget _buildStepIndicator() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildStepCircle(0, 'Clothes'),
-          _buildStepLine(),
-          _buildStepCircle(1, 'Person'),
-          _buildStepLine(),
-          _buildStepCircle(2, 'Confirm'),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildStepCircle(0, 'Quần Áo'),
+        _buildStepLine(),
+        _buildStepCircle(1, 'Người'),
+        _buildStepLine(),
+        _buildStepCircle(2, 'Xác Nhận'),
+      ],
     );
   }
 
@@ -230,21 +217,37 @@ class _FittingRoomState extends State<FittingRoom> {
     final isActive = _currentStep == step;
     return Column(
       children: [
-        CircleAvatar(
-          radius: 15,
-          backgroundColor: isActive ? Color(0xFFFFF2AF): Colors.grey,
-          child: Text(
-            '${step + 1}',
-            style: const TextStyle(color: Colors.black),
+        Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isActive ? Color(0xFFFFCFB3) : Colors.grey[300],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              '${step + 1}',
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.grey[700],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 8),
         Text(
           label,
           style: TextStyle(
-            color: isActive ? Colors.black : Colors.grey,
+            color: isActive ? Colors.black : Colors.grey[600],
             fontSize: 12,
-            fontWeight: FontWeight.w500
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ],
@@ -317,18 +320,19 @@ class Step0Widget extends StatelessWidget {
           ElevatedButton(
             onPressed: onContinue,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFFFF2AF),
+              backgroundColor: Color(0xFFFFCFB3),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               elevation: 4,
+              side: BorderSide.none,
             ),
-            child: const Text('Tiếp tục', style: TextStyle(color: Colors.black),),
+            child: const Text('Tiếp Tục', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 16),
           TextButton(
             onPressed: onBack,
-            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.black)),
           ),
         ],
       );
@@ -416,18 +420,19 @@ class Step1Widget extends StatelessWidget {
           ElevatedButton(
             onPressed: onContinue,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFFFF2AF),
+              backgroundColor: Color(0xFFFFCFB3),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               elevation: 4,
+              side: BorderSide.none,
             ),
-            child: const Text('Tiếp tục', style: TextStyle(color: Colors.black)),
+            child: const Text('Tiếp Tục', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 16),
           TextButton(
             onPressed: onBack,
-            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.black)),
           ),
         ],
       );
@@ -542,24 +547,39 @@ class Step2Widget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
                 child: Image.file(clothImage, fit: BoxFit.cover),
               ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: onGenerate,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFFFF2AF),
-              foregroundColor: Colors.white,
             ),
-            child: const Text('Tạo ảnh', style: TextStyle(color: Colors.black)),
+          ],
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'Xác Nhận Ảnh',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'Kiểm tra hai ảnh đã chọn. Nhấn "Tạo Ảnh" để xem kết quả thử đồ.',
+          style: TextStyle(fontSize: 14, color: Colors.grey),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 24),
+        ElevatedButton(
+          onPressed: onGenerate,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFFFFCFB3),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 4,
+            side: BorderSide.none,
           ),
-          const SizedBox(height: 10),
-          TextButton(
-            onPressed: onReset,
-            child: const Text('Bắt đầu lại từ đầu', style: TextStyle(color: Colors.black)),
-          ),
-        ],
-      ),
+          child: const Text('Tạo Ảnh', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        ),
+        const SizedBox(height: 16),
+        TextButton(
+          onPressed: onReset,
+          child: const Text('Bắt Đầu Lại', style: TextStyle(fontSize: 14, color: Colors.black)),
+        ),
+      ],
     );
   }
 }
@@ -579,7 +599,7 @@ class CameraPreviewWidget extends StatelessWidget {
           color: Colors.grey[300],
           borderRadius: BorderRadius.circular(24),
         ),
-        child: const Center(child: CircularProgressIndicator(color: Colors.blueAccent)),
+        child: const Center(child: CircularProgressIndicator(color: Color(0xFFFFCFB3))),
       );
     }
     return Center(
@@ -621,61 +641,48 @@ class ImageSelectionWidget extends StatelessWidget {
         _buildIconButton(
           icon: Icons.image,
           onTap: onSelectGallery,
-          child: ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return LinearGradient(
-                colors: [
-                Color(0xFFFFF2AF),
-                Color.fromARGB(255, 243, 230, 113),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ).createShader(bounds);
-            },
-            child: const Icon(Iconsax.image, size: 40, color: Colors.black),
-          ),
+          tooltip: 'Chọn từ thư viện',
         ),
-        const SizedBox(width: 35),
-        Ink(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFFFF2AF),
-                Color.fromARGB(255, 243, 230, 113),
-              ],
-              begin: Alignment.bottomLeft,
-              end: Alignment.bottomRight,
-            ),
-            shape: BoxShape.circle,
-          ),
-          child: InkWell(
-            onTap: onCaptureCamera,
-            borderRadius: BorderRadius.circular(100),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: Icon(Iconsax.instagram, size: 25, color: Colors.black),
-            ),
-          ),
+        const SizedBox(width: 32),
+        _buildIconButton(
+          icon: Icons.camera_alt,
+          onTap: onCaptureCamera,
+          tooltip: 'Chụp ảnh',
+          isPrimary: true,
         ),
-        const SizedBox(width: 35),
-        GestureDetector(
+        const SizedBox(width: 32),
+        _buildIconButton(
+          icon: Icons.storage,
           onTap: onSelectAppData,
-          child: ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return LinearGradient(
-                colors: [
-                Color(0xFFFFF2AF),
-                Color.fromARGB(255, 243, 230, 113),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ).createShader(bounds);
-            },
-            child: const Icon(Iconsax.category, size: 40, color: Colors.black),
-          ),
+          tooltip: 'Chọn từ dữ liệu app',
         ),
       ],
+    );
+  }
+
+  Widget _buildIconButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    required String tooltip,
+    bool isPrimary = false,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(50),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0xFFFFCFB3),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 6, offset: const Offset(0, 2)),
+            ],
+          ),
+          child: Icon(icon, size: 28, color: Colors.white),
+        ),
+      ),
     );
   }
 }

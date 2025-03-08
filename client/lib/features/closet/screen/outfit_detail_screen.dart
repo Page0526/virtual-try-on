@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/closet/model/outfit.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 import '/features/closet/controller/outfit_bloc.dart';
 import '/features/closet/controller/outfit_state.dart';
 
@@ -17,20 +18,16 @@ class OutfitDetailScreen extends StatelessWidget {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: CusColor.primaryTextColor),
           onPressed: () => context.pop(),
         ),
         title: const Text(
           'Chi Tiết Outfit',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(color:  CusColor.primaryTextColor, fontWeight: FontWeight.w600, fontSize: 18),
         ),
         elevation: 8,
       ),
@@ -52,7 +49,7 @@ class OutfitDetailScreen extends StatelessWidget {
                       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -83,7 +80,7 @@ class OutfitDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           outfit.name,
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: CusColor.primaryTextColor),
                         ),
                         const SizedBox(height: 12),
                         Text(

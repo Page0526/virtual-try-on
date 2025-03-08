@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:myapp/features/closet/controller/clothing_bloc.dart';
 import 'package:myapp/features/closet/controller/clothing_event.dart';
 import 'package:myapp/features/closet/controller/clothing_state.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class ClosetDetailScreen extends StatefulWidget {
   final String closetId;
@@ -33,29 +34,25 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: CusColor.primaryTextColor),
           onPressed: () => context.push('/closet'),
         ),
         title: Text(
           widget.closetName,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          style: const TextStyle(color: CusColor.primaryTextColor, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         elevation: 8,
         actions: [
           IconButton(
-            icon: const Icon(Icons.check_box_outline_blank, color: Colors.white),
+            icon: const Icon(Icons.check_box_outline_blank, color: CusColor.primaryTextColor),
             onPressed: () {},
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert, color: CusColor.primaryTextColor),
             itemBuilder: (context) => [
               const PopupMenuItem(value: 'option1', child: Text('Tùy chọn 1')),
               const PopupMenuItem(value: 'option2', child: Text('Tùy chọn 2')),
@@ -184,12 +181,12 @@ class _ClosetDetailScreenState extends State<ClosetDetailScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFFB3D8A8),
+        backgroundColor: Color(0xFFFFCFB3),
         onPressed: () async {
           await context.push('/closet/add-clothing-item?closetId=${widget.closetId}');
           context.read<ClothingBloc>().add(LoadClothingItems(widget.closetId));
         },
-        child: const Icon(Icons.add, color: Color(0xFFFFFDEC)),
+        child: const Icon(Icons.add, color: Color(0xFFE78F81)),
       ),
     );
   }

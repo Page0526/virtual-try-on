@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/routes/routes.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class ShopClothesDetailScreen extends StatefulWidget {
   final String itemImage;
@@ -30,20 +31,16 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => context.pop(),
         ),
         title: const Text(
           'Chi Tiết Sản Phẩm',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,
         elevation: 8,
@@ -186,7 +183,8 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+                      side: BorderSide.none,
+                      backgroundColor: Color(0xFFE78F81),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

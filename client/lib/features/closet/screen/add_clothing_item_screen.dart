@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myapp/features/closet/controller/clothing_bloc.dart';
 import 'package:myapp/features/closet/controller/clothing_event.dart';
 import 'package:myapp/features/closet/model/item.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class AddClothingItemScreen extends StatefulWidget {
   const AddClothingItemScreen({super.key});
@@ -41,16 +42,12 @@ class _AddClothingItemScreenState extends State<AddClothingItemScreen> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         title: const Text(
           'Thêm Món Đồ Mới',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         elevation: 8,
       ),
@@ -87,7 +84,8 @@ class _AddClothingItemScreenState extends State<AddClothingItemScreen> {
                 onPressed: _pickImage,
                 
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB3D8A8),
+                  side: BorderSide.none,
+                  backgroundColor: Color(0xFFFFCFB3),
                 ),
                 child: const Text('Chọn Ảnh'),
               ),
@@ -95,7 +93,8 @@ class _AddClothingItemScreenState extends State<AddClothingItemScreen> {
               SizedBox(height: 5),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB3D8A8),
+                  side: BorderSide.none,
+                  backgroundColor: Color(0xFFFFCFB3),
                 ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {

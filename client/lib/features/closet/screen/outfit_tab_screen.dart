@@ -31,7 +31,7 @@ class OutfitTabScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final outfit = outfits[index];
               return Card(
-                color: Color(0xFFB3D8A8),
+                color: Color(0xFFFFCFB3),
                 margin: const EdgeInsets.only(bottom: 16.0),
                 child: ListTile(
                   leading: outfit.imageBytes != null

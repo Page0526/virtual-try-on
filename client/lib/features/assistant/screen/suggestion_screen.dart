@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/routes/routes.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class SuggestedItem {
   final String name;
@@ -58,27 +59,23 @@ class SuggestionScreen extends StatelessWidget {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFFFFDEC), Color(0xFFFFF2AF)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () => context.pop(),
-            ),
-            title: const Text(
-              'Gợi ý trang phục',
-              style: TextStyle(color: Colors.black),
-            ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 4,
-            iconTheme: const IconThemeData(color: Colors.black),
+            color: CusColor.barColor,
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => context.pop(),
+        ),
+        title: const Text(
+          'Gợi Ý Trang Phục',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 8,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -95,7 +92,7 @@ class SuggestionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -119,49 +116,117 @@ class SuggestionScreen extends StatelessWidget {
               const SizedBox(height: 24),
               // Tiêu đề gợi ý
               const Text(
-                'Gợi ý trang phục phù hợp',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                'Trang Phục Phù Hợp Với Bạn',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-              const SizedBox(height: 10),
-              // Danh sách gợi ý quần áo
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: suggestedItems.length,
-                  itemBuilder: (context, index) {
-                    final item = suggestedItems[index];
-                    return Card(
-                      color: Color(0xFFFFF2AF),
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      child: ListTile(
-                        leading: SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Image.asset(
-                            item.imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(
-                                Icons.broken_image,
-                                size: 60,
-                                color: Colors.grey,
-                              );
-                            },
-                          ),
-                        ),
-                        title: Text(item.name),
-                        subtitle: Text(item.type),
+              const SizedBox(height: 16),
+              // Danh sách gợi ý
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: suggestedItems.length,
+                itemBuilder: (context, index) {
+                  final item = suggestedItems[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Card(
+                      color: Color(0xFFFFCFB3),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: InkWell(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Đã chọn ${item.name}')),
+                          context.push(
+                            Uri(
+                              path: AppRoutes.item,
+                              queryParameters: {
+                                'itemImage': item.imageUrl,
+                                'brand': item.brand,
+                                'date': item.date,
+                                'type': item.name,
+                              },
+                            ).toString(),
                           );
                         },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              // Hình ảnh sản phẩm
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset(
+                                  item.imageUrl,
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      width: 70,
+                                      height: 70,
+                                      color: Colors.grey[500],
+                                      child: const Icon(Icons.broken_image),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Thông tin sản phẩm
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.name,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item.brand,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFE78F81).withValues(alpha: 0.5),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        item.recommended,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
