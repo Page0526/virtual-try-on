@@ -130,9 +130,10 @@ Install necessary packages
    ```sh
    flutter pub get
    ```
-4. Create conda environment
+4. Create conda and activate environment
    ```sh
    conda create --name your-env python=3.10
+   conda activate your-env
    ```
 5. Install libraries
    ```sh
