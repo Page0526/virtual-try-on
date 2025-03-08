@@ -68,9 +68,6 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -102,6 +99,8 @@ Flutter is built with
 * [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
 * [![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](#)
 * [![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?logo=dart&logoColor=white)](#)
+* [![FastAPI](https://img.shields.io/badge/FastAPI-009485.svg?logo=fastapi&logoColor=white)](#)
+* [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -112,17 +111,13 @@ Flutter is built with
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+Follow this tutorial to install flutter-sdk and start running app! [Flutter Docs](https://docs.flutter.dev/get-started/install/windows/mobile)
 
 ### Installation
 
 Install necessary packages
 
-1. Get a free API Key at [https://example.com](https://example.com)
+1. Get a free API Key at [Google for dev](https://ai.google.dev/)
 2. Clone the repo
    ```sh
    git clone https://github.com/Page0526/virtual-try-on.git
@@ -135,11 +130,19 @@ Install necessary packages
    ```sh
    flutter pub get
    ```
-4. Create .env file and enter your API in `.env`
+4. Create conda environment
+   ```sh
+   conda create --name your-env python=3.10
+   ```
+5. Install libraries
+   ```sh
+   pip install -r requirements.txt
+   ```
+6. Create .env file and enter your API in `.env`
    ```js
    GOOGLE_APIKEY = 'ENTER YOUR API';
    ```
-5. Run server
+7. Run server
    ```sh
    cd server/fashion_agent
    python main.py
@@ -153,6 +156,9 @@ Install necessary packages
 ## Usage
 
 Get to the try-on screen and start try on whatever clothes you want!
+<div align='center'>
+  <img src="client/assets/images/try-on-screen.png" width="400">
+</div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
