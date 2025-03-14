@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             const SizedBox(height: 12),
             // User info
             const Text(
-              'Melissa Peters',
+              'Tuoc Nguyen',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             const SizedBox(height: 4),

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 import '/features/fitting_room/controller/try_on_bloc.dart';
 import '/features/fitting_room/controller/try_on_event.dart';
 import '/features/fitting_room/controller/try_on_state.dart';
@@ -108,26 +109,22 @@ class _FittingRoomState extends State<FittingRoom> {
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blueAccent, Colors.indigo],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: CusColor.barColor,
             ),
           ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            icon: const Icon(Icons.arrow_back_ios, color: CusColor.primaryTextColor),
             onPressed: () => context.go('/'),
           ),
           title: const Text(
             'Phòng Thử Đồ Ảo',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+            style: TextStyle(color: CusColor.primaryTextColor, fontWeight: FontWeight.bold, fontSize: 20),
           ),
           centerTitle: true,
           elevation: 8,
           actions: [
             IconButton(
-              icon: const Icon(Icons.notifications, color: Colors.white),
+              icon: const Icon(Icons.notifications, color: CusColor.primaryTextColor),
               onPressed: () {},
             ),
           ],
@@ -225,7 +222,7 @@ class _FittingRoomState extends State<FittingRoom> {
           height: 30,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isActive ? Colors.blueAccent : Colors.grey[300],
+            color: isActive ? Color(0xFFFFCFB3) : Colors.grey[300],
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -248,7 +245,7 @@ class _FittingRoomState extends State<FittingRoom> {
         Text(
           label,
           style: TextStyle(
-            color: isActive ? Colors.blueAccent : Colors.grey[600],
+            color: isActive ? Colors.black : Colors.grey[600],
             fontSize: 12,
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
           ),
@@ -323,18 +320,19 @@ class Step0Widget extends StatelessWidget {
           ElevatedButton(
             onPressed: onContinue,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color(0xFFFFCFB3),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               elevation: 4,
+              side: BorderSide.none,
             ),
             child: const Text('Tiếp Tục', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 16),
           TextButton(
             onPressed: onBack,
-            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.black)),
           ),
         ],
       );
@@ -422,18 +420,19 @@ class Step1Widget extends StatelessWidget {
           ElevatedButton(
             onPressed: onContinue,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color(0xFFFFCFB3),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               elevation: 4,
+              side: BorderSide.none,
             ),
             child: const Text('Tiếp Tục', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
           const SizedBox(height: 16),
           TextButton(
             onPressed: onBack,
-            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+            child: const Text('Chọn Lại', style: TextStyle(fontSize: 14, color: Colors.black)),
           ),
         ],
       );
@@ -566,18 +565,19 @@ class Step2Widget extends StatelessWidget {
         ElevatedButton(
           onPressed: onGenerate,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: Color(0xFFFFCFB3),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             elevation: 4,
+            side: BorderSide.none,
           ),
           child: const Text('Tạo Ảnh', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         const SizedBox(height: 16),
         TextButton(
           onPressed: onReset,
-          child: const Text('Bắt Đầu Lại', style: TextStyle(fontSize: 14, color: Colors.blueAccent)),
+          child: const Text('Bắt Đầu Lại', style: TextStyle(fontSize: 14, color: Colors.black)),
         ),
       ],
     );
@@ -599,7 +599,7 @@ class CameraPreviewWidget extends StatelessWidget {
           color: Colors.grey[300],
           borderRadius: BorderRadius.circular(24),
         ),
-        child: const Center(child: CircularProgressIndicator(color: Colors.blueAccent)),
+        child: const Center(child: CircularProgressIndicator(color: Color(0xFFFFCFB3))),
       );
     }
     return Center(
@@ -675,15 +675,9 @@ class ImageSelectionWidget extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: isPrimary
-                  ? [Colors.blueAccent, Colors.indigo]
-                  : [Colors.blueAccent.withOpacity(0.7), Colors.indigo.withOpacity(0.7)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: Color(0xFFFFCFB3),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 2)),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 6, offset: const Offset(0, 2)),
             ],
           ),
           child: Icon(icon, size: 28, color: Colors.white),

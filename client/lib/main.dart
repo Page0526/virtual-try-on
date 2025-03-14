@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'My App',
       theme: CusAppTheme.lightTheme,
+      debugShowCheckedModeBanner: false,
       routerConfig: createRouter(navigationProvider),
     );
   }

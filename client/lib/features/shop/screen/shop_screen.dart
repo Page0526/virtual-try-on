@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class Product {
   final String name;
@@ -97,20 +98,16 @@ class _ShopState extends State<Shop> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => context.pop(),
         ),
         title: const Text(
           'Cửa Hàng Thời Trang',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,
         elevation: 8,
@@ -155,7 +152,7 @@ class _ShopState extends State<Shop> {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               // Product grid
               Expanded(
                 child: filteredProducts.isEmpty
@@ -201,14 +198,7 @@ class _ShopState extends State<Shop> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          gradient: isActive
-              ? const LinearGradient(
-                  colors: [Colors.blueAccent, Colors.indigo],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-              : null,
-          color: isActive ? null : Colors.grey[100],
+          color: isActive ? Color(0xFFFFCFB3) : Colors.grey[100],
           borderRadius: BorderRadius.circular(20),
           boxShadow: isActive
               ? [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 2))]
@@ -217,7 +207,7 @@ class _ShopState extends State<Shop> {
         child: Text(
           title,
           style: TextStyle(
-            color: isActive ? Colors.white : Colors.black87,
+            color: isActive ? Colors.black : Colors.black87,
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),
@@ -236,6 +226,7 @@ class _ShopState extends State<Shop> {
     required String type,
   }) {
     return Card(
+      color: Color(0xFFFFCFB3),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(

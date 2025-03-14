@@ -6,7 +6,7 @@ class CusColor {
 
 
   // Mau chu de cua app 
-  static const Color primaryColor = Color.fromARGB(255, 87, 16, 181);
+  static const Color primaryColor = Color.fromARGB(255, 240, 230, 140);
   static const Color secondaryColor = Color.fromARGB(255, 86, 202, 135);
   static const Color accentColor = Color.fromARGB(255, 38, 110, 112);
 
@@ -22,7 +22,7 @@ class CusColor {
   static const Color darkContainerColor = Color.fromARGB(255, 136, 136, 136);
 
   // Mau cua button 
-  static const Color buttonPrimaryColor = Color.fromARGB(255, 0, 0, 0);
+  static const Color buttonPrimaryColor = Color(0xFFE78F81);
   static const Color buttonSecondaryColor = Color(0xFF646FD4);
 
   // Mau cua border 
@@ -36,5 +36,5 @@ class CusColor {
   static const Color info = Color.fromARGB(255, 0, 0, 255);
 
   // Color of bar
-  static const Color barColor = Color(0xFFFFFDEC);
+  static const Color barColor = Color(0xFFFFF5CD);
 }

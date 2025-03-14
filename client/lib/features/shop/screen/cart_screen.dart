@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class CartScreen extends StatefulWidget {
   final String name;
@@ -34,28 +35,26 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => context.pop(),
         ),
         title: const Text(
           'Giỏ Hàng',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,
         elevation: 8,
       ),
       body: SafeArea(
+        
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
+            
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Cart Items
@@ -83,6 +82,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
               const SizedBox(height: 12),
               Card(
+                color: Color(0xFFFFCFB3),
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: ListTile(
@@ -123,7 +123,8 @@ class _CartScreenState extends State<CartScreen> {
                           // Logic thanh toán có thể thêm ở đây
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    side: BorderSide.none,
+                    backgroundColor: Color(0xFFE78F81),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -144,6 +145,7 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildCartItem(String name, double price, String imageUrl, int index) {
     return Card(
+      color: Color(0xFFFFCFB3),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.only(bottom: 12),

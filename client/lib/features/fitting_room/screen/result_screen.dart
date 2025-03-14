@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -38,21 +39,17 @@ class ResultScreen extends StatelessWidget {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => context.pop(),
         ),
         title: const Text(
           'Kết Quả Thử Đồ',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -75,7 +72,7 @@ class ResultScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -103,10 +100,11 @@ class ResultScreen extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () => _saveImage(context),
-                    icon: const Icon(Icons.save, size: 20),
+                    icon: const Icon(Icons.save, size: 20, color: Colors.white),
                     label: const Text('Lưu Ảnh'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+                      side: BorderSide.none,
+                      backgroundColor: Color(0xFFFFCFB3),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -121,9 +119,10 @@ class ResultScreen extends StatelessWidget {
                   const SizedBox(width: 16),
                   ElevatedButton.icon(
                     onPressed: () => context.pop(),
-                    icon: const Icon(Icons.arrow_back, size: 20),
+                    icon: const Icon(Icons.arrow_back, size: 20, color: Colors.white),
                     label: const Text('Quay Lại'),
                     style: ElevatedButton.styleFrom(
+                      side: BorderSide.none,
                       backgroundColor: Colors.grey[700],
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
@@ -144,15 +143,15 @@ class ResultScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blueAccent.withOpacity(0.1),
+                  color: Color(0xFFFFCFB3),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.blueAccent, width: 1.5),
+                  border: Border.all(color: Color(0xFFE78F81), width: 1.5),
                 ),
                 child: const Text(
                   'Cái áo này nên kết hợp với quần jean màu xanh nhạt và giày thể thao trắng.',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.blueAccent,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
@@ -167,7 +166,8 @@ class ResultScreen extends StatelessWidget {
                     context.push('/suggestion', extra: resultImageBytes);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    side: BorderSide.none,
+                    backgroundColor: Color(0xFFFFCFB3),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -180,6 +180,7 @@ class ResultScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white
                     ),
                   ),
                 ),

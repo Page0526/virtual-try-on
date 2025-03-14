@@ -31,9 +31,8 @@ class OutfitTabScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final outfit = outfits[index];
               return Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                margin: const EdgeInsets.only(bottom: 12),
+                color: Color(0xFFFFCFB3),
+                margin: const EdgeInsets.only(bottom: 16.0),
                 child: ListTile(
                   leading: outfit.imageBytes != null
                       ? ClipRRect(
@@ -60,14 +59,8 @@ class OutfitTabScreen extends StatelessWidget {
                           ),
                           child: const Icon(Icons.image, size: 30, color: Colors.grey),
                         ),
-                  title: Text(
-                    outfit.name,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
-                  ),
-                  subtitle: Text(
-                    outfit.categoryId,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
+                  title: Text(outfit.name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600 ),),
+                  subtitle: Text(outfit.categoryId, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300 )),
                   onTap: () {
                     context.push('/closet/outfit/${outfit.id}');
                   },

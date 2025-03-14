@@ -1,279 +1,104 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:myapp/common/widgets/recent_outfit_slider.dart';
-import 'package:myapp/features/routes/routes.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:myapp/common/widgets/quick_action_slider.dart';
 import 'package:myapp/utils/const/path.dart';
+import 'package:flutter/material.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
+import 'package:myapp/utils/const/graphic/size.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:myapp/common/widgets/recent_outfit_slider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget
+{
   const HomeScreen({super.key});
+  @override
+  State<HomeScreen> createState() => _HomeScreen();
+  
+}
 
+class _HomeScreen extends State<HomeScreen> {
+    
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        elevation: 8,
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: const AssetImage('assets/images/user.jpg'),
-              radius: 22,
-              backgroundColor: Colors.white,
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Xin chào, Tuoc',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                Text(
-                  'Hà Nội, VN',
-                  style: TextStyle(fontSize: 14, color: Colors.white70),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: _buildAppBar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Phần thời tiết
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.blueAccent.withOpacity(0.1), Colors.white],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Trời Nắng',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
-                        ),
-                        Text(
-                          '22°C',
-                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(Icons.wb_sunny, color: Colors.orange, size: 32),
-                        const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Hôm Nay',
-                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                            ),
-                            const Text(
-                              '15/03',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blueAccent),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              // Phần Recent Outfits
-              const Text(
-                'Trang Phục Gần Đây',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-              const SizedBox(height: 16),
-              RecentOutfitSlider(banners: [CusPath.banner1, CusPath.banner2, CusPath.banner3]),
-              const SizedBox(height: 24),
-              // Phần News
-              const Text(
-                'Tin Tức Thời Trang',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildOutfitCard(
-                      imageUrl: 'assets/images/image2.jpg',
-                      title: 'Phong Cách Thứ Sáu',
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildOutfitCard(
-                      imageUrl: 'assets/images/image2.jpg',
-                      title: 'Cuộc Họp Công Việc',
-                      onTap: () {},
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              // Phần Quick Actions
-              const Text(
-                'Hành Động Nhanh',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-              const SizedBox(height: 16),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                children: [
-                  _buildQuickActionCard(
-                    icon: Icons.camera_alt,
-                    title: 'Thử Đồ Ảo',
-                    color: Colors.lightBlue[100]!,
-                    gradientColors: [Colors.blueAccent, Colors.lightBlue],
-                    onTap: () => context.go(AppRoutes.fittingRoom),
-                  ),
-                  _buildQuickActionCard(
-                    icon: Icons.checkroom,
-                    title: 'Tủ Đồ Của Tôi',
-                    color: Colors.brown[100]!,
-                    gradientColors: [Colors.brown, Colors.brown[300]!],
-                    onTap: () => context.go(AppRoutes.closet),
-                  ),
-                  _buildQuickActionCard(
-                    icon: Icons.add_circle_outline,
-                    title: 'Kết Hợp Phong Cách',
-                    color: Colors.green[100]!,
-                    gradientColors: [Colors.green, Colors.greenAccent],
-                    onTap: () {},
-                  ),
-                  _buildQuickActionCard(
-                    icon: Icons.shopping_cart,
-                    title: 'Danh Sách Mua Sắm',
-                    color: Colors.pink[100]!,
-                    gradientColors: [Colors.pink, Colors.pinkAccent],
-                    onTap: () => context.go(AppRoutes.shop),
-                  ),
-                ],
+              SizedBox(width: 15),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5, top: 5),
+                child: Text('Recent Outfits', style: TextStyle(fontSize: CusSize.fontSizeLg, fontWeight: FontWeight.w700, color: CusColor.primaryTextColor)),
               ),
             ],
           ),
-        ),
+          RecentOutfitSlider(banners: [CusPath.banner1, CusPath.banner2, CusPath.banner3]),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(width: 15),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text('Quick Actions', style: TextStyle(fontSize: CusSize.fontSizeLg,  fontWeight: FontWeight.w700, color: CusColor.primaryTextColor)),
+              ),
+            ],
+          ),
+          QuickActionSlider(),
+        ],  
       ),
     );
   }
+}
 
-  Widget _buildOutfitCard({required String imageUrl, required String title, required VoidCallback onTap}) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Column(
+Future<List<String>> fetchImageUrlsfromDB() async {
+  await Future.delayed(Duration(seconds: 2));
+
+  return [
+
+  ];
+}
+
+
+PreferredSizeWidget _buildAppBar() {
+  return AppBar(
+      backgroundColor: CusColor.barColor,
+      leading: Builder(
+        builder: (BuildContext context) {
+          return IconButton(
+            icon: Icon(Iconsax.profile_circle, size: 30, color: CusColor.buttonPrimaryColor),
+            onPressed: () {
+              // TODO: add profile screen
+            },
+          );
+        },
+      ),
+      titleSpacing: 2,
+      title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-              child: Image.asset(
-                imageUrl,
-                height: 160,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 160,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.broken_image, size: 50),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-            ),
+            Text('Hello Tuoc', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: CusColor.primaryTextColor)),
+            SizedBox(height: 3),
+            Text('What do you want to try on today?',  style: TextStyle(fontSize: CusSize.fontSizeSm, fontWeight: FontWeight.w400, color: CusColor.primaryTextColor))
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildQuickActionCard({
-    required IconData icon,
-    required String title,
-    required Color color,
-    required List<Color> gradientColors,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: gradientColors,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 36, color: Colors.white),
-                const SizedBox(height: 12),
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
+      actions: [
+        IconButton(
+          icon: const Icon(Iconsax.notification, color: CusColor.buttonPrimaryColor),
+          tooltip: 'Notifications',
+          onPressed: () {
+            // TODO: add notification
+          }
         ),
-      ),
-    );
-  }
+        IconButton( 
+          icon: Icon(Iconsax.message_question, color: CusColor.buttonPrimaryColor), 
+          onPressed: () {
+            // TODO: add help
+          })
+      ],
+  );
 }

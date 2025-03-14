@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/routes/routes.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class SuggestedItem {
   final String name;
@@ -58,21 +59,17 @@ class SuggestionScreen extends StatelessWidget {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.indigo],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: CusColor.barColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => context.pop(),
         ),
         title: const Text(
           'Gợi Ý Trang Phục',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -95,7 +92,7 @@ class SuggestionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -137,6 +134,7 @@ class SuggestionScreen extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Card(
+                      color: Color(0xFFFFCFB3),
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -172,7 +170,7 @@ class SuggestionScreen extends StatelessWidget {
                                     return Container(
                                       width: 70,
                                       height: 70,
-                                      color: Colors.grey[300],
+                                      color: Colors.grey[500],
                                       child: const Icon(Icons.broken_image),
                                     );
                                   },
@@ -207,14 +205,14 @@ class SuggestionScreen extends StatelessWidget {
                                         vertical: 6,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.blueAccent.withOpacity(0.1),
+                                        color: Color(0xFFE78F81).withValues(alpha: 0.5),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
                                         item.recommended,
                                         style: const TextStyle(
                                           fontSize: 12,
-                                          color: Colors.blueAccent,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),

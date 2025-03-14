@@ -5,6 +5,7 @@ import 'package:myapp/features/closet/controller/closet_bloc.dart';
 import 'package:myapp/features/closet/controller/closet_event.dart';
 import 'package:myapp/features/closet/controller/closet_state.dart';
 import 'package:myapp/features/closet/model/closet.dart';
+import 'package:myapp/utils/const/graphic/color.dart';
 
 class ClosetTabScreen extends StatelessWidget {
   const ClosetTabScreen({super.key});
@@ -56,51 +57,37 @@ class ClosetTabScreen extends StatelessWidget {
 
   Widget _buildClosetItem(Closet closet, BuildContext context) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      margin: const EdgeInsets.only(bottom: 12),
+      color: Color(0xFFFFCFB3),
+      margin: const EdgeInsets.only(bottom: 16.0),
       child: InkWell(
         onTap: () => context.go('/closet/${closet.id}?closetName=${Uri.encodeComponent(closet.name)}'),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.image, size: 40, color: Colors.grey),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: const Icon(Icons.image, size: 100, color: Color(0xFFE78F81)), // Placeholder image
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       closet.name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${closet.items.length} món đồ',
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    ),
+                    Text('${closet.items.length} clothes', style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400, fontSize: 12)),
                   ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.edit, color: Colors.blueAccent),
-                onPressed: () {
-                  // Logic chỉnh sửa có thể thêm sau
-                },
-              ),
-            ],
-          ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit, color: Color(0xFFE78F81), size: 20),
+              onPressed: () {},
+            ),
+          ],
         ),
       ),
     );
@@ -119,30 +106,40 @@ class ClosetTabScreen extends StatelessWidget {
             context: context,
             builder: (context) {
               return AlertDialog(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                title: const Text(
-                  'Tạo Tủ Quần Áo Mới',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                content: TextField(
+                backgroundColor: Color(0xFFFFCFB3),
+                title: const Text('Tạo Tủ Quần Áo Mới'),
+                content: DefaultTextStyle(
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                  child: TextField(
                   controller: _closetNameController,
                   decoration: InputDecoration(
                     labelText: 'Tên tủ quần áo',
                     hintText: 'Nhập tên tủ quần áo',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    border: OutlineInputBorder( // Default border
+                      borderRadius: BorderRadius.circular(8), // Optional: Adjust corner radius
+                      borderSide: BorderSide(color: Colors.black, width: 1), // Default border color
                     ),
-                    filled: true,
-                    fillColor: Colors.grey[100],
+                    enabledBorder: OutlineInputBorder( // Border when TextField is not focused
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.black, width: 1.5), // Change color here
+                    ),
+                    focusedBorder: OutlineInputBorder( // Border when TextField is focused
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.black, width: 2), // Change color here
+                    ),
                   ),
+                ),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Hủy', style: TextStyle(color: Colors.grey)),
+                    child: const Text('Hủy', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black)),
                   ),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      // backgroundColor: Color(0xFF578FCA)
+                      side: BorderSide.none
+                    ),
                     onPressed: () {
                       final name = _closetNameController.text.trim();
                       if (name.isNotEmpty) {
@@ -151,11 +148,7 @@ class ClosetTabScreen extends StatelessWidget {
                         Navigator.pop(context);
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text('Tạo', style: TextStyle(color: Colors.white)),
+                    child: const Text('Tạo', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.white)),
                   ),
                 ],
               );
@@ -165,22 +158,17 @@ class ClosetTabScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blueAccent.withOpacity(0.1), Colors.white],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
+            color: Color(0xFFFFCFB3),
+          
+            borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
-              Icon(Icons.add, color: Colors.blueAccent, size: 28),
-              SizedBox(width: 12),
-              Text(
-                'Tạo tủ quần áo mới',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueAccent),
-              ),
+              Icon(Icons.add, color: Colors.black),
+              SizedBox(width: 2.0),
+              Text('Create a closet', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400)),
             ],
           ),
         ),
