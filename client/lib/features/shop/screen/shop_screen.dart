@@ -1,24 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/utils/const/graphic/color.dart';
-
-class Product {
-  final String name;
-  final double price;
-  final String itemImage;
-  final String brand;
-  final String date;
-  final String type;
-
-  Product({
-    required this.name,
-    required this.price,
-    required this.itemImage,
-    required this.brand,
-    required this.date,
-    required this.type,
-  });
-}
+import 'package:myapp/features/shop/model/product.dart';
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -117,7 +100,6 @@ class _ShopState extends State<Shop> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              // Search bar
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -133,11 +115,12 @@ class _ShopState extends State<Shop> {
                   hintStyle: TextStyle(color: Colors.grey[500]),
                 ),
                 onSubmitted: (value) {
-                  context.push('/shop/search');
+                  if (value.isNotEmpty) {
+                    context.push('/shop/search?query=$value');
+                  }
                 },
               ),
               const SizedBox(height: 24),
-              // Category tabs
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -153,7 +136,6 @@ class _ShopState extends State<Shop> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Product grid
               Expanded(
                 child: filteredProducts.isEmpty
                     ? const Center(
@@ -198,7 +180,7 @@ class _ShopState extends State<Shop> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isActive ? Color(0xFFFFCFB3) : Colors.grey[100],
+          color: isActive ? const Color(0xFFFFCFB3) : Colors.grey[100],
           borderRadius: BorderRadius.circular(20),
           boxShadow: isActive
               ? [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 2))]
@@ -226,7 +208,7 @@ class _ShopState extends State<Shop> {
     required String type,
   }) {
     return Card(
-      color: Color(0xFFFFCFB3),
+      color: const Color(0xFFFFCFB3),
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(

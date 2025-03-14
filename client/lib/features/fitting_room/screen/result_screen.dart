@@ -2,20 +2,47 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:myapp/features/fitting_room/controller/try_on_service.dart';
 import 'package:myapp/utils/const/graphic/color.dart';
 import 'package:path_provider/path_provider.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   final List<int> resultImageBytes;
 
   const ResultScreen({super.key, required this.resultImageBytes});
 
+  @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  String evaluationText = 'Đang phân tích...';
+  final TryOnService _tryOnService = TryOnService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchEvaluation();
+  }
+
+  Future<void> _fetchEvaluation() async {
+    try {
+      String result = await _tryOnService.evaluateOutfit(widget.resultImageBytes);
+      setState(() {
+        evaluationText = result;
+      });
+    } catch (e) {
+      setState(() {
+        evaluationText = 'Không thể đánh giá trang phục.';
+      });
+    }
+  }
   Future<void> _saveImage(BuildContext context) async {
     try {
       final directory = await getTemporaryDirectory();
       final path = '${directory.path}/try_on_result_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final file = File(path);
-      await file.writeAsBytes(resultImageBytes);
+      await file.writeAsBytes(widget.resultImageBytes);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -81,7 +108,7 @@ class ResultScreen extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
                     child: Image.memory(
-                      Uint8List.fromList(resultImageBytes),
+                      Uint8List.fromList(widget.resultImageBytes),
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -147,9 +174,9 @@ class ResultScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Color(0xFFE78F81), width: 1.5),
                 ),
-                child: const Text(
-                  'Cái áo này nên kết hợp với quần jean màu xanh nhạt và giày thể thao trắng.',
-                  style: TextStyle(
+                child: Text(
+                  evaluationText,
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -163,7 +190,7 @@ class ResultScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    context.push('/suggestion', extra: resultImageBytes);
+                    context.push('/suggestion', extra: widget.resultImageBytes);
                   },
                   style: ElevatedButton.styleFrom(
                     side: BorderSide.none,

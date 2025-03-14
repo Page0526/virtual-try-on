@@ -124,7 +124,7 @@ GoRouter createRouter(NavigationProvider navigationProvider) {
                 routes: [
                   GoRoute(
                     path: 'search',
-                    builder: (context, state) => const SearchResultsScreen(),
+                    builder: (context, state) => const SearchResultsScreen(query: '',),
                   ),
                 ],
               ),

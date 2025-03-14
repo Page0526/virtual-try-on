@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myapp/features/shop/controller/product_service.dart';
+import 'package:myapp/features/shop/controller/shop_service.dart';
 import 'package:myapp/features/shop/model/product.dart';
 import 'shop_event.dart';
 import 'shop_state.dart';

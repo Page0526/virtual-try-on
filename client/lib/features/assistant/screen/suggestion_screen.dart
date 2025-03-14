@@ -2,64 +2,112 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/routes/routes.dart';
-import 'package:myapp/utils/const/graphic/color.dart';
+import 'package:myapp/features/assistant/controller/assistant_service.dart';
 
-class SuggestedItem {
-  final String name;
-  final String brand;
-  final String date;
-  final String imageUrl;
-  final String recommended;
-
-  SuggestedItem({
-    required this.name,
-    required this.brand,
-    required this.date,
-    required this.imageUrl,
-    this.recommended = '',
-  });
-}
-
-class SuggestionScreen extends StatelessWidget {
+class SuggestionScreen extends StatefulWidget {
   final List<int> resultImageBytes;
 
   const SuggestionScreen({super.key, required this.resultImageBytes});
 
-  List<SuggestedItem> _getSuggestedItems() {
-    return [
-      SuggestedItem(
-        name: 'Áo thun',
-        brand: 'Uniqlo',
-        imageUrl: 'assets/images/rcm.png',
-        recommended: 'Phù hợp với phong cách năng động',
-        date: '2023',
-      ),
-      SuggestedItem(
-        name: 'Áo Phao',
-        brand: 'The North Face',
-        imageUrl: 'assets/images/rcm1.png',
-        recommended: 'Giữ ấm tốt, hợp mùa đông',
-        date: '2023',
-      ),
-      SuggestedItem(
-        name: 'Mũ Lưỡi Trai',
-        brand: 'Nike',
-        imageUrl: 'assets/images/rcm2.png',
-        recommended: 'Thêm điểm nhấn cá tính',
-        date: '2023',
-      ),
-    ];
+  @override
+  State<SuggestionScreen> createState() => _SuggestionScreenState();
+}
+
+class _SuggestionScreenState extends State<SuggestionScreen> {
+  String suggestions = 'Đang tải gợi ý...';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSuggestions();
+  }
+
+  Future<void> _loadSuggestions() async {
+    final result = await AssistantService().suggestCombinations(widget.resultImageBytes);
+    setState(() {
+      suggestions = result;
+    });
+  }
+
+  List<Widget> _buildSuggestionWidgets() {
+    if (suggestions.startsWith('Lỗi')) {
+      return [
+        Center(
+          child: Text(
+            suggestions,
+            style: const TextStyle(color: Colors.red, fontSize: 16),
+          ),
+        ),
+      ];
+    }
+
+    final lines = suggestions.split('\n').where((line) => line.trim().isNotEmpty).toList();
+    return lines.map((line) {
+      final parts = line.split(':');
+      if (parts.length < 2) return const SizedBox.shrink();
+      final category = parts[0].trim();
+      final description = parts[1].trim();
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12), // Sửa 'bottom' thay vì 'custom'
+        child: Card(
+          color: const Color(0xFFFFCFB3),
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.image, color: Colors.grey),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        category,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final suggestedItems = _getSuggestedItems();
-
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            color: CusColor.barColor,
+            color: Colors.white,
           ),
         ),
         leading: IconButton(
@@ -83,7 +131,6 @@ class SuggestionScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Hình ảnh kết quả
               Center(
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.85,
@@ -92,7 +139,7 @@ class SuggestionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
+                        color: Colors.black.withOpacity(0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -101,7 +148,7 @@ class SuggestionScreen extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
                     child: Image.memory(
-                      Uint8List.fromList(resultImageBytes),
+                      Uint8List.fromList(widget.resultImageBytes),
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -114,7 +161,6 @@ class SuggestionScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              // Tiêu đề gợi ý
               const Text(
                 'Trang Phục Phù Hợp Với Bạn',
                 style: TextStyle(
@@ -124,110 +170,7 @@ class SuggestionScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              // Danh sách gợi ý
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: suggestedItems.length,
-                itemBuilder: (context, index) {
-                  final item = suggestedItems[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Card(
-                      color: Color(0xFFFFCFB3),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          context.push(
-                            Uri(
-                              path: AppRoutes.item,
-                              queryParameters: {
-                                'itemImage': item.imageUrl,
-                                'brand': item.brand,
-                                'date': item.date,
-                                'type': item.name,
-                              },
-                            ).toString(),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Row(
-                            children: [
-                              // Hình ảnh sản phẩm
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(
-                                  item.imageUrl,
-                                  width: 70,
-                                  height: 70,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 70,
-                                      height: 70,
-                                      color: Colors.grey[500],
-                                      child: const Icon(Icons.broken_image),
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              // Thông tin sản phẩm
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.name,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      item.brand,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFE78F81).withValues(alpha: 0.5),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        item.recommended,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+              ..._buildSuggestionWidgets(),
             ],
           ),
         ),
