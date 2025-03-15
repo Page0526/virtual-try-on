@@ -5,6 +5,7 @@ class Product {
   final String brand;
   final String date;
   final String type;
+  final String? imageData;
 
   Product({
     required this.name,
@@ -13,6 +14,7 @@ class Product {
     required this.brand,
     required this.date,
     required this.type,
+    this.imageData,
   });
 
   @override

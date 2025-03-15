@@ -1,13 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/routes/routes.dart';
 import 'package:myapp/utils/const/graphic/color.dart';
 
 class ShopClothesDetailScreen extends StatefulWidget {
-  final String itemImage;
+  final String itemImage; // Đường dẫn ảnh (asset hoặc URL)
   final String brand;
   final String date;
   final String type;
+  final String? imageData; // Dữ liệu ảnh base64 (tùy chọn)
 
   const ShopClothesDetailScreen({
     super.key,
@@ -15,6 +17,7 @@ class ShopClothesDetailScreen extends StatefulWidget {
     required this.brand,
     required this.date,
     required this.type,
+    this.imageData, // Thêm tham số tùy chọn
   });
 
   @override
@@ -69,14 +72,7 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(24),
-                      child: Image.asset(
-                        widget.itemImage,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.broken_image, size: 50),
-                        ),
-                      ),
+                      child: _buildImageWidget(),
                     ),
                   ),
                 ),
@@ -202,6 +198,59 @@ class _ClothesDetailScreenState extends State<ShopClothesDetailScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildImageWidget() {
+    // Ưu tiên hiển thị ảnh từ imageData (base64) nếu có
+    if (widget.imageData != null && widget.imageData!.isNotEmpty) {
+      try {
+        final bytes = base64Decode(widget.imageData!);
+        return Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => Container(
+            color: Colors.grey[300],
+            child: const Icon(Icons.broken_image, size: 50),
+          ),
+        );
+      } catch (e) {
+        return Image.asset(
+          widget.itemImage,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => Container(
+            color: Colors.grey[300],
+            child: const Icon(Icons.broken_image, size: 50),
+          ),
+        );
+      }
+    }
+
+    // Nếu không có imageData hoặc decode lỗi, dùng itemImage
+    if (widget.itemImage.startsWith('http')) {
+      // Hiển thị ảnh từ URL
+      return Image.network(
+        widget.itemImage,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.broken_image, size: 50),
+        ),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+    } else {
+      // Hiển thị ảnh từ asset
+      return Image.asset(
+        widget.itemImage,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.broken_image, size: 50),
+        ),
+      );
+    }
   }
 
   Widget _buildColorOption(Color color) {

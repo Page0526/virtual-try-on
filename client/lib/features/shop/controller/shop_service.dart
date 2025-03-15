@@ -3,57 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:myapp/features/shop/model/product.dart';
 
 class ProductService {
-  static const String serverUrl = 'https://354a-34-169-25-87.ngrok-free.app/search_by_description';
+  static const String serverUrl = 'https://ad26-34-45-79-223.ngrok-free.app/search_by_description';
 
   final List<Product> _products = [
-    Product(
-      name: 'Black Crew Neck T-Shirt',
-      price: 100,
-      itemImage: 'assets/images/shop1.png',
-      brand: 'Generic',
-      date: '2023',
-      type: 'T-Shirt',
-    ),
-    Product(
-      name: 'White Crew Neck T-Shirt',
-      price: 100,
-      itemImage: 'assets/images/shop1.png',
-      brand: 'Generic',
-      date: '2023',
-      type: 'T-Shirt',
-    ),
-    Product(
-      name: 'Pink Crew Neck T-Shirt',
-      price: 100,
-      itemImage: 'assets/images/shop1.png',
-      brand: 'Generic',
-      date: '2023',
-      type: 'T-Shirt',
-    ),
-    Product(
-      name: 'Blue Jeans',
-      price: 150,
-      itemImage: 'assets/images/shop1.png',
-      brand: "Levi's",
-      date: '2023',
-      type: 'Jeans',
-    ),
-    Product(
-      name: 'Black Jacket',
-      price: 200,
-      itemImage: 'assets/images/shop1.png',
-      brand: 'Zara',
-      date: '2023',
-      type: 'Outer',
-    ),
-    Product(
-      name: 'Denim Jacket',
-      price: 180,
-      itemImage: 'assets/images/shop1.png',
-      brand: 'H&M',
-      date: '2023',
-      type: 'Outer',
-    ),
+    
   ];
 
   List<Product> getAllProducts() => _products;
@@ -91,15 +44,15 @@ class ProductService {
       final List<Product> products = results.map((item) {
         final name = item['name'] ?? 'Không có tên';
         final imageData = item['image_data'] as String?;
-        String itemImage = 'assets/images/placeholder.jpg'; // Placeholder mặc định
 
         return Product(
           name: name,
-          price: 0.0, // Giá không có trong dữ liệu server, đặt mặc định
-          itemImage: itemImage,
-          brand: 'Unknown', // Không có trong dữ liệu server
-          date: '2023', // Giá trị mặc định
-          type: 'Unknown', // Không có trong dữ liệu server
+          price: 0.0, // Giá không có trong dữ liệu server
+          itemImage: imageData ?? 'assets/images/placeholder.jpg', // Sử dụng imageData trực tiếp
+          brand: 'Unknown',
+          date: '2023',
+          type: 'Unknown',
+          imageData: imageData, // Thêm trường để lưu base64
         );
       }).toList();
 

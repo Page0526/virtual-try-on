@@ -31,7 +31,7 @@ class TryOnBloc extends Bloc<TryOnEvent, TryOnState> {
       ));
 
       try {
-        final resultImageBytes = await service.tryOnTest(event.personImage, event.clothImage);
+        final resultImageBytes = await service.tryOn(event.personImage, event.clothImage);
         emit(TryOnSuccess(
           resultImageBytes: resultImageBytes,
           currentStep: state.currentStep,

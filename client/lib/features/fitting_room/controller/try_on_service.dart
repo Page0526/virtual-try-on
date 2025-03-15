@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class TryOnService {
-  static const String _baseUrl = 'https://354a-34-169-25-87.ngrok-free.app';
+  static const String _baseUrl = 'https://a2d1-34-87-94-79.ngrok-free.app';
 
   Future<List<int>> tryOnTest(File personImage, File clothImage) async {
     try {
@@ -52,7 +52,7 @@ class TryOnService {
       // Create a multipart request to the evaluate_outfit endpoint
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('$_baseUrl/evaluate_outfit'),
+        Uri.parse('https://5ff4-34-45-79-223.ngrok-free.app/evaluate_outfit'),
       );
 
       // Add the image bytes as a multipart file

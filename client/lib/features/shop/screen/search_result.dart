@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:myapp/features/shop/controller/shop_service.dart';
 import 'package:myapp/features/shop/model/product.dart';
-
 
 class SearchResultsScreen extends StatefulWidget {
   final String query;
@@ -64,6 +62,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     brand: product.brand,
                     date: product.date,
                     type: product.type,
+                    imageData: product.imageData, // Truyền imageData
                   );
                 }).toList(),
               );
@@ -75,73 +74,87 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   }
 
   Widget _buildProductCard(
-  BuildContext context, {
-  required String name,
-  required double price,
-  required String itemImage,
-  required String brand,
-  required String date,
-  required String type,
-  String? imageData, // Thêm trường này nếu server trả về base64
-}) {
-  Widget imageWidget;
-  if (imageData != null) {
-    final bytes = base64Decode(imageData);
-    imageWidget = Image.memory(
-      bytes,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
-    );
-  } else {
-    imageWidget = Image.asset(
-      itemImage,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
+    BuildContext context, {
+    required String name,
+    required double price,
+    required String itemImage,
+    required String brand,
+    required String date,
+    required String type,
+    String? imageData,
+  }) {
+    Widget imageWidget;
+    if (imageData != null && imageData.isNotEmpty) {
+      try {
+        final bytes = base64Decode(imageData);
+        imageWidget = Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => Image.asset(
+            'assets/images/placeholder.jpg',
+            fit: BoxFit.cover,
+          ),
+        );
+      } catch (e) {
+        imageWidget = Image.asset(
+          'assets/images/placeholder.jpg',
+          fit: BoxFit.cover,
+        );
+      }
+    } else {
+      imageWidget = Image.asset(
+        itemImage,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Image.asset(
+          'assets/images/placeholder.jpg',
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          Uri(
+            path: '/item',
+            queryParameters: {
+              'itemImage': itemImage,
+              'brand': brand,
+              'date': date,
+              'type': type,
+              'imageData': imageData ?? '', 
+            },
+          ).toString(),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                child: imageWidget,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text('\$${price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
-
-  return GestureDetector(
-    onTap: () {
-      context.go(
-        Uri(
-          path: '/item',
-          queryParameters: {
-            'itemImage': itemImage,
-            'brand': brand,
-            'date': date,
-            'type': type,
-          },
-        ).toString(),
-      );
-    },
-    child: Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: imageWidget,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text('\$${price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
 }

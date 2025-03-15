@@ -135,11 +135,13 @@ GoRouter createRouter(NavigationProvider navigationProvider) {
                   final brand = state.uri.queryParameters['brand'] ?? '';
                   final date = state.uri.queryParameters['date'] ?? '';
                   final type = state.uri.queryParameters['type'] ?? '';
+                  final imageData = state.uri.queryParameters['imageData'] ?? '';
                   return ShopClothesDetailScreen(
                     itemImage: itemImage,
                     brand: brand,
                     date: date,
                     type: type,
+                    imageData: imageData,
                   );
                 },
               ),

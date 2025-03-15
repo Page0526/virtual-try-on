@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:myapp/features/routes/routes.dart';
 import 'package:myapp/features/assistant/controller/assistant_service.dart';
 
 class SuggestionScreen extends StatefulWidget {
@@ -14,7 +14,9 @@ class SuggestionScreen extends StatefulWidget {
 }
 
 class _SuggestionScreenState extends State<SuggestionScreen> {
-  String suggestions = 'Đang tải gợi ý...';
+  List<SuggestionItem> suggestions = [];
+  bool isLoading = true;
+  String errorMessage = '';
 
   @override
   void initState() {
@@ -23,77 +25,158 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
   }
 
   Future<void> _loadSuggestions() async {
-    final result = await AssistantService().suggestCombinations(widget.resultImageBytes);
-    setState(() {
-      suggestions = result;
-    });
+    try {
+      final result = await AssistantService().suggestCombinations(widget.resultImageBytes);
+      setState(() {
+        suggestions = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+        isLoading = false;
+      });
+    }
   }
 
   List<Widget> _buildSuggestionWidgets() {
-    if (suggestions.startsWith('Lỗi')) {
+    if (isLoading) {
+      return [
+        const Center(child: CircularProgressIndicator()),
+      ];
+    }
+
+    if (errorMessage.isNotEmpty) {
       return [
         Center(
           child: Text(
-            suggestions,
+            errorMessage,
             style: const TextStyle(color: Colors.red, fontSize: 16),
           ),
         ),
       ];
     }
 
-    final lines = suggestions.split('\n').where((line) => line.trim().isNotEmpty).toList();
-    return lines.map((line) {
-      final parts = line.split(':');
-      if (parts.length < 2) return const SizedBox.shrink();
-      final category = parts[0].trim();
-      final description = parts[1].trim();
-
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12), // Sửa 'bottom' thay vì 'custom'
-        child: Card(
-          color: const Color(0xFFFFCFB3),
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+    if (suggestions.isEmpty) {
+      return [
+        const Center(
+          child: Text(
+            'Không có gợi ý nào.',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
+        ),
+      ];
+    }
+
+    return suggestions.map((item) {
+      Widget imageWidget;
+      if (item.imageData != null && item.imageData!.isNotEmpty) {
+        try {
+          final bytes = base64Decode(item.imageData!);
+          imageWidget = Image.memory(
+            bytes,
+            width: 70,
+            height: 70,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.broken_image, color: Colors.grey),
+            ),
+          );
+        } catch (e) {
+          imageWidget = Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.broken_image, color: Colors.grey),
+          );
+        }
+      } else {
+        imageWidget = Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Icon(Icons.image, color: Colors.grey),
+        );
+      }
+
+      return GestureDetector(
+        onTap: () {
+          context.push(
+            Uri(
+              path: '/item',
+              queryParameters: {
+                'itemImage': 'assets/images/placeholder.jpg',
+                'brand': 'Unknown',
+                'date': '2023',
+                'type': item.category,
+                'imageData': item.imageData ?? '', 
+              },
+            ).toString(),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Card(
+            color: const Color(0xFFFFCFB3),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  ClipRRect(
                     borderRadius: BorderRadius.circular(12),
+                    child: imageWidget,
                   ),
-                  child: const Icon(Icons.image, color: Colors.grey),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        category,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.category,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
+                        const SizedBox(height: 4),
+                        Text(
+                          item.name,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          'Gợi ý: ${item.suggestions}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[700],
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
