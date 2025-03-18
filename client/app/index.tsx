@@ -1,35 +1,10 @@
-import { Image, StyleSheet, Platform, View, Text } from "react-native";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {Text, View} from 'react-native';
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#F5FCFF",
-    },
-    text: {
-        fontSize: 20,
-        textAlign: "center",
-        margin: 10,
-    },
-    logo: {
-        width: 66,
-        height: 58,
-        marginTop: Platform.OS === "android" ? 20 : 0,
-    },
-    });
-
-export default function HomeScreen() {
+export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Hello, world!</Text>
-      <Image
-        source={{
-          uri: "https://reactnative.dev/img/tiny_logo.png",
-        }}
-        style={styles.logo}
-      />
+    <View className = "flex-1 justify-center items-center bg-white">
+      <Text> Hello, world!</Text>
     </View>
   );
 }
-
