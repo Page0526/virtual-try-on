@@ -3,8 +3,8 @@ import {Text, View} from 'react-native';
 
 export default function App() {
   return (
-    <View className = "flex-1 justify-center items-center bg-white">
-      <Text> Hello, world!</Text>
+    <View className = "flex-1 items-center justify-center bg-white">
+      <Text className = "text-3xl"> Hello, world!</Text>
     </View>
   );
 }

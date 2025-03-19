@@ -1,89 +1,42 @@
 import React from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StyleSheet, Platform, StatusBar } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { styled } from 'nativewind';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledImageBackground = styled(ImageBackground);
+const StyledTouchableOpacity = styled(TouchableOpacity);
 
 const FashionAppScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.container}>
+    <StyledView className="flex-1 bg-white">
       <StatusBar barStyle="light-content" />
-      <ImageBackground
+      <StyledImageBackground
         source={require('@/assets/images/background.jpg')}
-        style={styles.backgroundImage}
+        className="flex-1 w-full h-3/5"
       >
-        <View style={[styles.contentContainer, { paddingTop: insets.top }]}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>WHAT TO WEAR</Text>
-          </View>
+        <StyledView className={`flex-1 px-[5%] justify-end pb-[10%]`} style={{paddingTop: insets.top}}>
+          <StyledView className="absolute top-[58%] left-[5%]">
+            <StyledText className="text-white text-5xl font-semibold">WHAT TO WEAR</StyledText>
+          </StyledView>
           
-          <View style={styles.taglineContainer}>
-            <Text style={styles.taglineText}>NOW SO MUCH</Text>
-            <Text style={styles.taglineText}>EASIER 😍</Text>
-          </View>
+          <StyledView className="mb-[30%]">
+              <StyledText className="text-black text-5xl font-bold leading-[55px]">NOW SO MUCH</StyledText>
+              <StyledText className="text-black text-5xl font-bold leading-[55px]">EASIER 😍</StyledText>
+          </StyledView>
           
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Get started</Text>
-            </TouchableOpacity>
-          </View>
-          
-          
-        </View>
-      </ImageBackground>
-    </View>
+          <StyledView className="mb-[6%]">
+            <StyledTouchableOpacity className="bg-[#f05b6e] py-[15px] rounded-lg items-center">
+              <StyledText className="text-white text-lg font-semibold">Get started</StyledText>
+            </StyledTouchableOpacity>
+          </StyledView>
+        </StyledView>
+      </StyledImageBackground>
+    </StyledView>
   );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    backgroundImage: {
-        flex: 1,
-        width: '100%',
-        height: '60%',
-    },
-    contentContainer: {
-        flex: 1,
-        paddingHorizontal: '5%',
-        justifyContent: 'flex-end',
-        paddingBottom: '10%',
-    },
-    headerContainer: {
-        position: 'absolute',
-        top: '58%',
-        left: '5%',
-    },
-    headerText: {
-        color: '#fff',
-        fontSize: 48,
-        fontWeight: '600',
-    },
-    taglineContainer: {
-        marginBottom: '30%',
-    },
-    taglineText: {
-        color: '#000',
-        fontSize: 48,
-        fontWeight: 'bold',
-        lineHeight: 55,
-    },
-    buttonContainer: {
-        marginBottom: '6%',
-    },
-    button: {
-        backgroundColor: '#f05b6e',
-        paddingVertical: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-    },
-});
 
 export default FashionAppScreen;
