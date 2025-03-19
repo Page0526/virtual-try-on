@@ -1,50 +1,45 @@
-# Welcome to your Expo app 👋
+## Chạy code sau để cài đặt 
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+- Install trước npm 
 
-## Get started
+```
+cd client 
+npm install 
 
-1. Install dependencies
+npx expo start --clear # lenhj de chay , tai app ve xong quet qr nhe or dung duoc tren app
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+## Cấu trúc dự án
+```
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+virtual-try-on/client/
+├── app/                        
+│   ├── _layout.tsx             # Root layout wrapper for all screens
+│   ├── index.tsx               # page đầu tiên 
+│   ├── landing_page.tsx        # landing page 
+│   ├── (auth)/                 # Thông tin (đăng kí + đăng nhập + thông tin tài khoản ngừoi dùng)
+│   │   ├── login.tsx           # Login screen (/login)
+│   │   ├── register.tsx        # Registration screen (/register)
+│   │   └── profile.tsx         # User profile screen (/profile)
+│   ├── (tabs)/                 # Tab navigation group (doesn't affect URL path)
+│   │   └── bottom_tab.tsx      # Bottom tab navigation (/bottom_tab)
+│   ├── fitting_room/           # Virtual fitting room feature (URL: /fitting_room/...)
+│   │   ├── input.tsx           # màn input nhập thông tin ảnh của ngừoi dùng 
+│   │   ├── output.tsx          # màn trả về output của model 
+│   │   └── closet.tsx          # màn lưu thông tin tủ đồ người dùng
+│   ├── shop/                   # Shopping related screens (URL: /shop/...)
+│   │   ├── cart.tsx            # Shopping cart screen (/shop/cart)
+│   │   └── ...
+│   └── stylemate/              # Style recommendation feature (URL: /stylemate/...)
+│
+├── assets/                     # Static assets for the application
+│   ├── fonts/                  # Custom fonts
+│   └── images/                 # Images and icons
+│
+├── components/                 # Reusable UI components
+│
+├── constants/                  # Application constants
+    └── Colors.ts               # Color definition
+```

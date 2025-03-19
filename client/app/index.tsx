@@ -1,10 +1,13 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {Text, View} from 'react-native';
+import LandingScreen from './landing_page';
+
+
 
 export default function App() {
   return (
-    <View className = "flex-1 items-center justify-center bg-white">
-      <Text className = "text-3xl"> Hello, world!</Text>
-    </View>
+    <SafeAreaProvider>
+      <LandingScreen />
+    </SafeAreaProvider>
   );
 }
