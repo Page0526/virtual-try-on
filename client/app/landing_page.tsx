@@ -3,6 +3,7 @@ import { View, Text, ImageBackground, TouchableOpacity, Platform, StatusBar } fr
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { styled } from 'nativewind';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -11,7 +12,8 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 
 const LandingScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-
+  const router = useRouter();
+  
   return (
     <StyledView className="flex-1 bg-white">
       <StatusBar barStyle="light-content" />
@@ -23,9 +25,6 @@ const LandingScreen: React.FC = () => {
             colors={['rgba(240, 91, 110, 0.3)', 'rgba(240, 91, 110, 0.3)']}
             className = "absolute w-full h-[70%]"
           />
-
-
-
         <StyledView className={`flex-1 px-[5%] justify-end pb-[10%]`} style={{paddingTop: insets.top}}>
           <StyledView className="absolute top-[70%] left-[5%]">
             <StyledText className="text-white text-5xl font-semibold">WHAT TO WEAR</StyledText>
@@ -37,7 +36,10 @@ const LandingScreen: React.FC = () => {
           </StyledView>
           
           <StyledView className="mb-[6%]">
-            <StyledTouchableOpacity className="bg-[#f05b6e] py-[15px] rounded-lg items-center">
+            <StyledTouchableOpacity 
+              className="bg-[#f05b6e] py-[15px] rounded-lg items-center"
+              onPress={() => router.replace('/(tabs)/shop/home')}
+            >
               <StyledText className="text-white text-3xl font-semibold">Get started</StyledText>
             </StyledTouchableOpacity>
           </StyledView>
