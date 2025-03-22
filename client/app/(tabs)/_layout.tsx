@@ -5,12 +5,14 @@ import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {Colors} from './../../constants/Colors' 
+import { StyleSheet } from 'react-native';
 
 export default function TabLayout() {
     return (
         <Tabs screenOptions={{
             headerShown:false,
-            tabBarActiveTintColor: Colors.PRIMARY
+            tabBarActiveTintColor: Colors.PRIMARY,
+            tabBarStyle: styles.tabBar,
             }}>
             <Tabs.Screen 
                 name='shop/home'
@@ -48,3 +50,22 @@ export default function TabLayout() {
         </Tabs>
     )
 }
+
+const styles = StyleSheet.create({
+    tabBar: {
+        position: 'absolute',
+        bottom: -16, // Space from bottom
+        backgroundColor: '#ffffff',
+        borderRadius: 25,
+        borderBottomEndRadius: 0,
+        borderColor: 'rgba(0, 0, 0, 0.3)',
+        borderWidth: 0.5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 10,
+        height: 70,
+        paddingBottom: 10,
+    }
+});
