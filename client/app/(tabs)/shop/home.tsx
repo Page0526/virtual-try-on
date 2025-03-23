@@ -1,5 +1,5 @@
-import Header from '@/app/components/Home/Header';
-import Slider from '@/app/components/Home/Slider';
+import Header from '@/components/Home/Header';
+import Slider from '@/components/Home/Slider';
 import { Colors } from '@/constants/Colors';
 import {Text, View} from 'react-native';
 import { StyleSheet } from 'react-native';
