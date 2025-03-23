@@ -233,7 +233,7 @@ interface ClosetItem {
   id: string;
   name: string;
   description: string;
-  color: string;
+  image: string;
 }
 
 interface OutfitItem {
@@ -251,15 +251,15 @@ const VirtualClosetScreen = () => {
   const [closetItems, setClosetItems] = useState<ClosetItem[]>([
     {
       id: '1',
-      name: 'Name',
-      description: 'Description about an event, someones supporting or special outfits suited for different occasions.',
-      color: '#F25C74'
+      name: 'My Adidas Shoes',
+      description: 'This is my favorite pair of shoes',
+      image: 'https://bizweb.dktcdn.net/thumb/large/100/424/874/products/z6171338962971-b0c416a77fbc5087938a95c26b487a43.jpg?v=1735390179417'
     },
     {
       id: '2',
-      name: 'Name',
-      description: 'Description about an event, someones supporting or special outfits suited for different occasions.',
-      color: '#F25C74'
+      name: 'Sweatshirt - size small',
+      description: 'This is my birthday present',
+      image: 'https://i.ebayimg.com/images/g/4y8AAOSwv9hm9L5-/s-l1200.jpg'
     }
   ]);
   
@@ -357,9 +357,10 @@ const VirtualClosetScreen = () => {
           {closetItems.map((item) => (
             <StyledView key={item.id} className="mb-4 mx-4">
               <StyledView className="flex-row">
-                <StyledView 
-                  style={{ backgroundColor: item.color }} 
+                <StyledImage 
+                  source={{ uri: item.image }} 
                   className="w-16 h-16 rounded-lg mr-4"
+                  resizeMode="cover"
                 />
                 <StyledView className="flex-1 justify-center">
                   <StyledText className="font-semibold text-base">{item.name}</StyledText>

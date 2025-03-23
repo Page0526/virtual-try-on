@@ -6,6 +6,7 @@ interface CartItemType {
   name: string;
   price: number;
   quantity: number;
+  itemlink: string;
 }
 
 interface CartItemProps {
@@ -27,7 +28,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onDecrement, onIncr
   return (
     <View className="flex-row bg-white rounded-xl p-4 mb-3">
       <Image 
-        source={require('@/assets/images/background.png')} 
+        source={{ uri: item.itemlink }} 
         className="w-20 h-20 rounded-lg" 
       />
       
@@ -98,10 +99,9 @@ const GroupedItem: React.FC<GroupedItemProps> = ({ title, items, onRemove, onDec
 
 const CartScreen: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([
-    { id: 1, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
-    { id: 2, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
-    { id: 3, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
-    { id: 4, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
+    { id: 1, name: 'Casual T-shirt', price: 399.00, quantity: 1, itemlink : 'https://harpersbazaarprod.vtexassets.com/unsafe/768x0/center/middle/filters:quality(80)/https%3A%2F%2Fharpersbazaarprod.vtexassets.com%2Farquivos%2Fids%2F849903%2Fimage_1.jpg%3Fv%3D638775684080800000' },
+    { id: 2, name: 'Daniella Shevel', price: 695.00, quantity: 1, itemlink : 'https://harpersbazaarprod.vtexassets.com/unsafe/768x0/center/middle/filters:quality(80)/https%3A%2F%2Fharpersbazaarprod.vtexassets.com%2Farquivos%2Fids%2F422427%2Fimage_1.jpg%3Fv%3D638594046348100000' },
+    { id: 3, name: 'Dazzling Feather Embroidered Bomber Jacket', price: 6897.00, quantity: 1 , itemlink : 'https://harpersbazaarprod.vtexassets.com/unsafe/768x0/center/middle/filters:quality(80)/https%3A%2F%2Fharpersbazaarprod.vtexassets.com%2Farquivos%2Fids%2F717646%2Fimage_1.jpg%3Fv%3D638720661038070000'},
   ]);
 
   const handleRemoveItem = (id: number): void => {
