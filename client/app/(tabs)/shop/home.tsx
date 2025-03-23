@@ -233,6 +233,10 @@ export default function HomeScreen() {
     );
   };
 
+  const handleProductPress = (productId: string) => {
+    router.replace('/(tabs)/shop/product_detail');
+  };
+
   return (
     <StyledSafeAreaView className={`flex-1 bg-white ${Platform.OS === 'android' ? 'pt-8' : ''}`}>
       <StatusBar barStyle="dark-content" />
@@ -410,9 +414,10 @@ export default function HomeScreen() {
           
           <StyledView className="flex-row flex-wrap justify-between">
             {filteredProducts.map((product) => (
-              <StyledView 
+              <StyledTouchableOpacity 
                 key={product.id} 
                 className="bg-white rounded-xl shadow-md mb-4 w-[48%]"
+                onPress={() => handleProductPress(product.id)}
               >
                 {/* Product Image */}
                 <StyledImage 
@@ -426,18 +431,16 @@ export default function HomeScreen() {
                   <StyledText className="font-medium text-sm" numberOfLines={1}>
                     {product.name}
                   </StyledText>
-                  
                   <StyledView className="flex-row justify-between items-center mt-2">
                     <StyledText className="font-bold text-base">
                       ${product.price}
                     </StyledText>
-                    
                     <StyledTouchableOpacity className="bg-red-500 rounded-full p-1.5">
                       <Feather name="shopping-bag" size={14} color="white" />
                     </StyledTouchableOpacity>
                   </StyledView>
                 </StyledView>
-              </StyledView>
+              </StyledTouchableOpacity>
             ))}
           </StyledView>
           

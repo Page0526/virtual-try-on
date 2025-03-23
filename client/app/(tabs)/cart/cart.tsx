@@ -1,413 +1,179 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Modal, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { useCart, CartItem, CartItemKey } from '@/app/(tabs)/cart/cartContext';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 
-const CartScreen: React.FC = () => {
-  const router = useRouter();
-  const { cartItems, updateQuantity, removeFromCart } = useCart();
-  const [selectedQuantityItem, setSelectedQuantityItem] = useState<CartItemKey | null>(null);
-  const [quantityModalVisible, setQuantityModalVisible] = useState<boolean>(false);
+interface CartItemType {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+}
 
-  const handleGoBack = (): void => {
-    router.back();
-  };
+interface CartItemProps {
+  item: CartItemType;
+  onRemove: (id: number) => void;
+  onDecrement: (id: number) => void;
+  onIncrement: (id: number) => void;
+}
 
-  // Calculate total price
-  const totalPrice: number = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+interface GroupedItemProps {
+  title: string;
+  items: CartItemType[];
+  onRemove: (id: number) => void;
+  onDecrement: (id: number) => void;
+  onIncrement: (id: number) => void;
+}
 
-  const continueShopping = (): void => {
-    router.push('./shop/home');
-  };
-
-  const handleQuantitySelect = (item: CartItem): void => {
-    setSelectedQuantityItem({
-      id: item.id,
-      size: item.size,
-      color: item.color
-    });
-    setQuantityModalVisible(true);
-  };
-
-  const handleSetQuantity = (quantity: number): void => {
-    if (selectedQuantityItem) {
-      const item = cartItems.find(item => 
-        item.id === selectedQuantityItem.id && 
-        item.size === selectedQuantityItem.size && 
-        item.color === selectedQuantityItem.color
-      );
-      
-      if (item) {
-        const diff = quantity - item.quantity;
-        for (let i = 0; i < Math.abs(diff); i++) {
-          updateQuantity(selectedQuantityItem, diff > 0);
-        }
-      }
-    }
-    setQuantityModalVisible(false);
-    setSelectedQuantityItem(null);
-  };
-
-  const handleRemoveItem = (item: CartItem): void => {
-    removeFromCart({
-      id: item.id,
-      size: item.size,
-      color: item.color
-    });
-  };
-
+const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onDecrement, onIncrement }) => {
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-
-      {/* Main container with fixed header, scrollable content and fixed footer */}
-      <View style={styles.mainContainer}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>GIỎ HÀNG</Text>
-          <TouchableOpacity 
-            onPress={handleGoBack}
-            style={styles.closeButton}
-          >
-            <AntDesign name="close" size={24} color="black" />
-          </TouchableOpacity>
+    <View className="flex-row bg-white rounded-xl p-4 mb-3">
+      <Image 
+        source={require('@/assets/images/background.png')} 
+        className="w-20 h-20 rounded-lg" 
+      />
+      
+      <View className="flex-1 ml-3">
+        <Text className="text-sm font-medium">
+          {item.name}
+        </Text>
+        <View className="flex-row items-center mt-1">
+          <Text className="text-xs">Size L • Color: </Text>
+          <Text className="text-xs text-blue-500">Blue</Text>
         </View>
-
-        {/* Scrollable Content */}
-        <KeyboardAwareScrollView 
-          style={styles.scrollContent}
-          contentContainerStyle={cartItems.length === 0 ? styles.emptyCartContainer : undefined}
-        >
-          {/* Empty Cart Message */}
-          {cartItems.length === 0 ? (
-            <View style={styles.emptyCartContent}>
-              <Ionicons name="cart-outline" size={80} color="#ddd" />
-              <Text style={styles.emptyCartText}>Giỏ hàng trống</Text>
-              <TouchableOpacity 
-                style={styles.continueShoppingButton}
-                onPress={continueShopping}
-              >
-                <Text style={styles.continueShoppingText}>Tiếp tục mua sắm</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            // Cart Items
-            cartItems.map((item: CartItem, index: number) => (
-              <View 
-                key={`${item.id}-${item.size}-${item.color}-${index}`}
-                style={styles.cartItemContainer}
-              >
-                <View style={styles.itemContent}>
-                  {/* Row with product image and details */}
-                  <View style={styles.productRow}>
-                    {/* Product Image */}
-                    <Image 
-                      source={{ uri: item.image }}
-                      style={styles.productImage}
-                      resizeMode="cover"
-                    />
-                    
-                    {/* Product Details */}
-                    <View style={styles.productDetails}>
-                      <View style={styles.itemHeader}>
-                        <Text style={styles.itemName}>{item.name}</Text>
-                        <TouchableOpacity onPress={() => handleRemoveItem(item)}>
-                          <AntDesign name="close" size={20} color="black" />
-                        </TouchableOpacity>
-                      </View>
-                      
-                      <Text style={styles.itemDetail}>
-                        Màu sắc: {item.color === 'gray' ? '07 GRAY' : 
-                                  item.color === 'black' ? '09 BLACK' : 
-                                  item.color.toUpperCase()}
-                      </Text>
-                      <Text style={styles.itemDetail}>
-                        Kích cỡ: {item.size.includes('CM') ? `Nam ${item.size}` : item.size}
-                      </Text>
-                      <Text style={styles.itemPrice}>
-                        {item.price.toLocaleString('vi-VN')} VND
-                      </Text>
-                    </View>
-                  </View>
-                  
-                  {/* Quantity and Subtotal Section */}
-                  <View style={styles.quantityAndTotal}>
-                    <View style={styles.quantityRow}>
-                      <TouchableOpacity 
-                        style={styles.quantitySelector}
-                        onPress={() => handleQuantitySelect(item)}
-                      >
-                        <Text style={styles.quantityText}>{item.quantity}</Text>
-                        <AntDesign name="down" size={12} color="black" />
-                      </TouchableOpacity>
-                    </View>
-                    
-                    <View style={styles.subtotalContainer}>
-                      <Text style={styles.subtotalLabel}>TỔNG:</Text>
-                      <Text style={styles.subtotalValue}>
-                        {(item.price * item.quantity).toLocaleString('vi-VN')} VND
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            ))
-          )}
-          
-          {/* Extra space at bottom to ensure content isn't covered by footer */}
-          <View style={styles.bottomSpacing} />
-        </KeyboardAwareScrollView>
-
-        {/* Footer with Total and Checkout button */}
-        {cartItems.length > 0 && (
-          <View style={styles.footer}>
-            <View style={styles.totalContainer}>
-              <Text style={styles.totalLabel}>TỔNG CỘNG</Text>
-              <Text style={styles.totalValue}>
-                {totalPrice.toLocaleString('vi-VN')} VND
-              </Text>
-            </View>
-            
-            <TouchableOpacity 
-              style={styles.checkoutButton}
-              onPress={() => console.log('Checkout')}
-            >
-              <Text style={styles.checkoutButtonText}>
-                THANH TOÁN
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <Text className="font-semibold mt-1">${item.price.toFixed(2)}</Text>
       </View>
 
-      {/* Quantity Modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={quantityModalVisible}
-        onRequestClose={() => setQuantityModalVisible(false)}
-      >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setQuantityModalVisible(false)}
-        >
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Chọn số lượng</Text>
-            <View style={styles.quantityGrid}>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num: number) => (
-                <TouchableOpacity
-                  key={num}
-                  style={styles.quantityOption}
-                  onPress={() => handleSetQuantity(num)}
-                >
-                  <Text style={styles.quantityOptionText}>{num}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+      <View className="justify-between items-end">
+        <TouchableOpacity onPress={() => onRemove(item.id)} className="p-1">
+          <View className="w-6 h-6 items-center justify-center rounded-full bg-gray-100">
+            <Text className="text-gray-500">×</Text>
           </View>
         </TouchableOpacity>
-      </Modal>
-    </SafeAreaView>
+
+        <View className="flex-row items-center">
+          <TouchableOpacity 
+            onPress={() => onDecrement(item.id)}
+            className="w-6 h-6 items-center justify-center bg-red-500 rounded"
+          >
+            <Text className="text-white font-bold">-</Text>
+          </TouchableOpacity>
+          
+          <Text className="mx-2 text-sm min-w-6 text-center">{item.quantity}</Text>
+          
+          <TouchableOpacity 
+            onPress={() => onIncrement(item.id)}
+            className="w-6 h-6 items-center justify-center bg-red-500 rounded"
+          >
+            <Text className="text-white font-bold">+</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  mainContainer: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e5e5',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  closeButton: {
-    position: 'absolute',
-    right: 16,
-  },
-  scrollContent: {
-    flex: 1,
-  },
-  emptyCartContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyCartContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 40,
-  },
-  emptyCartText: {
-    fontSize: 18,
-    color: '#666',
-    marginTop: 16,
-  },
-  continueShoppingButton: {
-    backgroundColor: 'black',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
-    marginTop: 24,
-  },
-  continueShoppingText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  cartItemContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#eeeeee',
-  },
-  itemContent: {
-    padding: 16,
-  },
-  productRow: {
-    flexDirection: 'row',
-    marginBottom: 12,
-  },
-  productImage: {
-    width: 80,
-    height: 100,
-    borderRadius: 4,
-    backgroundColor: '#f5f5f5',
-    marginRight: 12,
-  },
-  productDetails: {
-    flex: 1,
-  },
-  itemHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  itemName: {
-    fontSize: 18,
-    fontWeight: '500',
-    flex: 1,
-    paddingRight: 8,
-  },
-  itemDetail: {
-    fontSize: 16,
-    color: '#555',
-    marginTop: 4,
-  },
-  itemPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 8,
-  },
-  quantityAndTotal: {
-    marginTop: 10,
-  },
-  quantityRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  quantitySelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-  },
-  quantityText: {
-    fontSize: 16,
-    marginRight: 8,
-  },
-  subtotalContainer: {
-    marginTop: 8,
-  },
-  subtotalLabel: {
-    color: '#888',
-    fontSize: 14,
-  },
-  subtotalValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  bottomSpacing: {
-    height: 120,
-  },
-  footer: {
-    borderTopWidth: 1,
-    borderTopColor: '#e5e5e5',
-    backgroundColor: 'white',
-  },
-  totalContainer: {
-    padding: 16,
-  },
-  totalLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  totalValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  checkoutButton: {
-    backgroundColor: '#FF0000',
-    padding: 16,
-    alignItems: 'center',
-  },
-  checkoutButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 16,
-    width: '80%',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  quantityGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  quantityOption: {
-    width: '30%',
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    marginBottom: 8,
-    alignItems: 'center',
-  },
-  quantityOptionText: {
-    fontSize: 16,
-  },
-});
+const GroupedItem: React.FC<GroupedItemProps> = ({ title, items, onRemove, onDecrement, onIncrement }) => {
+  return (
+    <View className="mb-5">
+      <View className="flex-row justify-between items-center mb-3">
+        <Text className="font-semibold">{title}</Text>
+        <TouchableOpacity>
+          <View className="w-6 h-6 items-center justify-center rounded-full bg-gray-100">
+            <Text className="text-gray-500">×</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      
+      {items.map(item => (
+        <CartItem 
+          key={item.id} 
+          item={item} 
+          onRemove={onRemove}
+          onDecrement={onDecrement}
+          onIncrement={onIncrement}
+        />
+      ))}
+    </View>
+  );
+};
+
+const CartScreen: React.FC = () => {
+  const [cartItems, setCartItems] = useState<CartItemType[]>([
+    { id: 1, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
+    { id: 2, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
+    { id: 3, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
+    { id: 4, name: 'Popular shoes best choice from Adidas', price: 39.00, quantity: 1 },
+  ]);
+
+  const handleRemoveItem = (id: number): void => {
+    setCartItems(cartItems.filter(item => item.id !== id));
+  };
+
+  const handleIncrement = (id: number): void => {
+    setCartItems(cartItems.map(item => 
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+    ));
+  };
+
+  const handleDecrement = (id: number): void => {
+    setCartItems(cartItems.map(item => 
+      item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
+    ));
+  };
+
+  const calculateTotal = (): number => {
+    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  // Group the first two items
+  const groupedItems = cartItems.slice(0, 2);
+  const regularItems = cartItems.slice(2);
+
+  return (
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <StatusBar barStyle="dark-content" />
+      
+      <View className="px-4 py-3 bg-white shadow-md">
+        <Text className="text-center text-lg font-bold text-gray-800">CART</Text>
+      </View>
+
+      <ScrollView className="flex-1 px-4 pt-4">
+        <GroupedItem 
+          title="Together cheaper" 
+          items={groupedItems} 
+          onRemove={handleRemoveItem}
+          onDecrement={handleDecrement}
+          onIncrement={handleIncrement}
+        />
+
+        {regularItems.map(item => (
+          <CartItem 
+            key={item.id} 
+            item={item} 
+            onRemove={handleRemoveItem}
+            onDecrement={handleDecrement}
+            onIncrement={handleIncrement}
+          />
+        ))}
+
+        {/* Responsive spacing - will be larger on bigger screens */}
+        <View className="h-4 md:h-8 lg:h-12" />
+
+        <View className="bg-white p-4 shadow-lg mt-4">
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-gray-500">Total</Text>
+            <Text className="text-xl font-bold">${calculateTotal().toFixed(2)}</Text>
+          </View>
+
+            <TouchableOpacity 
+            className="w-full bg-red-500 py-3 rounded-full"
+            activeOpacity={0.8}
+            >
+            <Text className="text-white font-bold text-center text-lg">Go to Checkout</Text>
+            </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
 
 export default CartScreen;
