@@ -34,10 +34,10 @@ const ProductDetailScreen = () => {
           </View>
           <View className="relative">
             <Image 
-              source={require('@/assets/images/background.png')} 
+              source={require('@/assets/images/dress.jpg')} 
               style={{ width: windowWidth , height: windowHeight * 0.5}}
               className="resize-contain"
-              defaultSource={require('@/assets/images/background.png')}
+              defaultSource={require('@/assets/images/dress.jpg')}
             />
             {/* Indicators now inside the image at the bottom */}
             <View className="absolute bottom-4 left-0 right-0 flex-row justify-center">
@@ -50,8 +50,8 @@ const ProductDetailScreen = () => {
         {/* Product Details */}
         <View className="bg-white mt-2 p-4 rounded-t-3xl">
           <View className="flex-row justify-between items-center">
-            <Text className={`font-bold ${isLargeScreen ? 'text-2xl' : 'text-xl'}`}>Nike Air Force</Text>
-            <Text className="text-red-600 font-bold text-xl">$199.00</Text>
+            <Text className={`font-bold ${isLargeScreen ? 'text-2xl' : 'text-xl'}`}>Maxi Summer Dress</Text>
+            <Text className="text-red-600 font-bold text-xl">$270.99</Text>
           </View>
           
           {/* Ratings */}
@@ -73,7 +73,7 @@ const ProductDetailScreen = () => {
           <View className="mt-4">
             <Text className="font-semibold text-lg">Details</Text>
             <Text className="text-gray-600 mt-1">
-              Nike Dri-Fit is a polyester fabric designed to help you keep dry so you can more comfortably work harder, longer.
+            A signature midi style, our best-selling Josephina Dress is back this Spring with the same effortless day-to-night sensibility in a new bluebird colorway. Featuring a fitted knit bodice and a lightweight tiered cotton skirt, Josephina is a universally flattering silhouette for ease of wear. Style the Josephina Dress back to your favorite pair of sandals or flats for an elevated daytime look, or with a strappy heel for an evening out. Product Details: • Midi length • Sweetheart neckline • Sleeveless • Unlined
             </Text>
           </View>
           

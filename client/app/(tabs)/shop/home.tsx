@@ -252,7 +252,7 @@ export default function HomeScreen() {
           className="w-10 h-10 rounded-full"
         >
           <StyledImage 
-            source={require('@/assets/images/react-logo.png')}
+            source={require('@/assets/images/avatar.jpg')}
             className="w-10 h-10 rounded-full"
           />
         </StyledTouchableOpacity>

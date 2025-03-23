@@ -283,7 +283,7 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
             disabled={loading}
           >
             <Ionicons name="save" size={22} color={primaryColor} />
-            <Text style={[styles.actionButtonText, { color: primaryColor }]}>LƯU</Text>
+            <Text style={[styles.actionButtonText, { color: primaryColor }]}>SAVE</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
@@ -292,7 +292,7 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
             disabled={loading}
           >
             <Ionicons name="share-social" size={22} color={primaryColor} />
-            <Text style={[styles.actionButtonText, { color: primaryColor }]}>CHIA SẺ</Text>
+            <Text style={[styles.actionButtonText, { color: primaryColor }]}>SHARE</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -304,7 +304,7 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
             disabled={loading}
           >
             <Ionicons name="bulb" size={22} color={primaryColor} />
-            <Text style={[styles.actionButtonText, { color: primaryColor }]}>GỢI Ý</Text>
+            <Text style={[styles.actionButtonText, { color: primaryColor }]}>SUGGEST</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -317,7 +317,7 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
           disabled={loading}
         >
           <Ionicons name="camera" size={20} color="#ffffff" style={styles.suggestionsButtonIcon} />
-          <Text style={styles.suggestionsButtonText}>THỬ MẶC LẠI</Text>
+          <Text style={styles.suggestionsButtonText}>TRY AGAIN</Text>
         </TouchableOpacity>
       </View>
 

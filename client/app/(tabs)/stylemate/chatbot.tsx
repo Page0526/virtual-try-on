@@ -80,10 +80,19 @@ export default function ChatScreen() {
     setTimeout(() => {
       const botResponse: Message = {
         id: Date.now().toString(),
-        text: 'Now, I ll generate an image that represents streetwear fashion—featuring oversized hoodies, graphic tees, sneakers, and urban aesthetics. Here is an image representing streetwear fashion—featuring an oversized hoodie, cargo pants, high-top sneakers, and an urban background with graffiti and neon lights. Let me know if you d like a different style! 😊', // Always reply with "Hello"
+        text: `To design and print a T-shirt with a similar butterfly-themed graphic, follow these steps:
+
+    Create the Design:
+    • Use graphic design software like Adobe Illustrator, Photoshop, or Canva to design colorful butterflies with a dynamic layout.
+    • Ensure the design has high resolution (at least 300 DPI) for clear printing.
+    • Consider using a transparent background (PNG format) for flexibility in printing.
+
+    Test and Adjust:
+    • Order a sample to check the print quality and adjust colors if needed.😊`,
         sentByMe: false,
-        imageUrl: 'https://files.oaiusercontent.com/file-VB13vFcLxXSzms4FuiXxac?se=2025-03-23T12%3A18%3A41Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De3e64e00-15e3-42bd-9496-2ce071458882.webp&sig=Jb6iRgZIMDl7wPNrojZrwq8OYsCZWEmIKigXdoefvZw%3D', // Add image URL
+        imageUrl: 'https://i.etsystatic.com/44525338/r/il/73cf08/5655739622/il_fullxfull.5655739622_a54i.jpg', // Add image URL
       };
+      
       
       setMessages(prevMessages => [...prevMessages, botResponse]);
       setIsTyping(false);
