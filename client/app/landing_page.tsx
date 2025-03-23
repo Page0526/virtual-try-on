@@ -30,9 +30,9 @@ const LandingScreen: React.FC = () => {
             <StyledText className="text-white text-5xl font-semibold">WHAT TO WEAR</StyledText>
           </StyledView>
           
-          <StyledView className="mb-[10%]">
-              <StyledText className="text-black text-4xl font-bold leading-[55px]">NOW SO MUCH</StyledText>
-              <StyledText className="text-black text-4xl font-bold leading-[55px]">EASIER 😍</StyledText>
+          <StyledView className="mb-[5%]">
+              <StyledText className="text-black text-5xl font-bold leading-[55px]">NOW SO MUCH</StyledText>
+              <StyledText className="text-black text-5xl font-bold leading-[55px]">EASIER 😍</StyledText>
           </StyledView>
           
           <StyledView className="mb-[6%]">
