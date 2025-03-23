@@ -13,8 +13,8 @@ export default function TabLayout() {
             tabBarActiveTintColor: Colors.PRIMARY,
             tabBarStyle: {
                 position: 'absolute',
-                bottom: 35, // Moved higher up
-                marginHorizontal: 16,
+                bottom: 0, // Placed at the bottom of the screen
+                marginHorizontal: 0, // Removed side margins
                 backgroundColor: '#ffffff',
                 borderRadius: 25, // All corners rounded
                 borderColor: 'rgba(0, 0, 0, 0.3)',
@@ -24,16 +24,16 @@ export default function TabLayout() {
                 shadowOpacity: 0.1,
                 shadowRadius: 8,
                 elevation: 10,
-                height: 70,
-                paddingBottom: 10,
-                width: 'auto',
+                height: 85, // Increased height
+                paddingBottom: 12,
+                width: '100%', // Full width
             },
             tabBarLabelStyle: {
                 fontSize: 12,
-                marginBottom: 4,
+                marginBottom: 8, // Increased to move label up
             },
             tabBarIconStyle: {
-                marginTop: 4,
+                marginTop: 8, // Increased to move icons up
             }
             }}>
             <Tabs.Screen 
