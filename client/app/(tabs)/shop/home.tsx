@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, ScrollView, TextInput, TouchableOpacity, SafeAreaView, Platform, StatusBar, Dimensions, Animated, FlatList } from 'react-native';
 import { Feather, Ionicons, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { styled } from 'nativewind';
+import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+
 
 // Styled components for NativeWind v2
 const StyledView = styled(View);
@@ -16,6 +19,8 @@ const StyledSafeAreaView = styled(SafeAreaView);
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function HomeScreen() {
+
+  const router = useRouter();
   // Sample data with multiple images for slideshow
   const recentOutfits = [
     {
@@ -238,10 +243,15 @@ export default function HomeScreen() {
           <StyledText className="font-medium">Welcome back, </StyledText>
           <StyledText className="font-bold text-red-500">Tuoc Nguyen</StyledText>
         </StyledText>
-        <StyledImage 
-          source={require('@/assets/images/react-logo.png')}
+        <StyledTouchableOpacity 
+          onPress={() => router.replace('/(auth)/profile')}
           className="w-10 h-10 rounded-full"
-        />
+        >
+          <StyledImage 
+            source={require('@/assets/images/react-logo.png')}
+            className="w-10 h-10 rounded-full"
+          />
+        </StyledTouchableOpacity>
       </StyledView>
 
       {/* Search Bar */}
