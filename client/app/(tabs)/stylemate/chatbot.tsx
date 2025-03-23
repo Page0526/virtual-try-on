@@ -14,7 +14,8 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardEvent
+  KeyboardEvent,
+  Image
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,6 +24,7 @@ type Message = {
   id: string;
   text: string;
   sentByMe: boolean;
+  imageUrl?: string; // Add optional imageUrl property
 };
 
 type ChatSession = {
@@ -78,8 +80,9 @@ export default function ChatScreen() {
     setTimeout(() => {
       const botResponse: Message = {
         id: Date.now().toString(),
-        text: 'Hello', // Always reply with "Hello"
+        text: 'Now, I ll generate an image that represents streetwear fashion—featuring oversized hoodies, graphic tees, sneakers, and urban aesthetics. Here is an image representing streetwear fashion—featuring an oversized hoodie, cargo pants, high-top sneakers, and an urban background with graffiti and neon lights. Let me know if you d like a different style! 😊', // Always reply with "Hello"
         sentByMe: false,
+        imageUrl: 'https://files.oaiusercontent.com/file-VB13vFcLxXSzms4FuiXxac?se=2025-03-23T12%3A18%3A41Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De3e64e00-15e3-42bd-9496-2ce071458882.webp&sig=Jb6iRgZIMDl7wPNrojZrwq8OYsCZWEmIKigXdoefvZw%3D', // Add image URL
       };
       
       setMessages(prevMessages => [...prevMessages, botResponse]);
@@ -246,6 +249,12 @@ export default function ChatScreen() {
                         }`}>
                           {message.text}
                         </Text>
+                        {message.imageUrl && (
+                          <Image 
+                            source={{ uri: message.imageUrl }} 
+                            style={{ width: 200, height: 200, borderRadius: 10, marginTop: 5, marginBottom: 20, alignSelf: 'center' }} 
+                          />
+                        )}
                       </View>
                     ))}
                     
