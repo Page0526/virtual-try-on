@@ -53,7 +53,8 @@ export default function TabLayout() {
                 name='virtual-fitting'
                 options={{
                     tabBarLabel: 'Fitting Room',
-                    tabBarIcon: ({color})=><MaterialCommunityIcons name="wardrobe-outline" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
+                    tabBarIcon: ({color})=><MaterialCommunityIcons name="wardrobe-outline" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />,
+                    tabBarStyle: { display: 'none' },
                 }}/>
             <Tabs.Screen 
                 name='stylemate/chatbot' 
