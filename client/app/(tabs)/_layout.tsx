@@ -50,7 +50,7 @@ export default function TabLayout() {
                     tabBarIcon: ({color})=><Feather name="shopping-bag" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
                 }}/>
             <Tabs.Screen 
-                name='fitting_room/input_src'
+                name='virtual-fitting'
                 options={{
                     tabBarLabel: 'Fitting Room',
                     tabBarIcon: ({color})=><MaterialCommunityIcons name="wardrobe-outline" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
@@ -62,7 +62,7 @@ export default function TabLayout() {
                     tabBarIcon: ({color})=><MaterialCommunityIcons name="robot-love-outline" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
                 }}/>
             <Tabs.Screen 
-                name='fitting_room/closet'
+                name='closet/closet'
                 options={{
                     tabBarLabel: 'Closet',
                     tabBarIcon: ({color})=><Ionicons name="heart-circle-outline" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
