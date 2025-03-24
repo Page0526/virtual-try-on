@@ -30,8 +30,6 @@ class RecommendModel:
 
 
 
-
-
 class WardrobeModel : 
 
     collection_name = "wardrobe"

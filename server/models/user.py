@@ -1,35 +1,40 @@
 from datetime import datetime 
+"""
 
+
+"""
 
 class UserModel: 
 
-    collection_name = "users"
+    collection_name = "user"
     
     @staticmethod 
     def user_helper(user) -> dict : 
         return {
             "id" : str(user["_id"]),
-            "username" : user["username"],
             "fullname" : user["fullname"],
             "phone" : user["phone"],
             "address" : user["address"], 
             "email" : user["email"],
+            "is_admin" : user["is_admin"], 
             "password" : user["password"],
+            "avatar" : user["avatar"],
             "created_at" : user["created_at"],
             "updated_at" : user["updated_at"]
         }
     
-
-    def create_user(user_data): 
+    @staticmethod 
+    def create_user(user_data: dict): 
         now = datetime.now()
 
         return {
-            "username" : user_data.username, 
-            "fullname" : user_data.fullname,
-            "phone" : user_data.phone,
-            "address" : user_data.address,
-            "email" : user_data.email,
-            "password" : user_data.password,
+            "fullname" : user_data.get("fullname", ""),
+            "phone" : user_data.get("phone", ""),
+            "address" : user_data.get("address", ""),
+            "email" : user_data["email"],
+            "password" : user_data["hash_password"],
+            "avatar" : user_data.get("avatar", ""),
+            "is_admin" : user_data.get("is_admin", False),
             "created_at" : now,
             "updated_at" : now
         }

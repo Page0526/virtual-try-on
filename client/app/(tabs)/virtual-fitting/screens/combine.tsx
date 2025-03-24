@@ -160,15 +160,15 @@ const CombineScreen = () => {
     setProcessingStage('Analyzing images...');
     setTimeout(() => {
       setProcessingStage('Mapping garment to model...');
-    }, 700);
+    }, 6000);
     
     setTimeout(() => {
       setProcessingStage('Applying fitting algorithm...');
-    }, 1400);
+    }, 6000);
     
     setTimeout(() => {
       setProcessingStage('Finalizing result...');
-    }, 1900);
+    }, 6000);
     
     // Finish processing
     setTimeout(() => {
@@ -180,7 +180,7 @@ const CombineScreen = () => {
       
       // Navigate to result
       router.push('/(tabs)/virtual-fitting/screens/result');
-    }, 2500);
+    }, 7000);
   };
 
   if (!urisValid) {

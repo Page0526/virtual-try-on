@@ -45,5 +45,13 @@
 => Cần tìm phương pháp cải thiện mô hình với feedback của ngừoi dùng 
 
 
+## Project structure 
+
+1. Models : định nghĩa format của collection trong mongodb -> chuyển đổi format sang json 
+2. Services -> các hàm xử lý logic cho mỗi API 
+3. routers -> gọi tới các hàm services được định nghĩa trước với đường dẫn api  
+4. schemas -> 
+
+
     
     

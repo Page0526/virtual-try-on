@@ -1,7 +1,7 @@
 import motor.motor_asyncio
 from pymongo import MongoClient 
 from pymongo.errors import ConnectionFailure
-from config.setting import Setting 
+from config.setting import setting
 
 """
 File này connect tới mongodb -> setup db  
@@ -13,10 +13,11 @@ db = None
 async def connect_to_mongo():
     global db 
 
-    client = motor.motor_asyncio.AsyncIOMotorClient(Setting.MONGO_URI)
+    client = motor.motor_asyncio.AsyncIOMotorClient(setting.MONGO_URI)
     try: 
         await client.admin.command("ping")
-        db = client[Setting.DATABASE_NAME]
+        db = client[setting.DATABASE_NAME]
+    
         print("Connected to MongoDB")
     except ConnectionFailure: 
         print("Failed to connect to MongoDB")
@@ -27,7 +28,7 @@ async def connect_to_mongo():
 async def close_mongo_connection():
     global db 
 
-    if db: 
+    if db is not None: 
         db.client.close()
         print("MongoDB connection closed")
         db = None 

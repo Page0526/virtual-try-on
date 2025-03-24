@@ -96,7 +96,7 @@ export default function ChatScreen() {
       
       setMessages(prevMessages => [...prevMessages, botResponse]);
       setIsTyping(false);
-    }, 1000); // 1 second delay
+    }, 7000); // 7 seconds delay
   };
 
   const sendMessage = () => {
@@ -272,7 +272,7 @@ export default function ChatScreen() {
                       <View 
                         className="my-1.5 self-start bg-gray-100 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl px-4 py-2"
                       >
-                        <Text className="text-gray-500">typing...</Text>
+                        <Text className="text-gray-500">Generating...</Text>
                       </View>
                     )}
                   </ScrollView>
