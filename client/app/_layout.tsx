@@ -2,6 +2,7 @@ import { ClerkProvider } from '@clerk/clerk-expo'
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import {Slot, Stack} from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
+import { CartProvider } from './(tabs)/cart/cartContext';
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 if (!publishableKey) {
@@ -15,10 +16,12 @@ export default function RootLayout() {
     <ClerkProvider publishableKey={publishableKey}>
       {/* Global Transparent Status Bar with Black Icons */}
       <StatusBar style="dark" translucent={true} backgroundColor="transparent" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="landing_page" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <CartProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="landing_page" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </CartProvider>
     </ClerkProvider>
   );
 }

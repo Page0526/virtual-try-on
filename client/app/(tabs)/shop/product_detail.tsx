@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Alert } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import { useRouter } from 'expo-router';
+import { useCart } from '../cart/cartContext';
 
 const ProductDetailScreen = () => {
   const router = useRouter();
+  const { addToCart } = useCart();
   const [selectedColor, setSelectedColor] = useState('white');
+  const [selectedSize, setSelectedSize] = useState('');
+  
   const colors = [
     { name: 'black', code: '#000000' },
     { name: 'orange', code: '#FFA500' },
@@ -21,9 +25,39 @@ const ProductDetailScreen = () => {
   const isMediumScreen = windowWidth >= 380 && windowWidth < 768;
   const isLargeScreen = windowWidth >= 768;
   
+  const handleAddToCart = () => {
+    // Create a new cart item with product details
+    const newItem = {
+      id: Date.now(), // Using timestamp as unique ID
+      name: 'Maxi Summer Dress',
+      price: 270.99,
+      quantity: 1,
+      itemlink: 'https://harpersbazaarprod.vtexassets.com/unsafe/768x0/center/middle/filters:quality(80)/https%3A%2F%2Fharpersbazaarprod.vtexassets.com%2Farquivos%2Fids%2F717646%2Fimage_1.jpg%3Fv%3D638720661038070000'
+    };
+    
+    // Add the item to cart using our context
+    addToCart(newItem);
+    
+    // Show success message
+    Alert.alert(
+      "Added to Cart",
+      "Item has been added to your cart",
+      [
+        { 
+          text: "Continue Shopping", 
+          style: "cancel" 
+        },
+        { 
+          text: "Go to Cart", 
+          onPress: () => router.push('/(tabs)/cart/cart')
+        }
+      ]
+    );
+  };
+  
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
-      <ScrollView className="flex-1">
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 80 }}>
         {/* Product Image */}
         <View className="relative items-center justify-center bg-white px-4 py-0">
           {/* Header */}
@@ -104,21 +138,26 @@ const ProductDetailScreen = () => {
           </View>
           
           {/* Size Selection */}
-          <View className="mt-4">
+          <View className="mt-4 mb-8">
             <Text className="font-semibold text-lg">Size:</Text>
             <TouchableOpacity className="mt-2 border border-gray-300 rounded-[20px] p-3 flex-row justify-between items-center">
               <Text className="text-gray-400">CHOOSE SIZE</Text>
               <Ionicons name="chevron-forward" size={20} color="gray" />
             </TouchableOpacity>
           </View>
-          
-          {/* Buy Button */}
-          <TouchableOpacity style={{backgroundColor: Colors.PRIMARY}} className={`mt-6 rounded-[20px] items-center justify-center py-4 ${isLargeScreen ? 'mx-16' : isMediumScreen ? 'mx-8' : 'mx-0'}`}>
-            <Text className="text-white font-bold text-lg">Buy Now</Text>
-          </TouchableOpacity>
-          <View className="mb-8" />
         </View>
       </ScrollView>
+      
+      {/* Fixed Footer with Add to Cart Button */}
+      <View className="absolute bottom-0 left-0 right-0 bg-white px-4 py-3 shadow-lg border-t border-gray-200">
+        <TouchableOpacity 
+          style={{backgroundColor: Colors.PRIMARY}} 
+          className="rounded-[20px] items-center justify-center py-4"
+          onPress={handleAddToCart}
+        >
+          <Text className="text-white font-bold text-lg">Add to Cart</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
