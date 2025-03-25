@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, ScrollView, TextInput, TouchableOpacity, SafeAreaView, Platform, StatusBar, Dimensions, Animated, FlatList } from 'react-native';
+import { View, Text, Image, ScrollView, TextInput, TouchableOpacity, SafeAreaView, Platform, StatusBar, Dimensions, Animated} from 'react-native';
 import { Feather, Ionicons, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { styled } from 'nativewind';
 import { useNavigation } from '@react-navigation/native';
@@ -30,12 +30,12 @@ export default function HomeScreen() {
     },
     {
       id: '2',
-      image: require('@/assets/images/trend2.jpeg'), // Replace with different image
+      image: require('@/assets/images/trend2.jpeg'), 
       isMostOrdered: false,
     },
     {
       id: '3',
-      image: require('@/assets/images/trend3.jpeg'), // Replace with different image
+      image: require('@/assets/images/trend3.jpeg'),
       isMostOrdered: false,
     },
   ];
@@ -124,7 +124,7 @@ export default function HomeScreen() {
   };
 
   // Improved animation function with single-step transition
-  const animateToSlide = (newIndex: React.SetStateAction<number>, direction: string) => {
+  const animateToSlide = (newIndex: number, direction: string) => {
     if (isAnimating || newIndex === currentIndex) return;
     
     setIsAnimating(true);
@@ -209,7 +209,7 @@ export default function HomeScreen() {
     {
       id: '3',
       title: 'Celebrity Style Spotlight: Red Carpet Looks That Turned Heads',
-      image: require('@/assets/images/news3news3.jpeg'),
+      image: require('@/assets/images/news3.jpeg'),
       source: 'Fashion Weekly',
       time: '3 days ago',
       liked: false,
@@ -238,9 +238,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <StyledSafeAreaView className={`flex-1 bg-white ${Platform.OS === 'android' ? 'pt-8' : ''}`}>
-      <StatusBar barStyle="dark-content" />
-      
+    <StyledSafeAreaView className={`flex-1 bg-white ${Platform.select({ android: 'pt-8', ios: '' })}`}>      
       {/* Header - Modified to have welcome text on one line */}
       <StyledView className="px-4 pt-2 flex-row items-center justify-between">
         <StyledText className="text-base">
@@ -311,14 +309,6 @@ export default function HomeScreen() {
                     resizeMode="cover"
                   />
                   
-                  {/* Most Ordered Tag */}
-                  {recentOutfits[previousIndex].isMostOrdered && (
-                    <StyledView className="absolute bottom-6 left-6">
-                      <StyledView className="bg-white px-4 py-2 rounded-full shadow-md">
-                        <StyledText className="font-bold">Hot trend 🔥</StyledText>
-                      </StyledView>
-                    </StyledView>
-                  )}
                 </Animated.View>
                 
                 {/* Next/Current Slide */}
@@ -342,14 +332,6 @@ export default function HomeScreen() {
                     resizeMode="cover"
                   />
                   
-                  {/* Most Ordered Tag */}
-                  {recentOutfits[currentIndex].isMostOrdered && (
-                    <StyledView className="absolute bottom-6 left-6">
-                      <StyledView className="bg-white px-4 py-2 rounded-full shadow-md">
-                        <StyledText className="font-bold">Most ordered 🔥</StyledText>
-                      </StyledView>
-                    </StyledView>
-                  )}
                 </Animated.View>
               </StyledView>
               
@@ -411,6 +393,7 @@ export default function HomeScreen() {
             </StyledTouchableOpacity>
           ))}
         </StyledScrollView>
+          
           
           <StyledView className="flex-row flex-wrap justify-between">
             {filteredProducts.map((product) => (

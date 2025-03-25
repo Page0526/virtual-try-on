@@ -13,7 +13,7 @@ export default function TabLayout() {
             tabBarActiveTintColor: Colors.PRIMARY,
             tabBarStyle: {
                 position: 'absolute',
-                bottom: 0, // Placed at the bottom of the screen
+                bottom: -16, // Placed at the bottom of the screen
                 marginHorizontal: 0, // Removed side margins
                 backgroundColor: '#ffffff',
                 borderRadius: 25, // All corners rounded

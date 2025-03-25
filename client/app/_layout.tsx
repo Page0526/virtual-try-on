@@ -14,7 +14,7 @@ export default function RootLayout() {
   return (
     <ClerkProvider publishableKey={publishableKey}>
       {/* Global Transparent Status Bar with Black Icons */}
-      <StatusBar style="dark" translucent={false} backgroundColor="transparent" />
+      <StatusBar style="dark" translucent={true} backgroundColor="transparent" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="landing_page" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
