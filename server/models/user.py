@@ -11,7 +11,7 @@ class UserModel:
     @staticmethod 
     def user_helper(user) -> dict : 
         return {
-            "id" : str(user["_id"]),
+            "id" : user["_id"],
             "fullname" : user["fullname"],
             "phone" : user["phone"],
             "address" : user["address"], 

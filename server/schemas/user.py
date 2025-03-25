@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime 
 from schemas.cart import CartBase
-from typing import Optional
+from typing import Optional, Union 
 
 
 
@@ -18,7 +18,7 @@ class UserUpdate(BaseModel):
     fullname : Optional[str] = None
     phone : Optional[str] = None
     address : Optional[str] = None
-
+    avatar : Optional[str] = None
 
 class UserResponse(BaseModel): 
     message : str
@@ -26,6 +26,8 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
 
 
 class UserCreate(BaseModel): 

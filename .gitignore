@@ -179,3 +179,4 @@ style_vector_store
 product_vector_store
 static
 python_env
+node_modules

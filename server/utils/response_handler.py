@@ -22,7 +22,7 @@ class ResponseHandler:
             }
 
     @staticmethod 
-    def update_succes(name: str, id: str, data: dict = None): 
+    def update_success(name: str, id: str, data: dict = None): 
         message = f"{name} with id {id} updated successfully"
         return {
                 "message": message,
@@ -30,8 +30,8 @@ class ResponseHandler:
             } 
     
     @staticmethod 
-    def existed(name: str, id: str): 
-        message = f"{name} with id {id} already exists"
+    def existed(name: str): 
+        message = f"{name} already exists"
 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
