@@ -1,3 +1,4 @@
+import { Colors } from '@/constants/Colors';
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 
@@ -53,7 +54,8 @@ const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onDecrement, onIncr
         <View className="flex-row items-center">
           <TouchableOpacity 
             onPress={() => onDecrement(item.id)}
-            className="w-6 h-6 items-center justify-center bg-red-500 rounded"
+            className="w-6 h-6 items-center justify-center rounded"
+            style={{backgroundColor: Colors.PRIMARY}}
           >
             <Text className="text-white font-bold">-</Text>
           </TouchableOpacity>
@@ -62,7 +64,8 @@ const CartItem: React.FC<CartItemProps> = ({ item, onRemove, onDecrement, onIncr
           
           <TouchableOpacity 
             onPress={() => onIncrement(item.id)}
-            className="w-6 h-6 items-center justify-center bg-red-500 rounded"
+            className="w-6 h-6 items-center justify-center rounded"
+            style={{backgroundColor: Colors.PRIMARY}}
           >
             <Text className="text-white font-bold">+</Text>
           </TouchableOpacity>
@@ -130,13 +133,12 @@ const CartScreen: React.FC = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
-      <StatusBar barStyle="dark-content" />
-      
-      <View className="px-4 py-3 bg-white shadow-md">
+      <View className="px-4 py-5 bg-white shadow-md">
         <Text className="text-center text-lg font-bold text-gray-800">CART</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4">
+
+      <ScrollView className="flex-1 px-4 pt-4 mb-20">
         <GroupedItem 
           title="Together cheaper" 
           items={groupedItems} 
@@ -158,15 +160,16 @@ const CartScreen: React.FC = () => {
         {/* Responsive spacing - will be larger on bigger screens */}
         <View className="h-4 md:h-8 lg:h-12" />
 
-        <View className="bg-white p-4 shadow-lg mt-4">
+        <View className="bg-white p-4 shadow-lg mt-4 mb-5 rounded-[15px]">
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-gray-500">Total</Text>
             <Text className="text-xl font-bold">${calculateTotal().toFixed(2)}</Text>
           </View>
 
             <TouchableOpacity 
-            className="w-full bg-red-500 py-3 rounded-full"
+            className="w-full py-3 rounded-full"
             activeOpacity={0.8}
+            style={{backgroundColor: Colors.PRIMARY}}
             >
             <Text className="text-white font-bold text-center text-lg">Go to Checkout</Text>
             </TouchableOpacity>

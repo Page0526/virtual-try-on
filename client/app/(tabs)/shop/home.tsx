@@ -287,7 +287,7 @@ export default function HomeScreen() {
       </StyledView>
 
       {/* Search Bar */}
-      <StyledView className="mt-4 mx-4 flex-row items-center bg-gray-100 rounded-full px-4 py-2">
+      <StyledView className="mt-4 mx-4 flex-row items-center bg-gray-100 rounded-[20px] px-4 py-2">
         <Feather name="search" size={20} color="gray" />
         <StyledTextInput
           className="flex-1 ml-2 text-base"
@@ -406,14 +406,14 @@ export default function HomeScreen() {
 
 
         {/* Products Grid */}
-        <StyledView className="px-4 mt-4">
-          <StyledText className="text-lg font-bold mb-4">Products</StyledText>
+        <StyledView className="px-4">
+          <StyledText className="text-lg font-bold">Products</StyledText>
 
           {/* Categories */}
           <StyledScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 8, paddingVertical: 16 }}
+            contentContainerStyle={{ paddingHorizontal: 8, paddingVertical: 16, marginBottom: 5 }}
           >
             {categories.map((category) => (
               <StyledTouchableOpacity

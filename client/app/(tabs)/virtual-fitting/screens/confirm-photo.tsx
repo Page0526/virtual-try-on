@@ -211,7 +211,7 @@ const ConfirmPhotoScreen = () => {
         <TouchableOpacity 
           style={[styles.actionButton, styles.secondaryButton, { 
             borderColor: primaryColor,
-            backgroundColor: isDark ? 'rgba(255, 69, 0, 0.1)' : 'rgba(0, 0, 0)'
+      
           }]} 
           onPress={retakePhoto}
         >
@@ -355,7 +355,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 8,
     elevation: 2,
-    shadowColor: '#fff',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
     shadowRadius: 3,
@@ -369,7 +368,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   secondaryButton: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#000',
     borderWidth: 1,
   },
   primaryButton: {

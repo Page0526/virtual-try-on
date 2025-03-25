@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
+import { useRouter } from 'expo-router';
 
 const ProductDetailScreen = () => {
+  const router = useRouter();
   const [selectedColor, setSelectedColor] = useState('white');
   const colors = [
     { name: 'black', code: '#000000' },
@@ -24,12 +27,16 @@ const ProductDetailScreen = () => {
         {/* Product Image */}
         <View className="relative items-center justify-center bg-white px-4 py-0">
           {/* Header */}
-          <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center p-4 z-10">
-            <TouchableOpacity className="p-2">
-              <Ionicons name="arrow-back" size={24} color="white" />
+          <View className="absolute top-3 left-0 right-0 flex-row justify-between items-center p-4 z-10">
+
+            <TouchableOpacity 
+              className="p-2" 
+              onPress={() => router.push('/(tabs)/shop/home')}>
+              <Ionicons name="arrow-back" size={24} color="#e14e69" />
             </TouchableOpacity>
+
             <TouchableOpacity className="p-2">
-              <Ionicons name="heart-outline" size={24} color="white" />
+              <Ionicons name="heart-outline" size={24} color="#e14e69" />
             </TouchableOpacity>
           </View>
           <View className="relative">
@@ -51,7 +58,7 @@ const ProductDetailScreen = () => {
         <View className="bg-white mt-2 p-4 rounded-t-3xl">
           <View className="flex-row justify-between items-center">
             <Text className={`font-bold ${isLargeScreen ? 'text-2xl' : 'text-xl'}`}>Maxi Summer Dress</Text>
-            <Text className="text-red-600 font-bold text-xl">$270.99</Text>
+            <Text style={{color: Colors.PRIMARY}} className="font-bold text-xl">$270.99</Text>
           </View>
           
           {/* Ratings */}
@@ -99,14 +106,14 @@ const ProductDetailScreen = () => {
           {/* Size Selection */}
           <View className="mt-4">
             <Text className="font-semibold text-lg">Size:</Text>
-            <TouchableOpacity className="mt-2 border border-gray-300 rounded-lg p-3 flex-row justify-between items-center">
+            <TouchableOpacity className="mt-2 border border-gray-300 rounded-[20px] p-3 flex-row justify-between items-center">
               <Text className="text-gray-400">CHOOSE SIZE</Text>
               <Ionicons name="chevron-forward" size={20} color="gray" />
             </TouchableOpacity>
           </View>
           
           {/* Buy Button */}
-          <TouchableOpacity className={`mt-6 bg-red-600 rounded-lg items-center justify-center py-4 ${isLargeScreen ? 'mx-16' : isMediumScreen ? 'mx-8' : 'mx-0'}`}>
+          <TouchableOpacity style={{backgroundColor: Colors.PRIMARY}} className={`mt-6 rounded-[20px] items-center justify-center py-4 ${isLargeScreen ? 'mx-16' : isMediumScreen ? 'mx-8' : 'mx-0'}`}>
             <Text className="text-white font-bold text-lg">Buy Now</Text>
           </TouchableOpacity>
           <View className="mb-8" />
