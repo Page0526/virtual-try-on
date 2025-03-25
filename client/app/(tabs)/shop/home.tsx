@@ -18,6 +18,22 @@ const StyledSafeAreaView = styled(SafeAreaView);
 // Get screen dimensions for responsive sizing
 const { width: screenWidth } = Dimensions.get('window');
 
+// Define orange-red theme colors from capture.tsx
+const orangeRedTheme = {
+  secondary: '#FF6347', // Tomato
+  light: {
+    tint: '#e14E69',
+    background: '#fff',
+    text: '#333',
+    secondaryText: '#666',
+    card: '#fff',
+    border: '#FFE4E1', // Misty rose
+  }
+};
+
+// Primary color for the app from the theme
+const PRIMARY_COLOR = orangeRedTheme.light.tint;
+
 export default function HomeScreen() {
 
   const router = useRouter();
@@ -257,7 +273,7 @@ export default function HomeScreen() {
       <StyledView className="px-4 pt-2 flex-row items-center justify-between">
         <StyledText className="text-base">
           <StyledText className="font-medium">Welcome back, </StyledText>
-          <StyledText className="font-bold text-red-500">Tuoc Nguyen</StyledText>
+          <StyledText style={{ color: PRIMARY_COLOR }} className="font-bold">Tuoc Nguyen</StyledText>
         </StyledText>
         <StyledTouchableOpacity
           onPress={() => router.replace('/(auth)/profile')}
@@ -302,7 +318,7 @@ export default function HomeScreen() {
                 activeOpacity={0.7}
                 disabled={isAnimating}
               >
-                <AntDesign name="left" size={20} color="#FF4757" />
+                <AntDesign name="left" size={20} color={PRIMARY_COLOR} />
               </StyledTouchableOpacity>
 
               {/* Animation Container for Slides */}
@@ -360,7 +376,7 @@ export default function HomeScreen() {
                 activeOpacity={0.7}
                 disabled={isAnimating}
               >
-                <AntDesign name="right" size={20} color="#FF4757" />
+                <AntDesign name="right" size={20} color={PRIMARY_COLOR} />
               </StyledTouchableOpacity>
             </StyledView>
 
@@ -379,7 +395,8 @@ export default function HomeScreen() {
                   disabled={isAnimating}
                 >
                   <StyledView
-                    className={`h-2.5 w-2.5 rounded-full ${currentIndex === index ? 'bg-red-500' : 'bg-gray-300'}`}
+                    style={{ backgroundColor: currentIndex === index ? PRIMARY_COLOR : '#E5E7EB' }}
+                    className="h-2.5 w-2.5 rounded-full"
                   />
                 </TouchableOpacity>
               ))}
@@ -401,7 +418,10 @@ export default function HomeScreen() {
             {categories.map((category) => (
               <StyledTouchableOpacity
                 key={category.id}
-                className={`mx-2 px-4 py-2 rounded-full ${selectedCategory === category.name ? 'bg-red-500' : 'bg-gray-200'}`}
+                style={{ 
+                  backgroundColor: selectedCategory === category.name ? PRIMARY_COLOR : '#E5E7EB'
+                }}
+                className="mx-2 px-4 py-2 rounded-full"
                 onPress={() => handleCategoryPress(category.name)}
               >
                 <StyledText className={`font-medium ${selectedCategory === category.name ? 'text-white' : 'text-gray-800'}`}>
@@ -435,7 +455,10 @@ export default function HomeScreen() {
                     <StyledText className="font-bold text-base">
                       ${product.price}
                     </StyledText>
-                    <StyledTouchableOpacity className="bg-red-500 rounded-full p-1.5">
+                    <StyledTouchableOpacity 
+                      style={{ backgroundColor: PRIMARY_COLOR }}
+                      className="rounded-full p-1.5"
+                    >
                       <Feather name="shopping-bag" size={14} color="white" />
                     </StyledTouchableOpacity>
                   </StyledView>
@@ -499,7 +522,7 @@ export default function HomeScreen() {
                       <FontAwesome
                         name={news.liked ? "heart" : "heart-o"}
                         size={22}
-                        color={news.liked ? "#FF4757" : "#777777"}
+                        color={news.liked ? PRIMARY_COLOR : "#777777"}
                       />
                     </StyledTouchableOpacity>
                   </StyledView>
