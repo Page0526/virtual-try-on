@@ -11,10 +11,8 @@ import { BlurView } from 'expo-blur';
 
 // Define orange-red theme colors - matching the CaptureScreen theme
 const orangeRedTheme = {
-  primary: '#FF4500', // Orange-red
-  secondary: '#FF6347', // Tomato
   light: {
-    tint: '#FF4500',
+    tint: '#e14e69',
     background: '#fff',
     text: '#333',
     secondaryText: '#666',
@@ -213,7 +211,7 @@ const ConfirmPhotoScreen = () => {
         <TouchableOpacity 
           style={[styles.actionButton, styles.secondaryButton, { 
             borderColor: primaryColor,
-            backgroundColor: isDark ? 'rgba(255, 69, 0, 0.1)' : 'rgba(255, 69, 0, 0.05)'
+            backgroundColor: isDark ? 'rgba(255, 69, 0, 0.1)' : 'rgba(0, 0, 0)'
           }]} 
           onPress={retakePhoto}
         >
@@ -357,7 +355,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 8,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: '#fff',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
     shadowRadius: 3,

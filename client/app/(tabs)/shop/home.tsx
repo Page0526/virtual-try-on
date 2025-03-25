@@ -21,6 +21,8 @@ const { width: screenWidth } = Dimensions.get('window');
 export default function HomeScreen() {
 
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Sample data with multiple images for slideshow
   const recentOutfits = [
     {
@@ -39,6 +41,18 @@ export default function HomeScreen() {
       isMostOrdered: false,
     },
   ];
+
+  const handleSearch = () => {
+    const filteredProducts = products.filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Navigate to SearchScreen with search results
+    router.push({
+      pathname: '/(tabs)/shop/search',
+      params: { query: searchQuery, results: JSON.stringify(filteredProducts) },
+    });
+  };
 
   // Sample product data
   const products = [
@@ -261,10 +275,15 @@ export default function HomeScreen() {
         <Feather name="search" size={20} color="gray" />
         <StyledTextInput
           className="flex-1 ml-2 text-base"
-          placeholder="Search"
+          placeholder="Search for items..."
           placeholderTextColor="gray"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onSubmitEditing={handleSearch} // Trigger search when user presses enter
         />
-        <Ionicons name="mic-outline" size={20} color="gray" />
+        <TouchableOpacity onPress={handleSearch}>
+          <Ionicons name="arrow-forward-outline" size={24} color="gray" />
+        </TouchableOpacity>
       </StyledView>
 
       <StyledScrollView className="flex-1 mt-4" showsVerticalScrollIndicator={false}>

@@ -68,6 +68,23 @@ export default function TabLayout() {
                     tabBarLabel: 'Closet',
                     tabBarIcon: ({color})=><Ionicons name="heart-circle-outline" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
                 }}/>
+
+            {/* ✅ Hide unwanted screens from appearing in the tab bar */}
+            <Tabs.Screen 
+                name='shop/product_detail' 
+                options={{ 
+                    href: null,
+                    tabBarStyle: { display: 'none' }
+                 }}
+                
+            />
+            <Tabs.Screen 
+                name='shop/search' 
+                options={{ 
+                    href: null,
+                    tabBarStyle: { display: 'none' } 
+                 }} 
+            />
         </Tabs>
     )
 }
