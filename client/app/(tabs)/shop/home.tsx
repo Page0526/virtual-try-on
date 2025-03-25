@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, ScrollView, TextInput, TouchableOpacity, SafeAreaView, Platform, StatusBar, Dimensions, Animated} from 'react-native';
+import { View, Text, Image, ScrollView, TextInput, TouchableOpacity, SafeAreaView, Platform, StatusBar, Dimensions, Animated } from 'react-native';
 import { Feather, Ionicons, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { styled } from 'nativewind';
 import { useNavigation } from '@react-navigation/native';
@@ -32,7 +32,7 @@ export default function HomeScreen() {
     },
     {
       id: '2',
-      image: require('@/assets/images/trend2.jpeg'), 
+      image: require('@/assets/images/trend2.jpeg'),
       isMostOrdered: false,
     },
     {
@@ -104,11 +104,11 @@ export default function HomeScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  
+
   // Animation values - using two values for simultaneous animation
   const currentSlideAnimation = useRef(new Animated.Value(0)).current;
   const nextSlideAnimation = useRef(new Animated.Value(screenWidth)).current;
-  
+
   // Card size constants
   const CARD_WIDTH = screenWidth * 0.8;
   const CARD_HEIGHT = screenWidth * 0.9;
@@ -121,18 +121,18 @@ export default function HomeScreen() {
       // But we could add additional logic here for remote images
     });
   }, []);
-  
+
   // Navigation functions with improved animation
   const goToNextSlide = () => {
     if (isAnimating) return; // Prevent animation interruption
-    
+
     const newIndex = currentIndex < recentOutfits.length - 1 ? currentIndex + 1 : 0;
     animateToSlide(newIndex, 'right');
   };
 
   const goToPrevSlide = () => {
     if (isAnimating) return; // Prevent animation interruption
-    
+
     const newIndex = currentIndex > 0 ? currentIndex - 1 : recentOutfits.length - 1;
     animateToSlide(newIndex, 'left');
   };
@@ -140,25 +140,25 @@ export default function HomeScreen() {
   // Improved animation function with single-step transition
   const animateToSlide = (newIndex: number, direction: string) => {
     if (isAnimating || newIndex === currentIndex) return;
-    
+
     setIsAnimating(true);
     setPreviousIndex(currentIndex);
-    
+
     // Set initial positions based on direction
     const currentInitial = 0;
     const nextInitial = direction === 'right' ? CARD_WIDTH : -CARD_WIDTH;
-    
+
     // Set final positions based on direction
     const currentFinal = direction === 'right' ? -CARD_WIDTH : CARD_WIDTH;
     const nextFinal = 0;
-    
+
     // Reset animation values
     currentSlideAnimation.setValue(currentInitial);
     nextSlideAnimation.setValue(nextInitial);
-    
+
     // Update state before animation
     setCurrentIndex(newIndex);
-    
+
     // Run simultaneous animations for smooth transition
     Animated.parallel([
       // Current slide animation
@@ -183,7 +183,7 @@ export default function HomeScreen() {
 
   // State for categories
   const [selectedCategory, setSelectedCategory] = useState('All');
-  
+
   const categories = [
     { id: '1', name: 'All', isActive: true },
     { id: '2', name: 'Skirts', isActive: false },
@@ -193,12 +193,12 @@ export default function HomeScreen() {
   ];
 
   // Filter products by selected category
-  const filteredProducts = selectedCategory === 'All' 
-    ? products 
+  const filteredProducts = selectedCategory === 'All'
+    ? products
     : products.filter(product => product.category === selectedCategory);
 
   // Handle category selection
-  const handleCategoryPress = (categoryName: React.SetStateAction<string>) => {
+  const handleCategoryPress = (categoryName: string) => {
     setSelectedCategory(categoryName);
   };
 
@@ -240,9 +240,9 @@ export default function HomeScreen() {
 
   // Toggle like status for news items
   const toggleLike = (newsId: string) => {
-    setNewsItems(prevItems => 
-      prevItems.map(item => 
-        item.id === newsId ? {...item, liked: !item.liked} : item
+    setNewsItems(prevItems =>
+      prevItems.map(item =>
+        item.id === newsId ? { ...item, liked: !item.liked } : item
       )
     );
   };
@@ -252,18 +252,18 @@ export default function HomeScreen() {
   };
 
   return (
-    <StyledSafeAreaView className={`flex-1 bg-white ${Platform.select({ android: 'pt-8', ios: '' })}`}>      
+    <StyledSafeAreaView className={`flex-1 bg-white ${Platform.select({ android: 'pt-8', ios: '' })}`}>
       {/* Header - Modified to have welcome text on one line */}
       <StyledView className="px-4 pt-2 flex-row items-center justify-between">
         <StyledText className="text-base">
           <StyledText className="font-medium">Welcome back, </StyledText>
           <StyledText className="font-bold text-red-500">Tuoc Nguyen</StyledText>
         </StyledText>
-        <StyledTouchableOpacity 
+        <StyledTouchableOpacity
           onPress={() => router.replace('/(auth)/profile')}
           className="w-10 h-10 rounded-full"
         >
-          <StyledImage 
+          <StyledImage
             source={require('@/assets/images/avatar.jpg')}
             className="w-10 h-10 rounded-full"
           />
@@ -290,13 +290,13 @@ export default function HomeScreen() {
         {/* Recent Outfits Section - with improved slideshow */}
         <StyledView className="px-2">
           <StyledText className="text-lg font-bold mb-3 px-2">Recent outfits</StyledText>
-          
+
           {/* Carousel Container with Navigation Buttons */}
           <StyledView className="h-auto mb-2 items-center">
             <StyledView className="relative" style={{ height: CARD_HEIGHT + 20, width: CARD_WIDTH }}>
               {/* Navigation Button - Previous */}
-              <StyledTouchableOpacity 
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 rounded-full p-2 shadow-md" 
+              <StyledTouchableOpacity
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 rounded-full p-2 shadow-md"
                 style={{ left: -15 }}
                 onPress={goToPrevSlide}
                 activeOpacity={0.7}
@@ -304,11 +304,11 @@ export default function HomeScreen() {
               >
                 <AntDesign name="left" size={20} color="#FF4757" />
               </StyledTouchableOpacity>
-              
+
               {/* Animation Container for Slides */}
               <StyledView style={{ overflow: 'hidden', width: CARD_WIDTH, height: CARD_HEIGHT, position: 'relative' }}>
                 {/* Previous/Current Slide */}
-                <Animated.View 
+                <Animated.View
                   style={{
                     transform: [{ translateX: currentSlideAnimation }],
                     position: 'absolute',
@@ -327,11 +327,10 @@ export default function HomeScreen() {
                     className="rounded-[30px] w-full h-full"
                     resizeMode="cover"
                   />
-                  
                 </Animated.View>
-                
+
                 {/* Next/Current Slide */}
-                <Animated.View 
+                <Animated.View
                   style={{
                     transform: [{ translateX: nextSlideAnimation }],
                     position: 'absolute',
@@ -350,13 +349,12 @@ export default function HomeScreen() {
                     className="rounded-[30px] w-full h-full"
                     resizeMode="cover"
                   />
-                  
                 </Animated.View>
               </StyledView>
-              
+
               {/* Navigation Button - Next */}
-              <StyledTouchableOpacity 
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 rounded-full p-2 shadow-md" 
+              <StyledTouchableOpacity
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 rounded-full p-2 shadow-md"
                 style={{ right: -15 }}
                 onPress={goToNextSlide}
                 activeOpacity={0.7}
@@ -365,12 +363,12 @@ export default function HomeScreen() {
                 <AntDesign name="right" size={20} color="#FF4757" />
               </StyledTouchableOpacity>
             </StyledView>
-            
+
             {/* Navigation Indicators */}
             <StyledView className="flex-row justify-center items-center mt-4 space-x-2">
               {recentOutfits.map((_, index) => (
-                <TouchableOpacity 
-                  key={index} 
+                <TouchableOpacity
+                  key={index}
                   onPress={() => {
                     if (isAnimating || index === currentIndex) return;
                     // Determine direction based on current index
@@ -380,7 +378,7 @@ export default function HomeScreen() {
                   activeOpacity={0.7}
                   disabled={isAnimating}
                 >
-                  <StyledView 
+                  <StyledView
                     className={`h-2.5 w-2.5 rounded-full ${currentIndex === index ? 'bg-red-500' : 'bg-gray-300'}`}
                   />
                 </TouchableOpacity>
@@ -394,40 +392,40 @@ export default function HomeScreen() {
         <StyledView className="px-4 mt-4">
           <StyledText className="text-lg font-bold mb-4">Products</StyledText>
 
-           {/* Categories */}
-        <StyledScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 8, paddingVertical: 16 }}
-        >
-          {categories.map((category) => (
-            <StyledTouchableOpacity
-              key={category.id}
-              className={`mx-2 px-4 py-2 rounded-full ${selectedCategory === category.name ? 'bg-red-500' : 'bg-gray-200'}`}
-              onPress={() => handleCategoryPress(category.name)}
-            >
-              <StyledText className={`font-medium ${selectedCategory === category.name ? 'text-white' : 'text-gray-800'}`}>
-                {category.name}
-              </StyledText>
-            </StyledTouchableOpacity>
-          ))}
-        </StyledScrollView>
-          
-          
+          {/* Categories */}
+          <StyledScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 8, paddingVertical: 16 }}
+          >
+            {categories.map((category) => (
+              <StyledTouchableOpacity
+                key={category.id}
+                className={`mx-2 px-4 py-2 rounded-full ${selectedCategory === category.name ? 'bg-red-500' : 'bg-gray-200'}`}
+                onPress={() => handleCategoryPress(category.name)}
+              >
+                <StyledText className={`font-medium ${selectedCategory === category.name ? 'text-white' : 'text-gray-800'}`}>
+                  {category.name}
+                </StyledText>
+              </StyledTouchableOpacity>
+            ))}
+          </StyledScrollView>
+
+
           <StyledView className="flex-row flex-wrap justify-between">
             {filteredProducts.map((product) => (
-              <StyledTouchableOpacity 
-                key={product.id} 
+              <StyledTouchableOpacity
+                key={product.id}
                 className="bg-white rounded-xl shadow-md mb-4 w-[48%]"
                 onPress={() => handleProductPress(product.id)}
               >
                 {/* Product Image */}
-                <StyledImage 
+                <StyledImage
                   source={product.image}
                   className="w-full h-32 rounded-t-xl"
                   resizeMode="cover"
                 />
-                
+
                 {/* Product Info */}
                 <StyledView className="p-3">
                   <StyledText className="font-medium text-sm" numberOfLines={1}>
@@ -445,7 +443,7 @@ export default function HomeScreen() {
               </StyledTouchableOpacity>
             ))}
           </StyledView>
-          
+
           {/* Empty state when no products */}
           {filteredProducts.length === 0 && (
             <StyledView className="items-center justify-center py-10">
@@ -460,28 +458,28 @@ export default function HomeScreen() {
         {/* Fashion News Section */}
         <StyledView className="px-4 mt-8">
           <StyledText className="text-lg font-bold mb-4">Fashion News</StyledText>
-          
+
           {/* News Grid - Single Column */}
           <StyledView className="space-y-4">
             {newsItems.map((news) => (
-              <StyledView 
-                key={news.id} 
+              <StyledView
+                key={news.id}
                 className="bg-white rounded-xl shadow-md overflow-hidden"
               >
                 {/* News Image */}
-                <StyledImage 
+                <StyledImage
                   source={news.image}
                   className="w-full h-48"
                   resizeMode="cover"
                 />
-                
+
                 {/* News Content */}
                 <StyledView className="p-4">
                   {/* Title */}
                   <StyledText className="font-bold text-base" numberOfLines={2}>
                     {news.title}
                   </StyledText>
-                  
+
                   {/* Publication Info and Like Button */}
                   <StyledView className="flex-row justify-between items-center mt-3">
                     <StyledView>
@@ -492,16 +490,16 @@ export default function HomeScreen() {
                         {news.time}
                       </StyledText>
                     </StyledView>
-                    
+
                     {/* Like Button */}
-                    <StyledTouchableOpacity 
-                      className="p-2" 
+                    <StyledTouchableOpacity
+                      className="p-2"
                       onPress={() => toggleLike(news.id)}
                     >
-                      <FontAwesome 
-                        name={news.liked ? "heart" : "heart-o"} 
-                        size={22} 
-                        color={news.liked ? "#FF4757" : "#777777"} 
+                      <FontAwesome
+                        name={news.liked ? "heart" : "heart-o"}
+                        size={22}
+                        color={news.liked ? "#FF4757" : "#777777"}
                       />
                     </StyledTouchableOpacity>
                   </StyledView>
@@ -510,8 +508,11 @@ export default function HomeScreen() {
             ))}
           </StyledView>
         </StyledView>
-
-        <StyledView className="h-20" /> {/* Extra space at bottom */}
+        
+        {/* Extra space at bottom - must use View with a Text inside, not just View with text */}
+        <StyledView className="h-20">
+          <StyledText> </StyledText>
+        </StyledView>
       </StyledScrollView>
     </StyledSafeAreaView>
   );
