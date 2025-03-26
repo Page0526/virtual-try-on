@@ -25,17 +25,17 @@ export default function HomeScreen() {
   const recentOutfits = [
     {
       id: '1',
-      image: require('@/assets/images/background.png'),
+      image: require('@/assets/images/trend1.jpeg'),
       isMostOrdered: true,
     },
     {
       id: '2',
-      image: require('@/assets/images/outfit1.jpg'), // Replace with different image
+      image: require('@/assets/images/trend2.jpeg'), // Replace with different image
       isMostOrdered: false,
     },
     {
       id: '3',
-      image: require('@/assets/images/background.png'), // Replace with different image
+      image: require('@/assets/images/trend3.jpeg'), // Replace with different image
       isMostOrdered: false,
     },
   ];
@@ -44,44 +44,44 @@ export default function HomeScreen() {
   const products = [
     {
       id: '1',
-      name: 'Floral Summer Dress',
-      price: 59.99,
-      image: require('@/assets/images/background.png'),
-      category: 'Dress'
+      name: 'Charlee Skirts',
+      price: 275.99,
+      image: require('@/assets/images/skirt1.jpg'),
+      category: 'Skirts'
     },
     {
       id: '2',
       name: 'Slim Fit Jeans',
-      price: 49.99,
-      image: require('@/assets/images/outfit1.jpg'),
+      price: 149.99,
+      image: require('@/assets/images/jeans1.jpg'),
       category: 'Jeans'
     },
     {
       id: '3',
       name: 'Casual T-shirt',
-      price: 24.99,
-      image: require('@/assets/images/background.png'),
+      price: 224.99,
+      image: require('@/assets/images/tshirt.jpg'),
       category: 'T-s'
     },
     {
       id: '4',
-      name: 'Pleated Midi Skirt',
-      price: 39.99,
-      image: require('@/assets/images/background.png'),
+      name: 'Hardy Skirts',
+      price: 569.99,
+      image: require('@/assets/images/skirt2.jpg'),
       category: 'Skirts'
     },
     {
       id: '5',
-      name: 'Denim Jacket',
-      price: 69.99,
-      image: require('@/assets/images/outfit1.jpg'),
+      name: 'Cassandre Jeans',
+      price: 322.99,
+      image: require('@/assets/images/jeans2.jpg'),
       category: 'Jeans'
     },
     {
       id: '6',
       name: 'Maxi Summer Dress',
-      price: 79.99,
-      image: require('@/assets/images/background.png'),
+      price: 270.99,
+      image: require('@/assets/images/dress.jpg'),
       category: 'Dress'
     },
   ];
@@ -193,7 +193,7 @@ export default function HomeScreen() {
     {
       id: '1',
       title: 'Summer Fashion Trends: What to Wear This Season',
-      image: require('@/assets/images/background.png'),
+      image: require('@/assets/images/news1.jpg'),
       source: 'Fashion Magazine',
       time: '2 hours ago',
       liked: false,
@@ -201,7 +201,7 @@ export default function HomeScreen() {
     {
       id: '2',
       title: 'Sustainable Fashion: How Brands Are Going Green in 2023',
-      image: require('@/assets/images/outfit1.jpg'),
+      image: require('@/assets/images/news2.jpeg'),
       source: 'Eco Style',
       time: '1 day ago',
       liked: true,
@@ -209,7 +209,7 @@ export default function HomeScreen() {
     {
       id: '3',
       title: 'Celebrity Style Spotlight: Red Carpet Looks That Turned Heads',
-      image: require('@/assets/images/background.png'),
+      image: require('@/assets/images/news3news3.jpeg'),
       source: 'Fashion Weekly',
       time: '3 days ago',
       liked: false,
@@ -217,7 +217,7 @@ export default function HomeScreen() {
     {
       id: '4',
       title: 'Fashion Tech: How AR and VR Are Changing How We Shop for Clothes',
-      image: require('@/assets/images/outfit1.jpg'),
+      image: require('@/assets/images/news4.jpeg'),
       source: 'Tech Fashion',
       time: '1 week ago',
       liked: false,
@@ -231,6 +231,10 @@ export default function HomeScreen() {
         item.id === newsId ? {...item, liked: !item.liked} : item
       )
     );
+  };
+
+  const handleProductPress = (productId: string) => {
+    router.replace('/(tabs)/shop/product_detail');
   };
 
   return (
@@ -248,7 +252,7 @@ export default function HomeScreen() {
           className="w-10 h-10 rounded-full"
         >
           <StyledImage 
-            source={require('@/assets/images/react-logo.png')}
+            source={require('@/assets/images/avatar.jpg')}
             className="w-10 h-10 rounded-full"
           />
         </StyledTouchableOpacity>
@@ -293,8 +297,8 @@ export default function HomeScreen() {
                     position: 'absolute',
                     width: CARD_WIDTH,
                     height: CARD_HEIGHT,
-                    zIndex: 1,
                     shadowColor: "#000",
+                    zIndex: 1,
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.3,
                     shadowRadius: 10,
@@ -311,7 +315,7 @@ export default function HomeScreen() {
                   {recentOutfits[previousIndex].isMostOrdered && (
                     <StyledView className="absolute bottom-6 left-6">
                       <StyledView className="bg-white px-4 py-2 rounded-full shadow-md">
-                        <StyledText className="font-bold">Most ordered 🔥</StyledText>
+                        <StyledText className="font-bold">Hot trend 🔥</StyledText>
                       </StyledView>
                     </StyledView>
                   )}
@@ -410,9 +414,10 @@ export default function HomeScreen() {
           
           <StyledView className="flex-row flex-wrap justify-between">
             {filteredProducts.map((product) => (
-              <StyledView 
+              <StyledTouchableOpacity 
                 key={product.id} 
                 className="bg-white rounded-xl shadow-md mb-4 w-[48%]"
+                onPress={() => handleProductPress(product.id)}
               >
                 {/* Product Image */}
                 <StyledImage 
@@ -426,18 +431,16 @@ export default function HomeScreen() {
                   <StyledText className="font-medium text-sm" numberOfLines={1}>
                     {product.name}
                   </StyledText>
-                  
                   <StyledView className="flex-row justify-between items-center mt-2">
                     <StyledText className="font-bold text-base">
                       ${product.price}
                     </StyledText>
-                    
                     <StyledTouchableOpacity className="bg-red-500 rounded-full p-1.5">
                       <Feather name="shopping-bag" size={14} color="white" />
                     </StyledTouchableOpacity>
                   </StyledView>
                 </StyledView>
-              </StyledView>
+              </StyledTouchableOpacity>
             ))}
           </StyledView>
           

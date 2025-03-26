@@ -172,10 +172,11 @@ server_env
 
 /design/
 /.idea/
-/.vscode/
+.vscode/
 server_env
 news_vector_store
 style_vector_store
 product_vector_store
 static
 python_env
+node_modules

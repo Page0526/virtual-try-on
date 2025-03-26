@@ -24,7 +24,7 @@ export default function ProfileScreen() {
                   </View>
                 ) : (
                   <Image 
-                    source={require('@/assets/images/react-logo.png')} 
+                    source={require('@/assets/images/avatar.jpg')} 
                     className="w-16 h-16"
                     onError={() => React.useState(false)[1](true)}
                   />

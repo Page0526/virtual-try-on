@@ -14,7 +14,8 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardEvent
+  KeyboardEvent,
+  Image
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,6 +24,7 @@ type Message = {
   id: string;
   text: string;
   sentByMe: boolean;
+  imageUrl?: string; // Add optional imageUrl property
 };
 
 type ChatSession = {
@@ -78,13 +80,23 @@ export default function ChatScreen() {
     setTimeout(() => {
       const botResponse: Message = {
         id: Date.now().toString(),
-        text: 'Hello', // Always reply with "Hello"
+        text: `To design and print a T-shirt with a similar butterfly-themed graphic, follow these steps:
+
+    Create the Design:
+    • Use graphic design software like Adobe Illustrator, Photoshop, or Canva to design colorful butterflies with a dynamic layout.
+    • Ensure the design has high resolution (at least 300 DPI) for clear printing.
+    • Consider using a transparent background (PNG format) for flexibility in printing.
+
+    Test and Adjust:
+    • Order a sample to check the print quality and adjust colors if needed.😊`,
         sentByMe: false,
+        imageUrl: 'https://i.etsystatic.com/44525338/r/il/73cf08/5655739622/il_fullxfull.5655739622_a54i.jpg', // Add image URL
       };
+      
       
       setMessages(prevMessages => [...prevMessages, botResponse]);
       setIsTyping(false);
-    }, 1000); // 1 second delay
+    }, 7000); // 7 seconds delay
   };
 
   const sendMessage = () => {
@@ -246,6 +258,12 @@ export default function ChatScreen() {
                         }`}>
                           {message.text}
                         </Text>
+                        {message.imageUrl && (
+                          <Image 
+                            source={{ uri: message.imageUrl }} 
+                            style={{ width: 200, height: 200, borderRadius: 10, marginTop: 5, marginBottom: 20, alignSelf: 'center' }} 
+                          />
+                        )}
                       </View>
                     ))}
                     
@@ -254,7 +272,7 @@ export default function ChatScreen() {
                       <View 
                         className="my-1.5 self-start bg-gray-100 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl px-4 py-2"
                       >
-                        <Text className="text-gray-500">typing...</Text>
+                        <Text className="text-gray-500">Generating...</Text>
                       </View>
                     )}
                   </ScrollView>
