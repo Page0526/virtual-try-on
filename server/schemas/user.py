@@ -1,34 +1,29 @@
-from pydantic import BaseModel, EmailStr, Field
-from datetime import datetime 
-from cart import CartBase
+# schemas/user.py
+from pydantic import BaseModel, EmailStr
+from uuid import UUID
 from typing import Optional
+from datetime import datetime
 
+class UserBase(BaseModel):
+    email: EmailStr
+    full_name: str
 
+class UserCreate(UserBase):
+    password: str
 
-class UserBase(BaseModel): 
-    id : str = Field(default=None)
-    username : str 
-    fullname : str
-    email : EmailStr
-    password : str
-    phone_number : Optional[str] = None
-    address : Optional[str] = None
-    avatar : str # dduwong dan toi file luw avatar 
-    carts : CartBase
-    create_at : datetime 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
 
-class UserUpdate(BaseModel): 
-
-    fullname : Optional[str] = None
-    phone : Optional[str] = None
-    address : Optional[str] = None
-
-
-class UserResponse(BaseModel): 
-    message : str
-    data : UserBase
+class UserOut(BaseModel):
+    id: UUID
+    email: EmailStr
+    full_name: str
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
-        orm_mode = True
-        
+        from_attributes = True
