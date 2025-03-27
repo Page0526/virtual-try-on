@@ -4,29 +4,42 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 from langchain.chains.conversation.base import ConversationChain 
+from langchain.agents import create_react_agent, AgentExecutor
 import sys
 import os
 import warnings
+
+
+from server.features.stylemate.tools.tools_implements import get_tools
+from server.config.setting import settings
+from server.features.stylemate.prompt import PROMPT_TEMPLATE
+
 
 warnings.filterwarnings("ignore")
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from knowledge_db.vector_store import KnowledgeDB
 
 load_dotenv()
-GEMINI_API_KEY = os.getenv("GOOGLE_APIKEY")
+GEMINI_API_KEY = os.getenv("GEMINI_APIKEY")
 
-
-class FashionAgent: 
+class StyleMate: 
     """
     Main class thực hiện kết nối đến model và infer câu hỏi của ngừoi dùng
 
     """
 
     def __init__(self):
+        self.tools = get_tools()
 
 
-        self.model = ChatGoogleGenerativeAI(
-            model = "gemini-2.0-flash", 
+        self.text_model = ChatGoogleGenerativeAI(
+            model =  settings.GEMINI_MODEL, 
+            temperature= 0.7, 
+            api_key = GEMINI_API_KEY
+        )
+
+        self.vision_model = ChatGoogleGenerativeAI(
+            model = settings.VISION_GEMINI, 
             temperature= 0.7, 
             api_key = GEMINI_API_KEY
         )
@@ -36,7 +49,8 @@ class FashionAgent:
             return_messages=True, 
             memory_key = "chat_history", 
             input_key = "input",
-            output_key = "response"
+            output_key = "response", 
+            k = settings.HISTORY_TOKEN_LIMIT,
         )
 
         self.knowledge_db = KnowledgeDB()
@@ -46,63 +60,34 @@ class FashionAgent:
         except FileNotFoundError:
             print("Style vector store not found, creating new one")
 
-        self.qa_template = """
-            You are a fashion expert assistant providing accurate information based on the retrieved context.
-            Some rules you must follow:
-                1. Focus on topics related to fashion
-                2. If users ask about topics unrelated to fashion, politely decline and guide them back to fashion topics
-                3. Provide specific and practical advice
-                4. When possible, provide illustrative examples
-                5. Use friendly and accessible language
-            
-            Context information is below:
-            ---------------------
-            {context}
-            ---------------------
-            
-            Given this context, please answer the question. If the answer is not found in the context, 
-            say that you don't have information about that specific topic but provide relevant fashion advice 
-            based on your general knowledge.
-            
-            Chat History:
-            {chat_history}
-            
-            Question: {question}
-            Answer:
-        """
+        self.prompt_template = PROMPT_TEMPLATE
 
-        self.regular_template = """
-            You are a friendly, professional, and experienced fashion expert.
-            Your task is to provide information, advice on fashion trends, outfit coordination,
-            and related fashion knowledge.
+        self.agent = create_react_agent(
+            llm = self.text_model,
+            tools = self.tools,
+            prompt = self.prompt_template,
+            verbose = True,
+            memory = self.memory
 
-            Some rules you must follow:
-            1. Focus on topics related to fashion
-            2. If users ask about topics unrelated to fashion, politely decline and guide them back to fashion topics
-            3. Provide specific and practical advice
-            4. When possible, provide illustrative examples
-            5. Use friendly and accessible language
-
-            Conversation history:
-            {chat_history}
-
-            Latest question: {input}
-            Your response:
-        """
-
-        self.conversation = ConversationChain(
-            llm = self.model, 
-            memory = self.memory, 
-            prompt = PromptTemplate(
-            template = self.regular_template,
-            input_variables=["chat_history", "input"]
-            ), 
-            verbose = True
         )
+
+        self.agent_executor = AgentExecutor(
+            agent = self.agent, 
+            tools = self.tools, 
+            memory = self.memory, 
+            verbose = True, 
+            handling_parsing_errors = True,
+            max_iterations = 8 ,
+            max_iterations_per_tool = 2,
+            early_stopping_method= "generate"
+
+        ) 
 
 
 
     def get_response(self, query: str): 
+
+        
         try: 
             store_dir, _ = self.knowledge_db.routing(query)
             if store_dir is None: 
@@ -112,7 +97,7 @@ class FashionAgent:
             try: 
                 documents = self.knowledge_db.retrieval(query, store_dir)
                 if not documents or len(documents) == 0: 
-                    esponse = self.conversation({"input": query})
+                    response = self.conversation({"input": query})
                     return response['response']
                 
                 context = "\n".join([f"{i+1}. {doc.page_content}" for i, doc in enumerate(documents)])
@@ -135,6 +120,13 @@ class FashionAgent:
             return "Error in routing (get response function)"
 
 
+
+
+
+
+
+
+
     def chat_simulator(self): 
         """
         Hàm thực hiện chat với người dùng
@@ -153,7 +145,7 @@ class FashionAgent:
     
 
 if __name__ == "__main__": 
-    agent = FashionAgent()
+    agent = StyleMate()
     agent.chat_simulator()
 
 

@@ -13,10 +13,10 @@ import { BlurView } from 'expo-blur';
 
 // Define orange-red theme colors
 const orangeRedTheme = {
-  primary: '#FF4500', // Orange-red
+  primary: '#e14e69', // Orange-red
   secondary: '#FF6347', // Tomato
   light: {
-    tint: '#FF4500',
+    tint: '#e14e69',
     background: '#fff',
     text: '#333',
     secondaryText: '#666',
@@ -70,7 +70,7 @@ const CaptureScreen = () => {
   const instruction = isGarmentMode 
     ? 'Place the garment on a flat surface with good lighting to capture'
     : 'Stand in front of a plain background with good lighting for a full-body photo';
-  const galleryText = isGarmentMode ? 'MY CLOTHES' : 'MY MODELS';
+  const galleryText = isGarmentMode ? 'CLOTHES' : 'MY MODELS';
 
   const goBack = () => {
     router.back();

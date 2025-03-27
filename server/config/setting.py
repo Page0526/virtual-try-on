@@ -2,6 +2,10 @@
 from pydantic_settings import BaseSettings
 from pydantic import Field
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class Settings(BaseSettings):
     """Cấu hình ứng dụng Easyfit Backend API."""
@@ -20,6 +24,23 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = Field(default="development", env="ENVIRONMENT", description="Môi trường chạy ứng dụng (development/production)")
     DEBUG: bool = Field(default=True, env="DEBUG", description="Chế độ debug, bật trong môi trường phát triển")
     LOG_LEVEL: str = Field(default="INFO", env="LOG_LEVEL", description="Mức độ logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
+    
+
+
+    # setting model 
+
+    GEMINI_APIKEY = os.getenv("GEMINI_APIKEY")
+    VISION_GEMINI = "gemini-2.0-flash-exp-image-generation"
+    GEMINI_MODEL = "gemini-2.0-flash"
+
+    # tool search 
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
+
+    TOOL_TIMEOUT = 30 
+    HISTORY_TOKEN_LIMIT = 1000
+
+
 
     class Config:
         # Đường dẫn tới file .env nằm cùng thư mục với config

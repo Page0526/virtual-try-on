@@ -4,6 +4,8 @@ from schemas.user import UserCreate, UserLogin, UserUpdate
 from core.supabase import supabase
 from typing import Dict, Optional
 import logging
+from datetime import datetime
+
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)

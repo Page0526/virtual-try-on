@@ -98,6 +98,7 @@ class ProductService:
         except (ValueError, ProductException) as e:
             logger.error(f"Lỗi khi xóa product {product_id}: {str(e)}")
             raise
+    
 
     async def add_product_to_qdrant(self, product: Dict) -> None:
         """Thêm product vào Qdrant với vector embedding từ CLIP."""
@@ -123,7 +124,8 @@ class ProductService:
         except Exception as e:
             logger.error(f"Lỗi khi thêm product {product['id']} vào Qdrant: {str(e)}")
             raise
-
+    
+    @staticmethod
     async def search_products(self, query: str) -> List[Dict]: 
         """Tìm kiếm product bằng vector search với CLIP."""
         if not self.qdrant:
