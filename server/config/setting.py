@@ -26,19 +26,19 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = Field(default="INFO", env="LOG_LEVEL", description="Mức độ logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
     
 
+    # Gemini API settings
+    GEMINI_APIKEY: str | None = Field(default=None, env="GEMINI_APIKEY", description="API Key for Gemini AI models")
+    VISION_GEMINI: str = Field(default="gemini-2.0-flash-exp-image-generation", description="Gemini model for vision tasks")
+    GEMINI_MODEL: str = Field(default="gemini-2.0-flash", description="Default Gemini model for text tasks")
+    GEMINI_EMBEDDING_MODEL: str = Field(default="models/embedding-001", description="Gemini model for embedding tasks")
 
-    # setting model 
+    # Google Search settings
+    GOOGLE_API_KEY: str | None = Field(default=None, env="GOOGLE_API_KEY", description="Google API key for search functionality")
+    GOOGLE_CSE_ID: str | None = Field(default=None, env="GOOGLE_CSE_ID", description="Google Custom Search Engine ID")
 
-    GEMINI_APIKEY = os.getenv("GEMINI_APIKEY")
-    VISION_GEMINI = "gemini-2.0-flash-exp-image-generation"
-    GEMINI_MODEL = "gemini-2.0-flash"
-
-    # tool search 
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
-
-    TOOL_TIMEOUT = 30 
-    HISTORY_TOKEN_LIMIT = 1000
+    # Tool settings
+    TOOL_TIMEOUT: int = Field(default=30, description="Timeout in seconds for external tool calls")
+    HISTORY_TOKEN_LIMIT: int = Field(default=1000, description="Maximum number of tokens to store in conversation history")
 
 
 

@@ -11,133 +11,130 @@ import torch
 from PIL import Image
 import requests
 from io import BytesIO
-# import google.generativeai as genai
 import numpy as np
 from datetime import datetime
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
 
+
 class ProductService:
-    def __init__(self, qdrant: Optional[QdrantClient] = None):
-        self.qdrant = qdrant
-        self.collection_name = "products"
-        
-        # Luôn tải model CLIP, ngay cả khi Qdrant không có
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.clip_model, self.preprocess = clip.load("ViT-B/32", device=self.device)
+
+    COLLECTION_NAME = "products"
+    DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+    CLIP_MODEL, PREPROCESS = clip.load("ViT-B/32", device=DEVICE)
 
     @staticmethod
     async def create_product(product: ProductCreate) -> Dict:
-        """Tạo product mới và lưu vào Supabase."""
+        """Create new product and save to Supabase."""
         try:
             product_data = {
-                "name": product.name,
+                "title": product.name,
                 "description": product.description,
-                "image_url": product.image_url,
-                "category": product.category
+                "image_urls": product.image_urls,
+                "brand": product.brand
             }
             created_product = Product.create(product_data)
-            logger.info(f"Đã tạo product mới với ID {created_product['id']}")
+            logger.info(f"Created new product with ID {created_product['id']}")
             return created_product
         except ProductException as e:
-            logger.error(f"Lỗi khi tạo product: {str(e)}")
+            logger.error(f"Error creating product: {str(e)}")
             raise
 
     @staticmethod
     async def get_product_by_id(product_id: str) -> Optional[Dict]:
-        """Lấy thông tin product theo ID."""
+        """Get product information by ID."""
         try:
             product = Product.get_by_id(product_id)
             if product:
-                logger.info(f"Đã tìm thấy product với ID {product_id}")
+                logger.info(f"Found product with ID {product_id}")
             else:
-                logger.warning(f"Không tìm thấy product với ID {product_id}")
+                logger.warning(f"Product with ID {product_id} not found")
             return product
         except ProductException as e:
-            logger.error(f"Lỗi khi lấy product {product_id}: {str(e)}")
+            logger.error(f"Error retrieving product {product_id}: {str(e)}")
             raise
 
     @staticmethod
     async def list_products() -> List[Dict]:
-        """Lấy danh sách tất cả product."""
+        """Get list of all products."""
         try:
             products = Product.get_all()
-            logger.info("Đã lấy danh sách tất cả product")
+            logger.info("Retrieved list of all products")
             return products
         except ProductException as e:
-            logger.error(f"Lỗi khi lấy danh sách product: {str(e)}")
+            logger.error(f"Error retrieving product list: {str(e)}")
             raise
 
     @staticmethod
     async def update_product(product_id: str, product_update: ProductUpdate) -> Dict:
-        """Cập nhật thông tin product."""
+        """Update product information."""
         try:
             existing_product = Product.get_by_id(product_id)
             if not existing_product:
-                raise ValueError("Product không tồn tại")
+                raise ValueError("Product does not exist")
 
             update_data = product_update.dict(exclude_unset=True)
             update_data["updated_at"] = datetime.utcnow().isoformat()
             updated_product = Product.update(product_id, update_data)
-            logger.info(f"Đã cập nhật product với ID {product_id}")
+            logger.info(f"Updated product with ID {product_id}")
             return updated_product
         except (ValueError, ProductException) as e:
-            logger.error(f"Lỗi khi cập nhật product {product_id}: {str(e)}")
+            logger.error(f"Error updating product {product_id}: {str(e)}")
             raise
 
     @staticmethod
     async def delete_product(product_id: str) -> None:
-        """Xóa product khỏi Supabase."""
+        """Delete product from Supabase."""
         try:
             if not Product.get_by_id(product_id):
-                raise ValueError("Product không tồn tại")
+                raise ValueError("Product does not exist")
 
             Product.delete(product_id)
-            logger.info(f"Đã xóa product với ID {product_id}")
+            logger.info(f"Deleted product with ID {product_id}")
         except (ValueError, ProductException) as e:
-            logger.error(f"Lỗi khi xóa product {product_id}: {str(e)}")
+            logger.error(f"Error deleting product {product_id}: {str(e)}")
             raise
     
-
-    async def add_product_to_qdrant(self, product: Dict) -> None:
-        """Thêm product vào Qdrant với vector embedding từ CLIP."""
-        if not self.qdrant:
-            logger.warning("Qdrant client không khả dụng, bỏ qua việc thêm vào Qdrant")
+    @staticmethod
+    async def add_product_to_qdrant(product: Dict, qdrant: Optional[QdrantClient] = None) -> None:
+        """Add product to Qdrant with vector embedding from CLIP."""
+        if not qdrant:
+            logger.warning("Qdrant client not available, skipping adding to Qdrant")
             return
 
         try:
-            vector = self._generate_clip_vector(product["image_url"], product["name"])
+            vector = ProductService._generate_clip_vector(product["image_urls"][0], product["name"])
             if vector is None:
-                logger.warning(f"Không thể tạo vector cho product {product['id']}, bỏ qua.")
+                logger.warning(f"Could not create vector for product {product['id']}, skipping.")
                 return
 
-            self.qdrant.upsert(
-                collection_name=self.collection_name,
+            qdrant.upsert(
+                collection_name= ProductService.COLLECTION_NAME,
                 points=[{
                     "id": product["id"],
                     "vector": vector,
                     "payload": product
                 }]
             )
-            logger.info(f"Đã thêm vector cho product {product['id']} vào Qdrant")
+            logger.info(f"Added vector for product {product['id']} to Qdrant")
         except Exception as e:
-            logger.error(f"Lỗi khi thêm product {product['id']} vào Qdrant: {str(e)}")
+            logger.error(f"Error adding product {product['id']} to Qdrant: {str(e)}")
             raise
     
     @staticmethod
-    async def search_products(self, query: str) -> List[Dict]: 
-        """Tìm kiếm product bằng vector search với CLIP."""
-        if not self.qdrant:
-            raise ProductException("Qdrant client không khả dụng")
+    async def search_products(query: str, qdrant: Optional[QdrantClient] = None) -> List[Dict]: 
+        """Search products using vector search with CLIP."""
+        if not qdrant:
+            raise ProductException("Qdrant client not available")
 
         try:
-            text = clip.tokenize([query]).to(self.device)
+            text = clip.tokenize([query]).to(ProductService.DEVICE)
             with torch.no_grad():
-                text_vector = self.clip_model.encode_text(text).cpu().tolist()[0]
+                text_vector = ProductService.CLIP_MODEL.encode_text(text).cpu().tolist()[0]
 
-            search_result = self.qdrant.search(
-                collection_name=self.collection_name,
+            search_result = qdrant.search(
+                collection_name=ProductService.COLLECTION_NAME,
                 query_vector=text_vector,
                 limit=10
             )
@@ -149,27 +146,27 @@ class ProductService:
             response = supabase.table("Products").select("*").in_("id", product_ids).execute()
             return response.data if response.data else []
         except Exception as e:
-            logger.error(f"Lỗi khi tìm kiếm product: {str(e)}")
+            logger.error(f"Error searching products: {str(e)}")
             raise
 
-    def _generate_clip_vector(self, image_url: str, name: str) -> Optional[List[float]]:
-        """Tạo vector embedding từ ảnh và tên sản phẩm bằng CLIP."""
+    @staticmethod
+    def _generate_clip_vector(image_url: str, name: str) -> Optional[List[float]]:
+        """Create vector embedding from image and product name using CLIP."""
         try:
             response = requests.get(image_url, timeout=5)
             response.raise_for_status()
             image = Image.open(BytesIO(response.content)).convert("RGB")
         except requests.exceptions.RequestException as e:
-            logger.error(f"Lỗi khi tải ảnh từ {image_url}: {e}")
+            logger.error(f"Error loading image from {image_url}: {e}")
             return None
 
-        image_input = self.preprocess(image).unsqueeze(0).to(self.device)
-        text_input = clip.tokenize([name]).to(self.device)
+        image_input = ProductService.PREPROCESS(image).unsqueeze(0).to(ProductService.DEVICE)
+        text_input = clip.tokenize([name]).to(ProductService.DEVICE)
 
         with torch.no_grad():
-            image_vector = self.clip_model.encode_image(image_input).cpu().tolist()[0]
-            text_vector = self.clip_model.encode_text(text_input).cpu().tolist()[0]
+            image_vector = ProductService.CLIP_MODEL.encode_image(image_input).cpu().tolist()[0]
+            text_vector = ProductService.CLIP_MODEL.encode_text(text_input).cpu().tolist()[0]
 
-        # Kết hợp vector ảnh và text bằng concatenation
+        # Combine image and text vectors by concatenation
         combined_vector = np.concatenate([image_vector, text_vector]).tolist()
         return combined_vector
- 

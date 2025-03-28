@@ -1,30 +1,29 @@
 # schemas/product.py
 from pydantic import BaseModel
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class ProductBase(BaseModel):
-    name: str
-    image_url: str
+    title: str
+    image_urls: List[str]
 
 class ProductCreate(ProductBase):
     description: Optional[str] = None
-    category: Optional[str] = None
+    brand: Optional[str] = None
 
 class ProductUpdate(BaseModel):
-    name: Optional[str] = None
+    title: Optional[str] = None
     description: Optional[str] = None
-    image_url: Optional[str] = None
-    category: Optional[str] = None
+    image_urls: Optional[List[str]] = None
+    brand: Optional[str] = None
 
 class ProductOut(BaseModel):
     id: UUID
     name: str
     description: Optional[str] = None
-    image_url: str
-    category: Optional[str] = None
-    created_at: datetime
+    image_urls: List[str]
+    brand: Optional[str] = None 
 
     class Config:
         from_attributes = True

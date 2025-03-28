@@ -1,3 +1,4 @@
+import io
 import os 
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -8,16 +9,15 @@ from langchain.agents import create_react_agent, AgentExecutor
 import sys
 import os
 import warnings
-
-
-from server.features.stylemate.tools.tools_implements import get_tools
-from server.config.setting import settings
-from server.features.stylemate.prompt import PROMPT_TEMPLATE
-
+from PIL import Image 
 
 warnings.filterwarnings("ignore")
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from knowledge_db.vector_store import KnowledgeDB
+from tools.tools_implements import get_tools
+from config.setting import settings
+from prompt.prompt import PROMPT_TEMPLATE
 
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_APIKEY")
@@ -25,25 +25,16 @@ GEMINI_API_KEY = os.getenv("GEMINI_APIKEY")
 class StyleMate: 
     """
     Main class thực hiện kết nối đến model và infer câu hỏi của ngừoi dùng
-
     """
 
     def __init__(self):
         self.tools = get_tools()
 
-
-        self.text_model = ChatGoogleGenerativeAI(
+        self.model = ChatGoogleGenerativeAI(
             model =  settings.GEMINI_MODEL, 
             temperature= 0.7, 
             api_key = GEMINI_API_KEY
         )
-
-        self.vision_model = ChatGoogleGenerativeAI(
-            model = settings.VISION_GEMINI, 
-            temperature= 0.7, 
-            api_key = GEMINI_API_KEY
-        )
-
 
         self.memory = ConversationBufferMemory(
             return_messages=True, 
@@ -63,12 +54,9 @@ class StyleMate:
         self.prompt_template = PROMPT_TEMPLATE
 
         self.agent = create_react_agent(
-            llm = self.text_model,
+            llm = self.model,
             tools = self.tools,
             prompt = self.prompt_template,
-            verbose = True,
-            memory = self.memory
-
         )
 
         self.agent_executor = AgentExecutor(
@@ -80,14 +68,49 @@ class StyleMate:
             max_iterations = 8 ,
             max_iterations_per_tool = 2,
             early_stopping_method= "generate"
-
         ) 
 
+    def process_message(self, query: str, image: bytes = None): 
+        try : 
+            try: 
+                store_dir, = self.knowledge_db.routing(query)
+                if store_dir is not None : 
+                    documents = self.knowledge_db.retrieval(query, store_dir)
+                    if documents and len(documents) > 0: 
+                        context = "\n".join([f"{i+1}. {doc.page_content}" for i, doc in enumerate(documents)])
+                        query = f"[CONTEXT] {context} \n\n [QUERY] {query}"
+            except Exception as e : 
+                print(f"Error in knowledge retrieval: {e}")
 
+            if image is not None:
+                print("Image detected")
+                image_obj = Image.open(io.BytesIO(image))
+                
+                try : 
+                    response = self.agent_executor.invoke({
+                        "input": query,
+                        "image": image_obj
+                    })
+                    return response.get("output", "Sorry, I couldn't process the image properly.")
+                except Exception as e:
+                    print(f"Error in vision agent: {e}")
+                    return "Sorry, I couldn't process the image properly."
+            else:
+                try : 
+                # Text-only query
+                    response = self.agent_executor.invoke({
+                        "input": query
+                    })
+                except Exception as e:
+                    print(f"Error in text agent: {e}")
+                    return "Sorry, I couldn't process your query."
+                return response.get("output", "Sorry, I couldn't understand your query.")
 
-    def get_response(self, query: str): 
+        except Exception as e:
+            print(f"Error in process message: {e}")
+            return "Error in processing message"    
 
-        
+    def get_response(self, query: str, image: bytes = None): 
         try: 
             store_dir, _ = self.knowledge_db.routing(query)
             if store_dir is None: 
@@ -113,19 +136,11 @@ class StyleMate:
                 return response.content
             
             except Exception as e: 
-                print(e)
+                print(f"Error in retrieval: {e}")
                 return "Error in retrieval"
         except Exception as e:
-            print(e)
+            print(f"Error in routing (get response function): {e}")
             return "Error in routing (get response function)"
-
-
-
-
-
-
-
-
 
     def chat_simulator(self): 
         """
@@ -138,14 +153,9 @@ class StyleMate:
             if user_input == "exit": 
                 break
 
-            response = self.get_response(user_input)
+            response = self.process_message(user_input)
             print(f"Bot: {response}")
-
-
-    
 
 if __name__ == "__main__": 
     agent = StyleMate()
     agent.chat_simulator()
-
-

@@ -14,8 +14,17 @@ class WebSearchFunc(BaseModel):
 class ProductSearchFunc(BaseModel): 
 
     query : str = Field(..., description="Search query to look up on the product database")
-    category : str = Field(..., description="Category to filter the search results")
-    limit : int = Field(default=5, description="Number of results to return")
 
+
+class ImageAnalyzerFunc(BaseModel): 
+    query : str = Field(..., description="Query used to analyze images for product information")
+    image : bytes = Field(..., description="Image data to be analyzed")
+
+
+class ImageGeneratorFunc(BaseModel):
+
+    query: str = Field(..., description="Detailed description of the fashion style or outfit to visualize")
+    style: str = Field(default="realistic", description="Visual style preference (realistic, artistic, casual, etc.)")
+    occasion: str = Field(default="casual", description="Occasion for the outfit (casual, formal, party, etc.)")
 
 

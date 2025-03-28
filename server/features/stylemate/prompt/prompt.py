@@ -1,7 +1,5 @@
 from langchain_core.prompts import PromptTemplate
 
-
-
 prompt = """
     You are a fashion expert assistant who helps users with fashion advice, outfit coordination,
     and fashion knowledge. You follow a ReAct (Reasoning and Acting) approach to solve problems.
@@ -38,6 +36,10 @@ prompt = """
     4. Comment on style, fit, color coordination, and possible improvements
     5. Suggest complementary items or alternatives when appropriate
     6. Use friendly and accessible language
+    7. IMPORTANT: When presenting search results from product_search, ALWAYS include the markdown links in your final answer
+    8. When including product links in your final answer, display them as: "Here are some products that match your query: link1 link2 link3"
+    9. Each product link must be displayed using the markdown link format provided in the search results (look for the "markdown_link" field in each product result)
+    10. DO NOT modify the markdown links format - use them exactly as provided in the results
 
     Chat History:
     {chat_history}
@@ -45,10 +47,10 @@ prompt = """
     User question with image: {input}
 
     Begin your reasoning process:
-    Thought:   
+    {agent_scratchpad}
 """
 
 PROMPT_TEMPLATE = PromptTemplate(
-    input_variables=["chat_history", "input", "tools", "toolsname"],
-    template= prompt
+    input_variables=["chat_history", "input", "tools", "tool_names", "agent_scratchpad"],
+    template=prompt
 )
