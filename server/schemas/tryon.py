@@ -1,22 +1,27 @@
 # schemas/tryon.py
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 class TryOnRequest(BaseModel):
-    garment_des: str = ""  # Mô tả trang phục
-    is_checked: bool = True       # Sử dụng mask
-    is_checked_crop: bool = False # Cắt ảnh
-    denoise_steps: int = 30       # Số bước giảm nhiễu
-    seed: int = 42                # Giá trị seed
+    # Các tham số phù hợp với API Leffa
+    ref_acceleration: bool = False
+    step: int = Field(30, ge=1, le=100)  # Tương đương với denoise_steps trong mã cũ
+    scale: float = Field(2.5, ge=0.1, le=10.0)
+    seed: int = 42
+    vt_model_type: str = "viton_hd"
+    vt_garment_type: str = "upper_body"
+    vt_repaint: bool = False
 
     class Config:
         json_schema_extra = {
             "example": {
-                "garment_des": "A red casual shirt",
-                "is_checked": True,
-                "is_checked_crop": False,
-                "denoise_steps": 30,
-                "seed": 42
+                "ref_acceleration": False,
+                "step": 30,
+                "scale": 2.5,
+                "seed": 42,
+                "vt_model_type": "viton_hd",
+                "vt_garment_type": "upper_body",
+                "vt_repaint": False
             }
         }
 

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,21 +28,24 @@ const orangeRedTheme = {
   }
 };
 
-// Define type for suggestion item
 type SuggestionItem = {
   id: number;
   uri: string;
   label: string;
   description: string;
+  price?: number;
+  brand?: string;
 };
 
 const SuggestionsScreen = () => {
   const router = useRouter();
+  const params = useLocalSearchParams<{
+    recommendations?: string;
+    resultUri?: string;
+  }>();
   const colorScheme = useColorScheme();
   
   const isDark = colorScheme === 'dark';
-  
-  // Use orange-red theme colors
   const primaryColor = isDark ? orangeRedTheme.dark.tint : orangeRedTheme.light.tint;
   const bgColor = isDark ? orangeRedTheme.dark.background : orangeRedTheme.light.background;
   const textColor = isDark ? orangeRedTheme.dark.text : orangeRedTheme.light.text;
@@ -50,113 +53,128 @@ const SuggestionsScreen = () => {
   const borderColor = isDark ? orangeRedTheme.dark.border : orangeRedTheme.light.border;
   const secondaryTextColor = isDark ? orangeRedTheme.dark.secondaryText : orangeRedTheme.light.secondaryText;
 
-  // Suggestion data with descriptions
-  const suggestions: SuggestionItem[] = [
-    { 
-      id: 1, 
-      uri: 'https://images-na.ssl-images-amazon.com/images/I/41rMU29qfBL.jpg', 
-      label: 'Office Wear', 
-      description: 'Suitable for professional office environments'
-    },
-    { 
-      id: 2, 
-      uri: 'https://dytbw3ui6vsu6.cloudfront.net/media/catalog/product/resize/780x780/S/a/Sandro_SFPPA01555-14_F_P_1.webp', 
-      label: 'Casual', 
-      description: 'Dynamic, comfortable style for weekends'
-    },
-    { 
-      id: 3, 
-      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRulQO6l2VoxTTfN2kGyxT4zYNNt3Wej5fKqA&s', 
-      label: 'Evening', 
-      description: 'Elegant outfits for special occasions'
-    },
-    { 
-      id: 4, 
-      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuiGQF3nZJxF6sfpXn2SK1MmC9SNm7dDS7_g&s', 
-      label: 'Sporty', 
-      description: 'Active and comfortable for sports activities'
-    },
-  ];
+  const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Center image - using a local import rather than reading from URI
-  const centerImage = require("@/assets/images/combine.png");
+  useEffect(() => {
+    try {
+      if (params.recommendations) {
+        const parsedRecs = JSON.parse(params.recommendations);
+        if (Array.isArray(parsedRecs)) {
+          setSuggestions(parsedRecs.map((item, index) => ({
+            id: index,
+            uri: item.image_urls?.[0] || '',
+            label: item.title || 'Recommended Item',
+            description: item.description || 'Great match for your style',
+            price: item.price,
+            brand: item.brand
+          })));
+        }
+      }
+    } catch (e) {
+      setError('Failed to load recommendations');
+      console.error('Error parsing recommendations:', e);
+    } finally {
+      setLoading(false);
+    }
+  }, [params.recommendations]);
 
-  // Render a suggestion item
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: bgColor, justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={primaryColor} />
+        <Text style={[styles.loadingText, { color: textColor }]}>Loading recommendations...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: bgColor, justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={[styles.errorText, { color: textColor }]}>{error}</Text>
+        <TouchableOpacity
+          style={[styles.retryButton, { backgroundColor: primaryColor }]}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.retryButtonText}>Try Again</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  if (suggestions.length === 0) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: bgColor, justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={[styles.noResultsText, { color: textColor }]}>No recommendations found</Text>
+        <TouchableOpacity
+          style={[styles.retryButton, { backgroundColor: primaryColor }]}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.retryButtonText}>Try Again</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
   const renderSuggestionItem = ({ item }: { item: SuggestionItem }) => (
     <TouchableOpacity 
       style={[styles.suggestionItem, { backgroundColor: secondaryBgColor, borderColor }]}
-      onPress={() => console.log(`Selected style: ${item.label}`)}
+      onPress={() => router.push({
+        pathname: '/(tabs)/shop/product_detail',
+        params: { 
+          productId: item.id.toString(),
+          productData: JSON.stringify(item)
+        }
+      })}
     >
       <Image
         source={{ uri: item.uri }}
         style={styles.suggestionImage}
-        onError={(error) => console.error(`Error loading suggestion image ${item.id}:`, error.nativeEvent.error)}
+        onError={() => console.log(`Error loading image for ${item.label}`)}
       />
       <View style={styles.suggestionContent}>
-        <Text style={[styles.suggestionLabel, { color: textColor }]}>
-          {item.label}
-        </Text>
-        <Text style={[styles.suggestionDescription, { color: secondaryTextColor }]}>
-          {item.description}
-        </Text>
+        <Text style={[styles.suggestionLabel, { color: textColor }]}>{item.label}</Text>
+        {item.brand && <Text style={[styles.suggestionBrand, { color: secondaryTextColor }]}>{item.brand}</Text>}
+        {item.price && <Text style={[styles.suggestionPrice, { color: primaryColor }]}>${item.price.toFixed(2)}</Text>}
+        <Text style={[styles.suggestionDescription, { color: secondaryTextColor }]}>{item.description}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]} edges={['top', 'left', 'right']}>
-      {/* Gradient Background */}
+    <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
       <LinearGradient
         colors={isDark ? ['#1e1e1e', '#262626'] : ['#fff5f2', '#ffffff']}
         style={styles.gradientBackground}
       />
 
-      {/* Header */}
-      <View style={[styles.header, { backgroundColor: secondaryBgColor, borderBottomColor: borderColor, borderBottomWidth: 1 }]}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.push('/virtual-fitting/screens/result')}
-        >
+      <View style={[styles.header, { backgroundColor: secondaryBgColor, borderBottomColor: borderColor }]}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={primaryColor} />
         </TouchableOpacity>
-        
         <Text style={[styles.headerTitle, { color: textColor }]}>STYLING SUGGESTIONS</Text>
-        
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => router.push('/(tabs)/shop/home')}
-        >
-          <Ionicons name="close" size={24} color={primaryColor} />
-        </TouchableOpacity>
+        <View style={{ width: 40 }} /> {/* Spacer */}
       </View>
 
-      {/* Fixed center image container */}
-      <View style={[styles.imageContainer, { borderColor }]}>
-        <Image
-          source={centerImage}
-          style={styles.resultImage}
-          onError={(error) => console.error('Error loading center image:', error.nativeEvent.error)}
-        />
-      </View>
+      {params.resultUri && (
+        <View style={[styles.imageContainer, { borderColor }]}>
+          <Image
+            source={{ uri: params.resultUri }}
+            style={styles.resultImage}
+            onError={() => console.log('Error loading result image')}
+          />
+        </View>
+      )}
 
-      {/* Suggestions title */}
-      <View style={styles.suggestionHeader}>
-        <Text style={[styles.suggestionTitle, { color: textColor }]}>
-          Outfit Suggestions
-        </Text>
-        <Text style={[styles.suggestionSubtitle, { color: secondaryTextColor }]}>
-          Choose a style that suits you
-        </Text>
-      </View>
+      <Text style={[styles.sectionTitle, { color: textColor }]}>Recommended For You</Text>
 
-      {/* Suggestions list in 2-column grid */}
       <FlatList
         data={suggestions}
         renderItem={renderSuggestionItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         columnWrapperStyle={styles.suggestionRow}
-        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.suggestionContainer}
       />
     </SafeAreaView>
@@ -164,7 +182,7 @@ const SuggestionsScreen = () => {
 };
 
 const { width } = Dimensions.get('window');
-const columnWidth = (width - 60) / 2; // 60 = padding (40) + gap between columns (20)
+const columnWidth = (width - 60) / 2;
 
 const styles = StyleSheet.create({
   container: {
@@ -185,15 +203,9 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 10,
     marginBottom: 15,
+    borderBottomWidth: 1,
   },
   backButton: {
-    padding: 8,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  closeButton: {
     padding: 8,
     width: 40,
     height: 40,
@@ -205,40 +217,24 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     letterSpacing: 1,
-    flex: 1,
   },
   imageContainer: {
     width: '100%',
-    height: '40%',
+    height: 300,
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 20,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
     borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   resultImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
   },
-  suggestionHeader: {
-    marginBottom: 15,
-  },
-  suggestionTitle: {
+  sectionTitle: {
     fontSize: 22,
     fontWeight: '700',
-    textAlign: 'left',
-  },
-  suggestionSubtitle: {
-    fontSize: 14,
-    textAlign: 'left',
-    marginTop: 4,
+    marginBottom: 15,
   },
   suggestionContainer: {
     paddingBottom: 20,
@@ -251,18 +247,11 @@ const styles = StyleSheet.create({
     width: columnWidth,
     borderRadius: 16,
     overflow: 'hidden',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
     borderWidth: 1,
   },
   suggestionImage: {
     width: '100%',
     height: 150,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
   },
   suggestionContent: {
     padding: 12,
@@ -272,9 +261,42 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 4,
   },
+  suggestionBrand: {
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  suggestionPrice: {
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
   suggestionDescription: {
     fontSize: 12,
-    lineHeight: 18,
+    lineHeight: 16,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+  },
+  errorText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  noResultsText: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  retryButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

@@ -8,11 +8,13 @@ import {
   Dimensions, 
   TouchableOpacity,
   Animated,
-  ScrollView 
+  ScrollView,
+  Alert // Import Alert
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { useRouter } from 'expo-router';
 import { useFittingContext } from '../context/fitting-context';
+import { tryOnService } from '@/services/api'; // Import the API service
 import { useColorScheme } from '@/hooks/useColorScheme';
 import StepIndicator from '@/components/Fitting-room/StepIndicator';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -144,42 +146,52 @@ const CombineScreen = () => {
     validateUris();
   }, [garmentUri, modelUri, router]);
 
-  // Generate the combined image with improved visual feedback
-  const generateImage = () => {
+  // Generate the combined image by calling the API
+  const generateImage = async () => {
+    if (!garmentUri || !modelUri) {
+      Alert.alert('Error', 'Garment or model image is missing.');
+      return;
+    }
+
     setLoading(true);
-    
-    // Give haptic feedback
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    
-    // Animate the merge
     animateMerge();
-    animateProgress();
-    
-    // Show different processing stages with timing
-    setProcessingStage('Analyzing images...');
-    setTimeout(() => {
-      setProcessingStage('Mapping garment to model...');
-    }, 6000);
-    
-    setTimeout(() => {
-      setProcessingStage('Applying fitting algorithm...');
-    }, 6000);
-    
-    setTimeout(() => {
-      setProcessingStage('Finalizing result...');
-    }, 6000);
-    
-    // Finish processing
-    setTimeout(() => {
+    animateProgress(); // Keep progress animation for visual feedback
+
+    try {
+      setProcessingStage('Uploading images...');
+      // Call the API service
+      const result = await tryOnService.processTryOn(garmentUri, modelUri, {
+        // You can pass specific options here if needed, otherwise defaults are used
+        garment_des: "Virtual try-on item", 
+      });
+
+      setProcessingStage('Processing complete!');
+
+      // Set the result URI from the API response
+      if (result && result.result_url) {
+        setResultUri(result.result_url);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        // Navigate to result screen
+        router.push('/(tabs)/virtual-fitting/screens/result');
+      } else {
+        throw new Error('Invalid API response: Missing result_url');
+      }
+
+    } catch (error: any) {
+      console.error('Error generating image:', error);
+      Alert.alert(
+        'Processing Error',
+        `Failed to create virtual fitting: ${error.message || 'Please try again.'}`,
+        [{ text: 'OK' }]
+      );
+      // Reset animations or state if needed
+      mergeAnim.setValue(0);
+      progressAnim.setValue(0);
+      setProcessingStage(''); // Clear stage text on error
+    } finally {
       setLoading(false);
-      setResultUri(modelUri);
-      
-      // Give success feedback
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      
-      // Navigate to result
-      router.push('/(tabs)/virtual-fitting/screens/result');
-    }, 7000);
+    }
   };
 
   if (!urisValid) {

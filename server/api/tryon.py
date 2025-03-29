@@ -26,14 +26,16 @@ async def try_on(
 ):
     try:
         # Gọi TryOnService mà không cần user_id
-        result_url = await TryOnService.process_tryon(
+        result_urls = await TryOnService.process_tryon(
             user_image=user_image,
             product_image=product_image,
             request=request,
             db=db
         )
-        logger.info(f"Try-on thành công: {result_url}")
-        return ResponseHandler.tryon_success(result_url)
+        logger.info(f"Try-on thành công: {result_urls}")
+        return ResponseHandler.tryon_success(
+            result_urls["result_url"], 
+        )
     except ValueError as ve:
         logger.error(f"Lỗi dữ liệu trong try-on: {str(ve)}")
         return ResponseHandler.error(str(ve), status_code=400)

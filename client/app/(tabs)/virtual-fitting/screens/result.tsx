@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
 import { useRouter } from 'expo-router';
+import { recommendService } from '@/services/api';
 import { useFittingContext } from '../context/fitting-context';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
@@ -41,7 +42,8 @@ const ResultScreen = () => {
   const [loading, setLoading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isCommentExpanded, setIsCommentExpanded] = useState(false);
-  const [localImageUri, setLocalImageUri] = useState<string | null>(null);
+  const [localImageUri, setLocalImageUri] = useState<string | null>(null); // Keep for potential saving/sharing
+  const [displayUri, setDisplayUri] = useState<string | null>(null); // State for the URI to display
   
   const isDark = colorScheme === 'dark';
   
@@ -56,44 +58,59 @@ const ResultScreen = () => {
   // You need to replace 'require("../assets/default-result.jpg")' with your actual asset path
   const fallbackImage = require("@/assets/images/combine.png");
 
-  // Load image from assets or URI
+  // Load image URI when the component mounts or resultUri changes
   useEffect(() => {
     const loadImage = async () => {
-      try {
-        // First check if resultUri exists and is valid
-        if (resultUri) {
-          // 
-          const asset = Asset.fromModule(fallbackImage);
-          await asset.downloadAsync();
-          setLocalImageUri(asset.uri);
+      setImageLoaded(false); // Reset loading state
+      if (resultUri) {
+        // Check if it's a remote URL (likely from API)
+        if (resultUri.startsWith('http')) {
+          console.log('Displaying remote image:', resultUri);
+          setDisplayUri(resultUri);
+          setLocalImageUri(resultUri); // Use remote URI for saving/sharing initially
           setUriValid(true);
+        } else if (resultUri.startsWith('file://')) {
+          // Check if local file exists
+          const exists = await checkFileExists(resultUri);
+          if (exists) {
+            console.log('Displaying local file:', resultUri);
+            setDisplayUri(resultUri);
+            setLocalImageUri(resultUri);
+            setUriValid(true);
+          } else {
+            console.warn('Local file URI does not exist:', resultUri);
+            setUriValid(false);
+          }
+        } else {
+          console.warn('Invalid result URI format:', resultUri);
+          setUriValid(false);
         }
-        // If resultUri doesn't exist or is invalid, try to load from a specific asset
-        // This could be modified to load a different asset based on some condition
+      } else {
+        console.warn('No result URI found in context.');
+        setUriValid(false);
+      }
+
+      // If URI is invalid after checks, load fallback
+      if (!uriValid && !displayUri) {
         try {
-          // This is an alternative approach using Asset module for more complex cases
-          // You could add more fallback options here
           const asset = Asset.fromModule(fallbackImage);
           await asset.downloadAsync();
-          setLocalImageUri(asset.uri);
-          setUriValid(true);
+          console.log('Displaying fallback image:', asset.uri);
+          setDisplayUri(asset.uri);
+          setLocalImageUri(asset.uri); // Use fallback for saving/sharing
+          setUriValid(true); // Set to true as fallback is loaded
         } catch (assetError) {
           console.error('Error loading fallback asset:', assetError);
-          setUriValid(false);
-          // Only redirect if all image loading attempts fail
-          router.push('/virtual-fitting/screens/combine');
+          // If even fallback fails, redirect
+          Alert.alert('Error', 'Failed to load result image.', [{ text: 'OK', onPress: () => router.push('/(tabs)/virtual-fitting/screens/combine') }]);
         }
-      } catch (error) {
-        console.error('Error in loadImage:', error);
-        setUriValid(false);
-        router.push('/virtual-fitting/screens/combine');
       }
     };
 
     loadImage();
-  }, [resultUri, router]);
+  }, [resultUri]); // Depend only on resultUri
 
-  // Check if file exists
+  // Check if file exists (remains the same)
   const checkFileExists = async (fileUri: string) => {
     try {
       const info = await FileSystem.getInfoAsync(fileUri);
@@ -141,11 +158,21 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
       }
 
       if (!localImageUri) {
-        Alert.alert('Lỗi', 'Không thể lưu ảnh. Vui lòng thử lại.');
+        Alert.alert('Lỗi', 'Không có ảnh để lưu.');
         return;
-      } 
-      
-      await MediaLibrary.saveToLibraryAsync(localImageUri);
+      }
+
+      // If it's a remote URL, download it first
+      let fileToSaveUri = localImageUri;
+      if (localImageUri.startsWith('http')) {
+        const downloadDest = FileSystem.documentDirectory + `tryon_result_${Date.now()}.jpg`;
+        console.log(`Downloading remote image from ${localImageUri} to ${downloadDest}`);
+        const { uri: downloadedUri } = await FileSystem.downloadAsync(localImageUri, downloadDest);
+        fileToSaveUri = downloadedUri;
+        console.log('Download complete:', fileToSaveUri);
+      }
+
+      await MediaLibrary.saveToLibraryAsync(fileToSaveUri);
       Alert.alert('Thành công', 'Ảnh đã được lưu vào thư viện ảnh!');
     } catch (error) {
       console.error('Error saving image:', error);
@@ -167,8 +194,19 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
       }
 
       if (localImageUri) {
-        await Sharing.shareAsync(localImageUri, {
+         // If it's a remote URL, download it first for sharing
+        let fileToShareUri = localImageUri;
+        if (localImageUri.startsWith('http')) {
+          const downloadDest = FileSystem.cacheDirectory + `share_tryon_${Date.now()}.jpg`; // Use cache dir
+          console.log(`Downloading remote image for sharing from ${localImageUri} to ${downloadDest}`);
+          const { uri: downloadedUri } = await FileSystem.downloadAsync(localImageUri, downloadDest);
+          fileToShareUri = downloadedUri;
+          console.log('Download for sharing complete:', fileToShareUri);
+        }
+
+        await Sharing.shareAsync(fileToShareUri, {
           dialogTitle: 'Chia sẻ ảnh kết quả',
+          mimeType: 'image/jpeg', // Specify mime type
         });
       }
     } catch (error) {
@@ -179,11 +217,17 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
     }
   };
 
-  if (!uriValid && !localImageUri) {
-    return null; // Wait for redirect if both URI and local assets are invalid
+  // Show loading indicator until displayUri is determined or fallback loaded
+  if (!displayUri && !imageLoaded) {
+     return (
+      <SafeAreaView style={[styles.container, { backgroundColor: bgColor, justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={primaryColor} />
+        <Text style={[styles.loadingText, { color: textColor, marginTop: 15 }]}>Loading Result...</Text>
+      </SafeAreaView>
+    );
   }
 
-  // Function to handle image loading failure
+   // Function to handle image loading failure
   const handleImageError = () => {
     // If external URI fails, try directly with require statement
     console.error('Error loading image from URI, using fallback asset directly');
@@ -232,17 +276,22 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
               </View>
             )}
             
-            {/* Conditional rendering based on image source */}
-            {localImageUri ? (
+            {/* Display the image using displayUri */}
+            {displayUri && (
               <Image
-                source={{ uri: localImageUri }}
+                source={{ uri: displayUri }}
                 style={styles.image}
                 onLoad={() => setImageLoaded(true)}
-                onError={handleImageError}
+                onError={(error) => {
+                  console.error('Error loading display image:', error.nativeEvent.error);
+                  handleImageError(); // Trigger fallback logic on error
+                }}
               />
-            ) : (
-              <Image
-                source={fallbackImage}
+            )}
+            {/* If displayUri is null but fallback is loaded via localImageUri */}
+            {!displayUri && localImageUri && (
+               <Image
+                source={{ uri: localImageUri }} // Should be fallback URI
                 style={styles.image}
                 onLoad={() => setImageLoaded(true)}
               />
@@ -296,11 +345,34 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
 
           <TouchableOpacity
             style={[styles.actionButton, { backgroundColor: isDark ? 'rgba(255, 69, 0, 0.2)' : 'rgba(255, 69, 0, 0.1)', borderColor }]}
-            onPress={() => router.push({
-              pathname: '/virtual-fitting/screens/suggestions',
-              params: { resultUri: localImageUri },
-            })}
-            disabled={loading}
+            onPress={async () => {
+              try {
+                setLoading(true);
+                const imageToUse = displayUri || localImageUri;
+                if (!imageToUse) {
+                  Alert.alert('Error', 'No image available for recommendations');
+                  return;
+                }
+                
+                const recommendations = await recommendService.getRecommendations({
+                  image: imageToUse
+                });
+                
+                router.push({
+                  pathname: '/(tabs)/virtual-fitting/screens/suggestions',
+                  params: { 
+                    resultUri: imageToUse,
+                    recommendations: JSON.stringify(recommendations)
+                  }
+                });
+              } catch (error) {
+                console.error('Error getting recommendations:', error);
+                Alert.alert('Error', 'Failed to get recommendations. Please try again.');
+              } finally {
+                setLoading(false);
+              }
+            }}
+            disabled={loading || !displayUri}
           >
             <Ionicons name="bulb" size={22} color={primaryColor} />
             <Text style={[styles.actionButtonText, { color: primaryColor }]}>SUGGEST</Text>
@@ -309,16 +381,22 @@ Không phù hợp: Nếu cần tham dự các sự kiện trang trọng (như h�
       </ScrollView>
 
       {/* Suggestions Button (Fixed at bottom) */}
-      <View style={styles.bottomButtonContainer}>
-        <TouchableOpacity
-          style={[styles.suggestionsButton, { backgroundColor: primaryColor }]}
-          onPress={() => router.push('/virtual-fitting/screens/capture')}
-          disabled={loading}
-        >
+      {/* Only show Try Again button if not loading */}
+      {!loading && (
+        <View style={styles.bottomButtonContainer}>
+          <TouchableOpacity
+            style={[styles.suggestionsButton, { backgroundColor: primaryColor }]}
+            onPress={() => {
+              // Reset context? Or just navigate back? Decide based on desired flow.
+              // For now, just navigate back to capture.
+              router.push('/(tabs)/virtual-fitting/screens/capture');
+            }}
+          >
           <Ionicons name="camera" size={20} color="#ffffff" style={styles.suggestionsButtonIcon} />
           <Text style={styles.suggestionsButtonText}>TRY AGAIN</Text>
         </TouchableOpacity>
       </View>
+      )} {/* Add missing closing parenthesis for conditional rendering */}
 
       {/* Loading Overlay */}
       {loading && (
