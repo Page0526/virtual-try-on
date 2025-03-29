@@ -78,6 +78,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     marginVertical: 16,

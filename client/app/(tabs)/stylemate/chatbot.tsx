@@ -168,7 +168,7 @@ export default function ChatScreen() {
       <SafeAreaView className="flex-1 bg-white">
         {/* Header */}
         <View 
-          className={`px-6 flex-row items-center justify-between ${isTablet ? 'h-16' : 'h-14'}`}
+          className={`px-6 flex-row flex-1 items-center justify-between ${isTablet ? 'h-16' : 'h-14'}`}
           style={{
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },
@@ -178,10 +178,13 @@ export default function ChatScreen() {
             backgroundColor: '#FDFDFD',
             borderBottomWidth: 1,
             borderBottomColor: '#F0F0F0',
+            paddingTop: 20,
+            maxHeight: 90
           }}
         >
+          
           <View className="flex-row items-center">
-            <Ionicons name="hardware-chip-outline" size={isTablet ? 24 : 20} color="#FF6B6B" style={{ marginRight: 8 }} />
+            <Ionicons name="hardware-chip-outline" size={isTablet ? 24 : 20} color="#E14E69" style={{ marginRight: 8 }} />
             <Text 
               className={`text-black font-bold ${isTablet ? 'text-2xl' : 'text-xl'}`}
               style={{ letterSpacing: 0.5, color: '#333' }}
@@ -311,16 +314,16 @@ export default function ChatScreen() {
               }}
             >
               <View 
-                className={`flex-row items-center ${isTablet ? 'py-3 px-3' : 'py-2 px-2'}`}
+                className={`flex-row items-center gap-3 ${isTablet ? 'py-3 px-3' : 'py-2 px-3'}`}
               >
-                <TouchableOpacity className="p-2 ml-1">
+                <TouchableOpacity className="">
                   <Ionicons name="image-outline" size={isTablet ? 28 : 24} color="#666" />
                 </TouchableOpacity>
                 
-                <View className={`relative flex-1 ${isTablet ? 'h-12' : 'h-11'}`}>
+                <View className={`relative flex-1 flex-row ${isTablet ? 'h-12' : 'h-11'}`}>
                   <TouchableWithoutFeedback>
                     <View 
-                      className={`flex-1 bg-gray-100 rounded-xl px-4 py-2`}
+                      className={`bg-gray-100 rounded-xl pl-2 w-[100%]`}
                       style={{
                         shadowColor: '#000',
                         shadowOffset: { width: 0, height: 1 },
@@ -335,7 +338,7 @@ export default function ChatScreen() {
                         onChangeText={setInputText}
                         placeholder="Ask anything about fashion..."
                         placeholderTextColor="#A0A0A0"
-                        className={`flex-1 text-black pr-12 ${isTablet ? 'text-base py-1' : 'py-0.5'}`}
+                        className={`text-black ${isTablet ? 'text-base py-1' : 'py-0.5'}`}
                         multiline={false}
                         autoCapitalize="sentences"
                         autoCorrect={true}
@@ -347,14 +350,12 @@ export default function ChatScreen() {
                       />
                     </View>
                   </TouchableWithoutFeedback>
-                  
-                  <TouchableOpacity 
+                </View>
+                <TouchableOpacity 
                     onPress={sendMessage}
-                    className="absolute right-2 items-center justify-center"
+                    className="items-center justify-center"
                     style={{
-                      top: '50%',
-                      transform: [{ translateY: -14 }],
-                      backgroundColor: '#FF6B6B',
+                      backgroundColor: '#E14E69',
                       borderRadius: 20,
                       width: 36,
                       height: 36,
@@ -367,7 +368,6 @@ export default function ChatScreen() {
                   >
                     <Ionicons name="paper-plane" size={isTablet ? 20 : 18} color="white" />
                   </TouchableOpacity>
-                </View>
               </View>
             </View>
           </View>

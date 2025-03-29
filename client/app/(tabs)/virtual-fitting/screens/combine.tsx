@@ -24,10 +24,9 @@ const { width, height } = Dimensions.get('window');
 
 // Define orange-red theme colors to match CaptureScreen
 const orangeRedTheme = {
-  primary: '#FF4500', // Orange-red
-  secondary: '#FF6347', // Tomato
+  primary: '#e14e69',
   light: {
-    tint: '#FF4500',
+    tint: '#e14e69',
     background: '#fff',
     text: '#333',
     secondaryText: '#666',
@@ -279,7 +278,7 @@ const CombineScreen = () => {
                 <MaterialIcons name="checkroom" size={18} color={colors.primary} style={styles.imageTypeIcon} />
                 <Text style={[styles.imageLabel, { color: colors.text }]}>Garment</Text>
               </View>
-              <MaterialIcons name="check-circle" size={20} color={colors.secondary} />
+              <MaterialIcons name="check-circle" size={20} color={colors.primary} />
             </View>
             <View style={[styles.imageWrapper, { borderColor: colors.border }]}>
               <Image
@@ -339,7 +338,7 @@ const CombineScreen = () => {
                 <Ionicons name="person-outline" size={18} color={colors.primary} style={styles.imageTypeIcon} />
                 <Text style={[styles.imageLabel, { color: colors.text }]}>Model</Text>
               </View>
-              <MaterialIcons name="check-circle" size={20} color={colors.secondary} />
+              <MaterialIcons name="check-circle" size={20} color={colors.primary} />
             </View>
             <View style={[styles.imageWrapper, { borderColor: colors.border }]}>
               <Image
@@ -380,7 +379,7 @@ const CombineScreen = () => {
           
           <View style={styles.checklistItem}>
             <View style={[styles.checkIcon, { backgroundColor: colors.secondary + '20' }]}>
-              <Feather name="check" size={14} color={colors.secondary} />
+              <Feather name="check" size={14} color={colors.primary} />
             </View>
             <Text style={[styles.checklistText, { color: colors.subText }]}>
               Images properly framed and aligned
@@ -389,7 +388,7 @@ const CombineScreen = () => {
           
           <View style={styles.checklistItem}>
             <View style={[styles.checkIcon, { backgroundColor: colors.secondary + '20' }]}>
-              <Feather name="check" size={14} color={colors.secondary} />
+              <Feather name="check" size={14} color={colors.primary} />
             </View>
             <Text style={[styles.checklistText, { color: colors.subText }]}>
               Adequate lighting for both images
@@ -398,7 +397,7 @@ const CombineScreen = () => {
           
           <View style={styles.checklistItem}>
             <View style={[styles.checkIcon, { backgroundColor: colors.secondary + '20' }]}>
-              <Feather name="check" size={14} color={colors.secondary} />
+              <Feather name="check" size={14} color={colors.primary} />
             </View>
             <Text style={[styles.checklistText, { color: colors.subText }]}>
               Model pose suitable for garment fitting
@@ -492,6 +491,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+    marginTop: -5
   },
   scrollContent: {
     paddingHorizontal: 20,

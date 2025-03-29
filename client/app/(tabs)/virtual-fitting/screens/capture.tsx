@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, FlatList, TouchableWithoutFeedback, StatusBar, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, FlatList, TouchableWithoutFeedback, StatusBar, Platform, ScrollView } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -10,13 +10,19 @@ import { Ionicons } from '@expo/vector-icons';
 import StepIndicator from '@/components/Fitting-room/StepIndicator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
+import { Colors } from '@/constants/Colors';
+import { styled } from 'nativewind';
+
+
+const StyledScrollView = styled(ScrollView);
 
 // Define orange-red theme colors
 const orangeRedTheme = {
-  primary: '#e14e69', // Orange-red
+
   secondary: '#FF6347', // Tomato
   light: {
-    tint: '#e14e69',
+    tint: '#e14E69',
+
     background: '#fff',
     text: '#333',
     secondaryText: '#666',
@@ -57,7 +63,6 @@ const CaptureScreen = () => {
   const colorScheme = useColorScheme();
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Use orange-red theme colors instead of Colors from constants
   const tintColor = colorScheme === 'dark' ? orangeRedTheme.dark.tint : orangeRedTheme.light.tint;
   const backgroundColor = colorScheme === 'dark' ? orangeRedTheme.dark.background : orangeRedTheme.light.background;
   const textColor = colorScheme === 'dark' ? orangeRedTheme.dark.text : orangeRedTheme.light.text;
@@ -66,7 +71,7 @@ const CaptureScreen = () => {
   const borderColor = colorScheme === 'dark' ? orangeRedTheme.dark.border : orangeRedTheme.light.border;
 
   const isGarmentMode = type === 'garment';
-  const title = isGarmentMode ? 'Capture Garment' : 'Capture Model';
+  const title = isGarmentMode ? 'CAPTURE GARMENT' : 'CAPTURE MODEL';
   const instruction = isGarmentMode 
     ? 'Place the garment on a flat surface with good lighting to capture'
     : 'Stand in front of a plain background with good lighting for a full-body photo';
@@ -190,110 +195,109 @@ const CaptureScreen = () => {
         onBackPress={goBack}
         onClosePress={goHome}
       />
-      <View style={styles.contentContainer}>
-        <StepIndicator
-          currentStep={isGarmentMode ? 1 : 2}
-          totalSteps={3}
-          stepLabels={['Garment', 'Model', 'Combine']}
-          // You may need to pass the tintColor to StepIndicator if it accepts color props
-          activeColor={tintColor}
-        />
-        
-        <View style={[styles.cameraContainer, { borderColor }]}>
-          <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+      <StyledScrollView className="">
+        <View style={styles.contentContainer}>
+          <StepIndicator
+            currentStep={isGarmentMode ? 1 : 2}
+            totalSteps={3}
+            stepLabels={['Garment', 'Model', 'Combine']}
+            activeColor={tintColor}
+          />
           
-          <View style={styles.cameraOverlay}>
-            <View style={[styles.cameraGuideFrame, { borderColor: 'rgba(255,69,0,0.7)' }]}>
-              {isGarmentMode ? (
-                <Ionicons name="shirt-outline" size={48} color="rgba(255,69,0,0.7)" />
-              ) : (
-                <Ionicons name="person-outline" size={48} color="rgba(255,69,0,0.7)" />
-              )}
+          {/* Camera window */}
+          <View style={[styles.cameraContainer, { borderColor }]}>
+            <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
+            
+            <View style={styles.cameraOverlay}>
+              <View style={[styles.cameraGuideFrame, { borderColor: Colors.PRIMARY }]}>
+                {isGarmentMode ? (
+                  <Ionicons name="shirt-outline" size={48} color="rgba(225, 78, 105,0.7)" />
+                ) : (
+                  <Ionicons name="person-outline" size={48} color="rgba(225, 78, 105,0.7)" />
+                )}
+              </View>
             </View>
+            
+            <TouchableOpacity 
+              style={[styles.toggleCameraButton, { backgroundColor: Colors.PRIMARY }]} 
+              onPress={toggleCameraFacing}
+            >
+              <Ionicons name="camera-reverse" size={24} color="#fff" />
+            </TouchableOpacity>
           </View>
           
-          <TouchableOpacity 
-            style={[styles.toggleCameraButton, { backgroundColor: 'rgba(255,69,0,0.7)' }]} 
-            onPress={toggleCameraFacing}
-          >
-            <Ionicons name="camera-reverse" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        
-        <Text style={[styles.instruction, { color: secondaryTextColor }]}>
-          {instruction}
-        </Text>
-        
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={[styles.actionButton, { borderColor }]} 
-            onPress={pickImage}
-          >
-            <Ionicons name="image" size={20} color={tintColor} />
-            <Text style={[styles.actionButtonText, { color: tintColor }]}>GALLERY</Text>
-          </TouchableOpacity>
+          <Text style={[styles.instruction, { color: secondaryTextColor }]}>
+            {instruction}
+          </Text>
           
-          <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
-            <View style={[styles.captureButtonOuter, { borderColor: tintColor }]}>
-              <View style={[styles.captureButtonInner, { backgroundColor: tintColor }]} />
-            </View>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[styles.actionButton, { borderColor }]} 
-            onPress={() => setModalVisible(true)}
-          >
-            <Ionicons 
-              name={isGarmentMode ? "shirt" : "person"} 
-              size={20} 
-              color={tintColor} 
-            />
-            <Text style={[styles.actionButtonText, { color: tintColor }]}>
-              {galleryText}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      
-      <Modal 
-        animationType="slide" 
-        transparent={true} 
-        visible={modalVisible} 
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={styles.modalOverlay}>
-            <BlurView intensity={50} style={styles.blurOverlay}>
-              <TouchableWithoutFeedback>
-                <View style={[styles.modalContainer, { backgroundColor: cardColor }]}>
-                  <View style={[styles.modalHandle, { backgroundColor: colorScheme === 'dark' ? '#444' : '#ddd' }]} />
-                  
-                  <Text style={[styles.modalTitle, { color: textColor }]}>
-                    {isGarmentMode ? 'My Clothes Collection' : 'My Models'}
-                  </Text>
-                  
-                  <FlatList
-                    data={isGarmentMode ? mockGarments : mockModels}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    style={styles.itemList}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.itemListContent}
-                  />
-                  
-                  <TouchableOpacity 
-                    style={[styles.closeButton, { backgroundColor: tintColor }]} 
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <Text style={styles.closeButtonText}>Close</Text>
-                  </TouchableOpacity>
-                </View>
-              </TouchableWithoutFeedback>
-            </BlurView>
+          {/* Gallery, Camera button */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity 
+              style={[styles.actionButton, { borderColor }]} 
+              onPress={pickImage}
+            >
+              <Ionicons name="image" size={20} color={tintColor} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+              <View style={[styles.captureButtonOuter, { borderColor: tintColor }]}>
+                <View style={[styles.captureButtonInner, { backgroundColor: tintColor }]} />
+              </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[styles.actionButton, { borderColor }]} 
+              onPress={() => setModalVisible(true)}
+            >
+              <Ionicons 
+                name={isGarmentMode ? "shirt" : "person"} 
+                size={20} 
+                color={tintColor} 
+              />
+            </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+        </View>
+        
+        <Modal 
+          animationType="slide" 
+          transparent={true} 
+          visible={modalVisible} 
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+            <View style={styles.modalOverlay}>
+              <BlurView intensity={50} style={styles.blurOverlay}>
+                <TouchableWithoutFeedback>
+                  <View style={[styles.modalContainer, { backgroundColor: cardColor }]}>
+                    <View style={[styles.modalHandle, { backgroundColor: colorScheme === 'dark' ? '#444' : '#ddd' }]} />
+                    
+                    <Text style={[styles.modalTitle, { color: textColor }]}>
+                      {isGarmentMode ? 'My Clothes Collection' : 'My Models'}
+                    </Text>
+                    
+                    <FlatList
+                      data={isGarmentMode ? mockGarments : mockModels}
+                      renderItem={renderItem}
+                      keyExtractor={(item) => item.id}
+                      style={styles.itemList}
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={styles.itemListContent}
+                    />
+                    
+                    <TouchableOpacity 
+                      style={[styles.closeButton, { backgroundColor: tintColor }]} 
+                      onPress={() => setModalVisible(false)}
+                    >
+                      <Text style={styles.closeButtonText}>Close</Text>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableWithoutFeedback>
+              </BlurView>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      </StyledScrollView>
     </SafeAreaView>
   );
 };
@@ -331,6 +335,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  stepIndicator: {
+
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -356,6 +363,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingBottom: 30,
+
   },
   permissionContainer: {
     flex: 1,
@@ -380,7 +388,7 @@ const styles = StyleSheet.create({
   },
   cameraContainer: {
     width: '100%',
-    height: '60%',
+    height: '100%',
     borderRadius: 20,
     overflow: 'hidden',
     marginVertical: 20,
@@ -414,7 +422,7 @@ const styles = StyleSheet.create({
     bottom: 15,
     right: 15,
     borderRadius: 30,
-    padding: 12,
+    padding: 10,
   },
   instruction: {
     fontSize: 14,
