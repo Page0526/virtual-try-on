@@ -16,9 +16,8 @@ async def create_product(
 ):
     """Tạo một sản phẩm mới."""
     try:
-        product_service = ProductService(qdrant)
-        created_product = await product_service.create_product(product)
-        await product_service.add_product_to_qdrant(created_product)
+        created_product = await ProductService.create_product(product)
+        await ProductService.add_product_to_qdrant(created_product, qdrant)
         return created_product
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -29,10 +28,9 @@ async def get_product(
     supabase: Client = Depends(get_supabase_db)
 ):
     """Lấy thông tin sản phẩm theo ID."""
-    product_service = ProductService()
-    product = await product_service.get_product_by_id(product_id)
+    product = await ProductService.get_product_by_id(product_id)
     if not product:
-        raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại")
+        raise HTTPException(status_code=404, detail="Product not found")
     return product
 
 @router.get("/", response_model=list[ProductOut])
@@ -40,8 +38,7 @@ async def list_products(
     supabase: Client = Depends(get_supabase_db)
 ):
     """Lấy danh sách tất cả sản phẩm."""
-    product_service = ProductService()
-    return await product_service.list_products()
+    return await ProductService.list_products()
 
 @router.put("/{product_id}", response_model=ProductOut)
 async def update_product(
@@ -51,8 +48,7 @@ async def update_product(
 ):
     """Cập nhật thông tin sản phẩm."""
     try:
-        product_service = ProductService()
-        return await product_service.update_product(product_id, product_update)
+        return await ProductService.update_product(product_id, product_update)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -63,8 +59,7 @@ async def delete_product(
 ):
     """Xóa sản phẩm."""
     try:
-        product_service = ProductService()
-        await product_service.delete_product(product_id)
+        await ProductService.delete_product(product_id)
         return {"message": f"Đã xóa sản phẩm với ID {product_id}"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -77,10 +72,10 @@ async def search_products(
 ):
     """Tìm kiếm sản phẩm bằng vector search với CLIP."""
     try:
-        product_service = ProductService(qdrant)
-        return await product_service.search_products(query)
+        return await ProductService.search_products(query, qdrant)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 @router.post("/recommend", response_model=list[ProductOut])
 async def recommend_products(
@@ -94,3 +89,4 @@ async def recommend_products(
         return await product_service.recommend_products(recommend_request)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+

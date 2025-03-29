@@ -6,10 +6,14 @@ from langchain_community.vectorstores.chroma import Chroma
 import json
 from langchain_core.documents import Document
 from typing import Dict
+import sys
+import os 
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
+from config.setting import settings
 
 load_dotenv()
-GEMINI_API_KEY = os.getenv("GOOGLE_APIKEY")
+GEMINI_API_KEY = os.getenv("GEMINI_APIKEY")
 
 
 class KnowledgeDB: 
@@ -24,11 +28,11 @@ class KnowledgeDB:
 
     
         self.embedding_model = GoogleGenerativeAIEmbeddings(
-            model = "models/embedding-001", 
+            model = settings.GEMINI_EMBEDDING_MODEL, 
             google_api_key = GEMINI_API_KEY
         )
         self.llm_model = ChatGoogleGenerativeAI(
-            model = "gemini-2.0-flash", 
+            model = settings.GEMINI_MODEL, 
             api_key = GEMINI_API_KEY
         ) 
 
@@ -172,10 +176,10 @@ class KnowledgeDB:
         Hàm thực hiện load vector store từ disk
         """
         try:
-            with open("data_collector/raw-data/elle_data.json", "r", encoding="utf-8") as f:
+            with open("./data_collector/raw-data/elle_data.json", "r", encoding="utf-8") as f:
                 elle_data = json.load(f)
             
-            with open("data_collector/raw-data/vogue_data.json", "r", encoding="utf-8") as f:
+            with open("./data_collector/raw-data/vogue_data.json", "r", encoding="utf-8") as f:
                 vogue_data = json.load(f)
             
             combined_data = elle_data + vogue_data
@@ -184,13 +188,13 @@ class KnowledgeDB:
             self.update_or_create_vectorstore("news", df)
             print("News vector store created")
 
-            with open("data_collector/raw-data/styling_data_vs.json", "r", encoding="utf-8") as f:
+            with open("./data_collector/raw-data/styling_data_vs.json", "r", encoding="utf-8") as f:
                 styling_data = json.load(f)
             df = pd.DataFrame(styling_data)
             self.update_or_create_vectorstore("style", df)
             print("Style vector store created")
 
-            with open("data_collector/raw-data/product_data.json", "r", encoding="utf-8") as f:
+            with open("./data_collector/raw-data/product_data.json", "r", encoding="utf-8") as f:
                 product_data = json.load(f)
             df = pd.DataFrame(product_data)
             self.update_or_create_productstore("product", df)

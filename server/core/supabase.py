@@ -10,13 +10,13 @@ logger = logging.getLogger(__name__)
 # Khởi tạo client Supabase toàn cục
 try:
     supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
-    logger.info("Khởi tạo và kết nối tới Supabase thành công")
+    logger.info("Successfuly connected to Supabase")
 except Exception as e:
-    logger.error(f"Lỗi khi khởi tạo client Supabase: {str(e)}")
+    logger.error(f"Error in connection to Supabase: {str(e)}")
     raise
 
 def get_supabase_db() -> Client:
     """Dependency injection để cung cấp Supabase client."""
     if supabase is None:
-        raise RuntimeError("Supabase client chưa được khởi tạo")
+        raise RuntimeError("Supabase client haven't been initialized")
     return supabase

@@ -5,15 +5,22 @@ import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {Colors} from './../../constants/Colors' 
+import { useCart } from '@/app/(tabs)/cart/cartContext';
 
 export default function TabLayout() {
+    // Get cart items to display badge count
+    const { cartItems } = useCart();
+    
+    // Calculate total number of items in cart
+    const totalItemsInCart = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    
     return (
         <Tabs screenOptions={{
             headerShown: false,
             tabBarActiveTintColor: Colors.PRIMARY,
             tabBarStyle: {
                 position: 'absolute',
-                bottom: 0, // Placed at the bottom of the screen
+                bottom: -16, // Placed at the bottom of the screen
                 marginHorizontal: 0, // Removed side margins
                 backgroundColor: '#ffffff',
                 borderRadius: 25, // All corners rounded
@@ -47,7 +54,29 @@ export default function TabLayout() {
                 name='cart/cart' 
                 options={{
                     tabBarLabel: 'Cart',
-                    tabBarIcon: ({color})=><Feather name="shopping-bag" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
+                    tabBarIcon: ({color}) => (
+                        <View>
+                            <Feather name="shopping-bag" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
+                            {totalItemsInCart > 0 && (
+                                <View style={{
+                                    position: 'absolute',
+                                    right: -6,
+                                    top: -4,
+                                    backgroundColor: Colors.PRIMARY,
+                                    borderRadius: 12,
+                                    width: 18,
+                                    height: 18,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                    <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
+                                        {totalItemsInCart > 99 ? '99+' : totalItemsInCart}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    ),
+                    tabBarStyle: { display: 'none' } // Hide the tab bar on the cart screen
                 }}/>
             <Tabs.Screen 
                 name='virtual-fitting'
@@ -68,6 +97,23 @@ export default function TabLayout() {
                     tabBarLabel: 'Closet',
                     tabBarIcon: ({color})=><Ionicons name="heart-circle-outline" className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7" size={24} color={color} />
                 }}/>
+
+            {/* ✅ Hide unwanted screens from appearing in the tab bar */}
+            <Tabs.Screen 
+                name='shop/product_detail' 
+                options={{ 
+                    href: null,
+                    tabBarStyle: { display: 'none' }
+                 }}
+                
+            />
+            <Tabs.Screen 
+                name='shop/search' 
+                options={{ 
+                    href: null,
+                    tabBarStyle: { display: 'none' } 
+                 }} 
+            />
         </Tabs>
     )
 }

@@ -15,10 +15,9 @@ import { Asset } from 'expo-asset';
 
 // Define orange-red theme colors
 const orangeRedTheme = {
-  primary: '#FF4500', // Orange-red
-  secondary: '#FF6347', // Tomato
+  primary: '#e14e69', // Orange-red
   light: {
-    tint: '#FF4500',
+    tint: '#e14e69',
     background: '#fff',
     text: '#333',
     secondaryText: '#666',
