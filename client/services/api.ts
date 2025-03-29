@@ -1,7 +1,29 @@
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
-const API_URL = 'https://upgraded-space-trout-qrwq946jjqgc4wg6-8000.app.github.dev';
+// Dynamic API URL configuration
+const getApiUrl = () => {
+  // When running in development
+  if (__DEV__) {
+    // For Android emulator, localhost points to the emulator itself, not your machine
+    if (Platform.OS === 'android') {
+      return 'http://10.0.2.2:8000'; // Special IP for Android emulator to access host machine
+    }
+    // For iOS simulator
+    else if (Platform.OS === 'ios') {
+      return 'http://localhost:8000'; // Works on iOS simulator
+    }
+    // For web or direct device testing, you might need to use your machine's actual IP
+    return Constants.expoConfig?.extra?.apiUrl || 'http://127.0.0.1:8000';
+  }
+  // For production, use a production URL
+  return Constants.expoConfig?.extra?.apiUrl || 'https://your-production-api.com';
+};
+
+const API_URL = getApiUrl();
+console.log('Using API URL:', API_URL); // For debugging
 
 export const recommendService = {
   async getRecommendations(input: { text?: string; image?: string }) {
@@ -119,4 +141,88 @@ export const tryOnService = {
       }
     }
   },
+};
+
+export const agentService = {
+  async sendTextMessage(message: string, userId?: string) {
+    try {
+      const response = await axios.post(`${API_URL}/stylemate/query`, {
+        query: message,
+        user_id: userId || undefined
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.data;
+    } catch (error: any) {
+      console.error('Error in sendTextMessage:', error);
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const errorDetail = error.response?.data?.detail || error.message;
+        console.error('Axios error details:', { status, errorDetail });
+        throw new Error(`Could not process message: ${errorDetail} (Status: ${status})`);
+      } else {
+        throw new Error(`Unexpected error: ${error.message}`);
+      }
+    }
+  },
+
+  async sendMessageWithImage(message: string, imageUri: string) {
+    try {
+      // Check if file exists
+      const imageInfo = await FileSystem.getInfoAsync(imageUri);
+      if (!imageInfo.exists) {
+        throw new Error(`Image file not found: ${imageUri}`);
+      }
+
+      // Create FormData
+      const formData = new FormData();
+      formData.append('query', message);
+      formData.append('image_file', {
+        uri: imageUri,
+        name: `image_${Date.now()}.jpg`,
+        type: 'image/jpeg',
+      } as any);
+
+      const response = await axios.post(`${API_URL}/stylemate/query-with-image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error: any) {
+      console.error('Error in sendMessageWithImage:', error);
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const errorDetail = error.response?.data?.detail || error.message;
+        console.error('Axios error details:', { status, errorDetail });
+        throw new Error(`Could not process message with image: ${errorDetail} (Status: ${status})`);
+      } else {
+        throw new Error(`Unexpected error: ${error.message}`);
+      }
+    }
+  },
+
+  async resetConversation(userId?: string) {
+    try {
+      const response = await axios.post(`${API_URL}/stylemate/reset`, {
+        user_id: userId || undefined
+      });
+      
+      return response.data;
+    } catch (error: any) {
+      console.error('Error in resetConversation:', error);
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const errorDetail = error.response?.data?.detail || error.message;
+        console.error('Axios error details:', { status, errorDetail });
+        throw new Error(`Could not reset conversation: ${errorDetail} (Status: ${status})`);
+      } else {
+        throw new Error(`Unexpected error: ${error.message}`);
+      }
+    }
+  }
 };

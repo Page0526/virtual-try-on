@@ -15,7 +15,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 class TryOnService:
-    GRADIO_URL = "franciszzj/Leffa"
+    GRADIO_URL = "https://3702f602a4ecdb2bed.gradio.live/"
 
     @staticmethod
     def get_gradio_client() -> GradioClient:

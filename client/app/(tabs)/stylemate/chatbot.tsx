@@ -15,10 +15,13 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardEvent,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { agentService } from '../../../services/api';
 
 type Message = {
   id: string;
@@ -38,6 +41,7 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const sidebarAnimation = useRef(new Animated.Value(0)).current;
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -72,50 +76,113 @@ export default function ChatScreen() {
     outputRange: [300, 0],
   });
 
-  // Function to simulate bot response
-  const simulateBotResponse = () => {
-    setIsTyping(true);
-    
-    // Simulate delay for bot "thinking"
-    setTimeout(() => {
-      const botResponse: Message = {
-        id: Date.now().toString(),
-        text: `To design and print a T-shirt with a similar butterfly-themed graphic, follow these steps:
-
-    Create the Design:
-    • Use graphic design software like Adobe Illustrator, Photoshop, or Canva to design colorful butterflies with a dynamic layout.
-    • Ensure the design has high resolution (at least 300 DPI) for clear printing.
-    • Consider using a transparent background (PNG format) for flexibility in printing.
-
-    Test and Adjust:
-    • Order a sample to check the print quality and adjust colors if needed.😊`,
-        sentByMe: false,
-        imageUrl: 'https://i.etsystatic.com/44525338/r/il/73cf08/5655739622/il_fullxfull.5655739622_a54i.jpg', // Add image URL
-      };
-      
-      
-      setMessages(prevMessages => [...prevMessages, botResponse]);
-      setIsTyping(false);
-    }, 7000); // 7 seconds delay
-  };
-
-  const sendMessage = () => {
+  // Send message to the agent API
+  const sendMessage = async () => {
     if (inputText.trim() === '') return;
     
+    // Create and display user message
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputText,
       sentByMe: true,
+      ...(selectedImage && { imageUrl: selectedImage }),
     };
     
     setMessages(prev => [...prev, userMessage]);
+    
+    // Store the message text before clearing it
+    const messageText = inputText;
+    const imageUri = selectedImage;
+    
     setInputText('');
+    setSelectedImage(null);
     
     // Dismiss keyboard on send
     dismissKeyboard();
     
-    // Trigger bot response after user sends a message
-    simulateBotResponse();
+    // Show the typing indicator
+    setIsTyping(true);
+    
+    try {
+      // Send message to agent based on whether there's an image
+      let response;
+      
+      if (imageUri) {
+        response = await agentService.sendMessageWithImage(messageText, imageUri);
+      } else {
+        response = await agentService.sendTextMessage(messageText);
+      }
+      
+      // Handle successful response
+      if (response && response.success) {
+        const botResponse: Message = {
+          id: Date.now().toString(),
+          text: response.response,
+          sentByMe: false,
+        };
+        
+        setMessages(prevMessages => [...prevMessages, botResponse]);
+      } else {
+        throw new Error("Invalid response from agent");
+      }
+    } catch (error: any) {
+      console.error("Error sending message to agent:", error);
+      // Show error message
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        text: "Sorry, I'm having trouble responding right now. Please try again later.",
+        sentByMe: false,
+      };
+      setMessages(prevMessages => [...prevMessages, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const resetConversation = async () => {
+    try {
+      setIsTyping(true);
+      const response = await agentService.resetConversation();
+      
+      if (response && response.success) {
+        setMessages([]);
+        
+        // Show welcome message
+        const welcomeMessage: Message = {
+          id: Date.now().toString(),
+          text: "Hi! I'm StyleMate, your personal fashion assistant. How can I help you today?",
+          sentByMe: false,
+        };
+        setMessages([welcomeMessage]);
+      }
+    } catch (error) {
+      console.error("Error resetting conversation:", error);
+      Alert.alert("Error", "Failed to reset conversation. Please try again.");
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const pickImage = async () => {
+    // Request permission
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission Required", "You need to allow access to your photos to upload images");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+    
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      setSelectedImage(uri);
+    }
   };
 
   const selectChatSession = (session: ChatSession) => {
@@ -162,6 +229,16 @@ export default function ChatScreen() {
     };
   }, []);
 
+  // Display welcome message on first load
+  useEffect(() => {
+    const welcomeMessage: Message = {
+      id: Date.now().toString(),
+      text: "Hi! I'm StyleMate, your personal fashion assistant. How can I help you today?",
+      sentByMe: false,
+    };
+    setMessages([welcomeMessage]);
+  }, []);
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -201,6 +278,7 @@ export default function ChatScreen() {
             </TouchableOpacity>
             <TouchableOpacity 
               className={`w-10 h-10 items-center justify-center rounded-full bg-gray-200`}
+              onPress={resetConversation}
             >
               <Ionicons name="refresh-outline" size={isTablet ? 24 : 20} color="#222" />
             </TouchableOpacity>
@@ -316,7 +394,7 @@ export default function ChatScreen() {
               <View 
                 className={`flex-row items-center gap-3 ${isTablet ? 'py-3 px-3' : 'py-2 px-3'}`}
               >
-                <TouchableOpacity className="">
+                <TouchableOpacity className="" onPress={pickImage}>
                   <Ionicons name="image-outline" size={isTablet ? 28 : 24} color="#666" />
                 </TouchableOpacity>
                 
@@ -336,7 +414,7 @@ export default function ChatScreen() {
                         ref={inputRef}
                         value={inputText}
                         onChangeText={setInputText}
-                        placeholder="Ask anything about fashion..."
+                        placeholder={selectedImage ? "Add a caption to your image..." : "Ask anything about fashion..."}
                         placeholderTextColor="#A0A0A0"
                         className={`text-black ${isTablet ? 'text-base py-1' : 'py-0.5'}`}
                         multiline={false}
@@ -351,6 +429,18 @@ export default function ChatScreen() {
                     </View>
                   </TouchableWithoutFeedback>
                 </View>
+                
+                {/* Show selected image indicator */}
+                {selectedImage && (
+                  <View className="absolute bottom-11 left-2 flex-row items-center bg-gray-100 rounded-md px-2 py-1">
+                    <Ionicons name="image" size={16} color="#666" />
+                    <Text className="text-xs text-gray-600 ml-1">Image selected</Text>
+                    <TouchableOpacity onPress={() => setSelectedImage(null)} className="ml-1">
+                      <Ionicons name="close-circle" size={16} color="#666" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+                
                 <TouchableOpacity 
                     onPress={sendMessage}
                     className="items-center justify-center"

@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException, B
 from typing import Optional, Dict, Any
 from pydantic import BaseModel
 
-from ..features.stylemate.agent_service import get_agent_service, MessageRequest, AgentService
+from features.stylemate.agent_service import get_agent_service, MessageRequest, AgentService
 
 router = APIRouter(
     prefix="/chat",

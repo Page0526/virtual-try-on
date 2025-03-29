@@ -6,6 +6,7 @@ from api.tryon import router as tryon_router
 from api.product import router as product_router
 from config.setting import settings
 import logging
+from api.chat import router as chat_router
 
 # Thiết lập logging từ settings
 logging.basicConfig(level=settings.LOG_LEVEL if hasattr(settings, "LOG_LEVEL") else "INFO")
@@ -45,6 +46,7 @@ app.add_event_handler("shutdown", shutdown_event)
 app.include_router(user_router)
 app.include_router(tryon_router)
 app.include_router(product_router)
+app.include_router(chat_router)
 
 # Endpoint kiểm tra API
 @app.get("/", summary="Kiểm tra trạng thái API", description="Trả về thông báo API đang chạy.")
