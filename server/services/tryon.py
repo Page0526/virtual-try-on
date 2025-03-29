@@ -111,10 +111,8 @@ class TryOnService:
                     
                     # Trích xuất đường dẫn file
                     generated_image = TryOnService.extract_file_path(result[0]) if len(result) > 0 else None
-                    generated_mask = TryOnService.extract_file_path(result[1]) if len(result) > 1 else None
-                    generated_densepose = TryOnService.extract_file_path(result[2]) if len(result) > 2 else None
                     
-                    logger.info(f"Đường dẫn kết quả: image={generated_image}, mask={generated_mask}, densepose={generated_densepose}")
+                    logger.info(f"Đường dẫn kết quả: image={generated_image}")
                     
                     # Tải các file lên Supabase và trả về URL
                     urls = {}
@@ -126,21 +124,6 @@ class TryOnService:
                     else:
                         raise FileNotFoundError("Không tìm thấy ảnh kết quả từ API")
                     
-                    if generated_mask:
-                        try:
-                            urls["mask_url"] = await TryOnService.upload_file_to_storage(
-                                db, generated_mask, user_id, "mask"
-                            )
-                        except Exception as e:
-                            logger.warning(f"Không thể tải lên mask: {str(e)}")
-                    
-                    if generated_densepose:
-                        try:
-                            urls["densepose_url"] = await TryOnService.upload_file_to_storage(
-                                db, generated_densepose, user_id, "densepose"
-                            )
-                        except Exception as e:
-                            logger.warning(f"Không thể tải lên densepose: {str(e)}")
                     
                     logger.info(f"Đã tải lên: {urls}")
                     return urls

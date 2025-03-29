@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from uuid import UUID
 from typing import Optional, List
 from datetime import datetime
@@ -29,10 +29,17 @@ class ProductOut(BaseModel):
     brand: Optional[str] = None
     price: Optional[float] = None
     url: Optional[str] = None
-    created_at: Optional[datetime] = None  # Đổi thành Optional để tránh lỗi
+    created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
         
 class RecommendRequest(BaseModel):
-    image: str
+    text: Optional[str] = None
+    image: Optional[str] = None  # Can be URL or base64 encoded image
+
+    @validator('text', 'image')
+    def validate_input(cls, v, values):
+        if not values.get('text') and not values.get('image') and not v:
+            raise ValueError("Must provide either text or image")
+        return v

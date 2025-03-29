@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     DEBUG: bool = Field(default=True, env="DEBUG", description="Chế độ debug, bật trong môi trường phát triển")
     LOG_LEVEL: str = Field(default="INFO", env="LOG_LEVEL", description="Mức độ logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)")
     
+    GOOGLE_API_KEY: str = Field(..., env="GOOGLE_API_KEY", description="API Key của Gemini")
 
 
     # # setting model 

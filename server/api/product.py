@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from schemas.product import ProductCreate, ProductUpdate, ProductOut
+from schemas.product import ProductCreate, ProductUpdate, ProductOut, RecommendRequest
 from services.product import ProductService
 from core.supabase import get_supabase_db
 from core.qdrant import get_qdrant_db
@@ -79,5 +79,18 @@ async def search_products(
     try:
         product_service = ProductService(qdrant)
         return await product_service.search_products(query)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/recommend", response_model=list[ProductOut])
+async def recommend_products(
+    recommend_request: RecommendRequest,
+    supabase: Client = Depends(get_supabase_db),
+    qdrant: QdrantClient = Depends(get_qdrant_db)
+):
+    """Recommend products based on text or image input (URL or base64)."""
+    try:
+        product_service = ProductService(qdrant)
+        return await product_service.recommend_products(recommend_request)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

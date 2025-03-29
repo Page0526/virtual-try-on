@@ -28,8 +28,6 @@ class TryOnRequest(BaseModel):
 class TryOnResponse(BaseModel):
     status: str                   # Trạng thái (success/error)
     result_url: str               # URL công khai của ảnh kết quả
-    mask_url: Optional[str] = None     # URL công khai của mask (nếu có)
-    densepose_url: Optional[str] = None # URL công khai của densepose (nếu có)
 
     class Config:
         from_attributes = True

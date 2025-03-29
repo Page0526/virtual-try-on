@@ -35,8 +35,6 @@ async def try_on(
         logger.info(f"Try-on thành công: {result_urls}")
         return ResponseHandler.tryon_success(
             result_urls["result_url"], 
-            result_urls.get("mask_url"), 
-            result_urls.get("densepose_url")
         )
     except ValueError as ve:
         logger.error(f"Lỗi dữ liệu trong try-on: {str(ve)}")
