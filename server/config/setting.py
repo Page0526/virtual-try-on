@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     # Tool settings
     TOOL_TIMEOUT: int = Field(default=30, description="Timeout in seconds for external tool calls")
     HISTORY_TOKEN_LIMIT: int = Field(default=1000, description="Maximum number of tokens to store in conversation history")
-
+    MAX_ITERATIONS: int = Field(default=3, description="Maximum number of iterations for the agent to perform")
 
 
     class Config:

@@ -123,7 +123,7 @@ class ProductService:
             raise
     
     @staticmethod
-    async def search_products(query: str, qdrant: Optional[QdrantClient] = None) -> List[Dict]: 
+    def search_products(query: str, qdrant: Optional[QdrantClient] = None, limit = 10) -> List[Dict]: 
         """Search products using vector search with CLIP."""
         if not qdrant:
             raise ProductException("Qdrant client not available")
@@ -136,7 +136,7 @@ class ProductService:
             search_result = qdrant.search(
                 collection_name=ProductService.COLLECTION_NAME,
                 query_vector=text_vector,
-                limit=10
+                limit= limit, 
             )
 
             product_ids = [hit.id for hit in search_result]

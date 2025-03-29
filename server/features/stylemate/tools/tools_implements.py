@@ -52,7 +52,6 @@ def tools_format(tools: List[BaseTool])  -> List[Dict[str, Any]]:
     ]
 
 
-# cai dat tools 
 class ProductSearchTool(CustomTool): 
 
     name : str = "product_search"
@@ -67,12 +66,17 @@ class ProductSearchTool(CustomTool):
         logger.info(f"Running product search with query: {query}")
         try:
             qdrant = get_qdrant_db()
-            results = asyncio.run(ProductService.search_products(query, qdrant))
+            results = ProductService.search_products(query, qdrant, limit = 3)
  
-            filtered_results = []
+            filtered_results = "Here is information about some products you are looking to search for: \n"
             for product in results:
-                filtered_product = {k: v for k, v in product.items() if k not in ['product_id', 'product_image_url']}
-                filtered_results.append(filtered_product)
+    
+                product_str = ""
+                for key, value in product.items():
+                    if key in ['name', 'description', 'price', 'brand'] and value:
+                        product_str += f"{key.capitalize()}: {value}\n"
+                filtered_product = product_str.strip()
+                filtered_results += f"{filtered_product}\n\n"
             
             self._log_action("Product Search", {"query": query, "results": filtered_results})
             return filtered_results
@@ -80,28 +84,7 @@ class ProductSearchTool(CustomTool):
             logger.error(f"Error during product search: {str(e)}")
             raise
 
-    async def _arun(self, query: str): 
-        """
-        Thực hiện tìm kiếm sản phẩm trong cơ sở dữ liệu
-        """
-        logger.info(f"Running product search with query: {query}")
-        try:
-
-            qdrant = get_qdrant_db()
-            results = await ProductService.search_products(query, qdrant)
-            
-            # Remove product_id and product_image_url from each result
-            filtered_results = []
-            for product in results:
-                filtered_product = {k: v for k, v in product.items() if k not in ['product_id', 'product_image_url']}
-                filtered_results.append(filtered_product)
-            
-            self._log_action("Product Search", {"query": query, "results": filtered_results})
-            return filtered_results
-        except Exception as e:
-            logger.error(f"Error during product search: {str(e)}")
-            raise
-
+   
 
 
 class WebsearchTool(CustomTool): 
@@ -388,9 +371,9 @@ def get_tools() -> List[Dict[str, Any]]:
     """
     tools = [
         ProductSearchTool(), 
-        WebsearchTool(),
-        ImageAnalyzerTool(),    
-        ImageGenerationTool()
+        # WebsearchTool(),
+        # ImageAnalyzerTool(),    
+        # ImageGenerationTool()
     ]
     return tools
 
