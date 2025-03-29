@@ -18,9 +18,11 @@ const StyledScrollView = styled(ScrollView);
 
 // Define orange-red theme colors
 const orangeRedTheme = {
+
   secondary: '#FF6347', // Tomato
   light: {
     tint: '#e14E69',
+
     background: '#fff',
     text: '#333',
     secondaryText: '#666',
@@ -39,11 +41,9 @@ const orangeRedTheme = {
 
 // Mock data
 const mockGarments = [
-  { id: '1', name: 'Blue Dress', uri: 'https://via.placeholder.com/100?text=Blue+Dress' },
-  { id: '2', name: 'Red Shirt', uri: 'https://via.placeholder.com/100?text=Red+Shirt' },
-  { id: '3', name: 'Black Pants', uri: 'https://via.placeholder.com/100?text=Black+Pants' },
-  { id: '4', name: 'Green Jacket', uri: 'https://via.placeholder.com/100?text=Green+Jacket' },
-  { id: '5', name: 'Yellow Skirt', uri: 'https://via.placeholder.com/100?text=Yellow+Skirt' },
+  { id: '1', name: 'Blue Dress', uri: 'https://miss-rosier.com/cdn/shop/files/2024-7-29_2060.jpg?v=1723779976&width=800' },
+  { id: '2', name: 'Red Shirt', uri: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lu1f8aq8c7xb97.webp' },
+  { id: '3', name: 'Black Pants', uri: 'https://www.mytheresa.com/media/1094/1238/100/d5/P00609825.jpg' },
 ];
 
 const mockModels = [
@@ -75,7 +75,7 @@ const CaptureScreen = () => {
   const instruction = isGarmentMode 
     ? 'Place the garment on a flat surface with good lighting to capture'
     : 'Stand in front of a plain background with good lighting for a full-body photo';
-  const galleryText = isGarmentMode ? 'MY CLOTHES' : 'MY MODELS';
+  const galleryText = isGarmentMode ? 'CLOTHES' : 'MY MODELS';
 
   const goBack = () => {
     router.back();

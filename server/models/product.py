@@ -1,47 +1,75 @@
-from datetime  import datetime
+# models/product.py
+from uuid import uuid4
+from datetime import datetime
+from core.supabase import supabase
+from typing import Dict, Optional, List
 
+class ProductException(Exception):
+    pass
 
+class Product:
+    TABLE_NAME = "Products"
 
-class ProductModel : 
+    columns = {
+        "id": "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
+        "title": "TEXT NOT NULL",
+        "brand": "TEXT",
+        "price": "FLOAT4",
+        "image_urls": "JSONB NOT NULL", # Array of image URLs
+        "description": "TEXT",
+        "url": "TEXT",
+        "created_at": "TIMESTAMP DEFAULT NOW()"
+    }
 
-    collection_name = "product"
+    @classmethod
+    def create(cls, data: Dict[str, any]) -> Dict:
+        """Tạo product trong bảng Products."""
+        try:
+            product_data = {
+                "id": str(uuid4()),
+                "title": data["title"],
+                "brand": data.get("brand"),
+                "price": data.get("price"),
+                "image_urls": data.get("image_urls", []),
+                "description": data.get("description"),
+                "url": data.get("url"),
+            }
+            response = supabase.table(cls.TABLE_NAME).insert(product_data).execute()
+            return response.data[0] if response.data else {}
+        except Exception as e:
+            raise ProductException(f"Không thể tạo product: {str(e)}")
 
-    @staticmethod 
-    def product_helper(product) -> dict: 
+    @classmethod
+    def get_by_id(cls, product_id: str) -> Optional[Dict]:
+        """Lấy product theo ID."""
+        try:
+            response = supabase.table(cls.TABLE_NAME).select("*").eq("id", product_id).execute()
+            return response.data[0] if response.data else None
+        except Exception as e:
+            raise ProductException(f"Không thể lấy product {product_id}: {str(e)}")
 
-        return {
-            "id" : str(product["_id"]),
-            "name" : product["name"],
-            "brand" : product["brand"],
-            "description" : product["description"],
-            "price" : product["price"],
-            "quantity" : product["quantity"],
-            "category" : product["category"],
-            "image": product["image"],      # lưu list đường dẫn onlien tới ảnh 
-            "created_at" : product["created_at"],
-            "updated_at" : product["updated_at"]
-        }
-    
+    @classmethod
+    def get_all(cls) -> list[Dict]:
+        """Lấy tất cả product."""
+        try:
+            response = supabase.table(cls.TABLE_NAME).select("*").execute()
+            return response.data if response.data else []
+        except Exception as e:
+            raise ProductException(f"Không thể lấy danh sách product: {str(e)}")
 
-    @staticmethod 
-    def create_product(product_data) -> dict: 
+    @classmethod
+    def update(cls, product_id: str, data: Dict[str, any]) -> Dict:
+        """Cập nhật thông tin product."""
+        try:
+            response = supabase.table(cls.TABLE_NAME).update(data).eq("id", product_id).execute()
+            return response.data[0] if response.data else {}
+        except Exception as e:
+            raise ProductException(f"Không thể cập nhật product {product_id}: {str(e)}")
 
-        now = datetime.now()
-        return {
-            "name" : product_data.name,
-            "brand" : product_data.brand,
-            "description" : product_data.description,
-            "price" : product_data.price,
-            "quantity" : product_data.quantity,
-            "category" : product_data.category,
-            "image": product_data.image,      # lưu list đường dẫn onlien tới ảnh 
-            "created_at" : now,
-            "updated_at" : now
-        }
-    
-
-
-
-
-    
-
+    @classmethod
+    def delete(cls, product_id: str) -> None:
+        """Xóa product khỏi bảng Products."""
+        try:
+            supabase.table(cls.TABLE_NAME).delete().eq("id", product_id).execute()
+        except Exception as e:
+            raise ProductException(f"Không thể xóa product {product_id}: {str(e)}")
