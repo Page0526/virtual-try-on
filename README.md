@@ -35,7 +35,7 @@
   <h3 align="center">EasyFit</h3>
 
   <p align="center">
-    An awesome virtual try-on app built with Flutter!
+    An awesome virtual try-on app built with React Native (Expo)!
     <br />
     <br />
     <a href="https://github.com/Page0526/virtual-try-on">View Demo</a>
@@ -93,14 +93,14 @@ Với những tính năng này, EasyFit không chỉ mang đến trải nghiệm
 
 ### Built With
 
-Flutter is built with
-
-* [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-886FBF?logo=googlegemini&logoColor=fff)](#)
-* [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
-* [![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](#)
-* [![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?logo=dart&logoColor=white)](#)
-* [![FastAPI](https://img.shields.io/badge/FastAPI-009485.svg?logo=fastapi&logoColor=white)](#)
-* [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#)
+* [![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#)
+* [![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)](#)
+* [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](#)
+* [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=fff)](#)
+* [![FastAPI](https://img.shields.io/badge/FastAPI-009485?style=for-the-badge&logo=fastapi&logoColor=white)](#)
+* [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-886FBF?style=for-the-badge&logo=googlegemini&logoColor=fff)](#)
+* [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](#) 
+<!-- MongoDB seems incorrect based on code, replaced with Supabase -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -111,43 +111,69 @@ Flutter is built with
 
 ### Prerequisites
 
-Follow this tutorial to install flutter-sdk and start running app! [Flutter Docs](https://docs.flutter.dev/get-started/install/windows/mobile)
+*   Node.js and npm/yarn
+*   Expo CLI (`npm install -g expo-cli`)
+*   Python 3.10+ and pip
+*   Conda (optional, for managing Python environments)
+*   Git
 
 ### Installation
 
-Install necessary packages
+**Backend (Server):**
 
-1. Get a free API Key at [Google for dev](https://ai.google.dev/)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/Page0526/virtual-try-on.git
-   ```
-3. Direct to client folder
-4. ```sh
-   cd client
-   ```
-3. Install flutter packages
-   ```sh
-   flutter pub get
-   ```
-4. Create conda and activate environment
-   ```sh
-   conda create --name your-env python=3.10
-   conda activate your-env
-   ```
-5. Install libraries
-   ```sh
-   pip install -r requirements.txt
-   ```
-6. Create .env file and enter your API in `.env`
-   ```js
-   GOOGLE_APIKEY = 'ENTER YOUR API';
-   ```
-7. Run server
-   ```sh
-   cd server/fashion_agent
-   python main.py
-   ```
+1.  Clone the repo:
+    ```sh
+    git clone https://github.com/Page0526/virtual-try-on.git
+    cd virtual-try-on
+    ```
+2.  Navigate to the server directory:
+    ```sh
+    cd server
+    ```
+3.  Create and activate a Python environment (using Conda):
+    ```sh
+    conda create --name easyfit-env python=3.10
+    conda activate easyfit-env 
+    ```
+    (Or use `python -m venv venv` and `source venv/bin/activate` / `venv\Scripts\activate`)
+4.  Install Python dependencies:
+    ```sh
+    pip install -r requirements.txt
+    ```
+5.  Set up environment variables (e.g., Supabase keys, Google API key). You might need a `.env` file in the `server` directory. Refer to `server/config/setting.py`.
+    ```dotenv
+    # Example .env content (replace with actual values)
+    SUPABASE_URL=YOUR_SUPABASE_URL
+    SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY 
+    # Add other required keys (like Google API Key if needed by backend features)
+    ```
+6.  Run the FastAPI server:
+    ```sh
+    uvicorn main:app --reload --host 0.0.0.0 --port 8000 
+    ``` 
+    (Ensure you are in the `server` directory)
+
+**Frontend (Client):**
+
+1.  Navigate to the client directory (from the project root):
+    ```sh
+    cd ../client 
+    ```
+2.  Install Node.js dependencies:
+    ```sh
+    npm install 
+    ```
+    (or `yarn install`)
+3.  Set up environment variables for the client if needed (e.g., Clerk keys). Refer to the code using `process.env`. You might need a `.env` file in the `client` directory.
+    ```dotenv
+    # Example .env content (replace with actual values if used)
+    EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=YOUR_CLERK_KEY 
+    ```
+4.  Start the Expo development server:
+    ```sh
+    npx expo start
+    ```
+5.  Follow the instructions in the terminal to open the app on a simulator/emulator or physical device using the Expo Go app.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
