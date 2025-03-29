@@ -1,6 +1,6 @@
 # services/tryon.py
 from core.supabase import Client
-from gradio_client import Client as GradioClient, file
+from gradio_client import Client as GradioClient, handle_file
 from schemas.tryon import TryOnRequest
 from fastapi import UploadFile
 import logging
@@ -8,14 +8,14 @@ import uuid
 import tempfile
 import os
 from contextlib import contextmanager
-from typing import Optional  # Thêm import
+from typing import Optional, Dict, Tuple, List, Union
 
 logging.basicConfig(level="INFO")
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 class TryOnService:
-    GRADIO_URL = "yisol/IDM-VTON"
+    GRADIO_URL = "franciszzj/Leffa"
 
     @staticmethod
     def get_gradio_client() -> GradioClient:
@@ -38,14 +38,42 @@ class TryOnService:
                 os.remove(temp_file.name)
 
     @staticmethod
+    async def upload_file_to_storage(db: Client, file_path: str, user_id: Optional[str] = None, suffix: str = "") -> str:
+        """Tải file lên Supabase Storage và trả về URL công khai."""
+        try:
+            if not os.path.exists(file_path):
+                raise FileNotFoundError(f"Không tìm thấy file: {file_path}")
+                
+            with open(file_path, "rb") as file:
+                file_data = file.read()
+                
+            bucket_name = "tryon-temp"
+            file_name = f"tryon_{user_id or 'anonymous'}_{suffix}_{uuid.uuid4()}.jpg"
+            db.storage.from_(bucket_name).upload(file_name, file_data)
+            return db.storage.from_(bucket_name).get_public_url(file_name)
+        except Exception as e:
+            logger.error(f"Lỗi khi tải lên file {file_path}: {str(e)}")
+            raise
+
+    @staticmethod
+    def extract_file_path(result: Union[str, Dict]) -> str:
+        """Trích xuất đường dẫn file từ kết quả trả về."""
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict) and "url" in result:
+            return result["url"]
+        else:
+            raise ValueError(f"Không thể trích xuất đường dẫn file từ: {result}")
+
+    @staticmethod
     async def process_tryon(
         user_image: UploadFile,
         product_image: UploadFile,
         request: TryOnRequest,
         db: Client,
-        user_id: Optional[str] = None  # Làm user_id tùy chọn
-    ) -> str:
-        """Xử lý thử đồ và trả về URL công khai."""
+        user_id: Optional[str] = None
+    ) -> Dict[str, str]:
+        """Xử lý thử đồ và trả về các URL công khai."""
         try:
             # Đọc nội dung ảnh
             user_image_data = await user_image.read()
@@ -61,45 +89,61 @@ class TryOnService:
                         f.write(product_image_data)
                     logger.info(f"File tạm: user={user_temp_path}, product={product_temp_path}")
 
-                    # Gửi yêu cầu tới Gradio
+                    # Gửi yêu cầu tới Leffa API
                     gradio_client = TryOnService.get_gradio_client()
                     result = gradio_client.predict(
-                        dict={
-                            "background": file(user_temp_path),
-                            "layers": [],
-                            "composite": None
-                        },
-                        garm_img=file(product_temp_path),
-                        garment_des=request.garment_des,
-                        is_checked=request.is_checked,
-                        is_checked_crop=request.is_checked_crop,
-                        denoise_steps=request.denoise_steps,
+                        src_image_path=handle_file(user_temp_path),  # Sử dụng handle_file
+                        ref_image_path=handle_file(product_temp_path),  # Sử dụng handle_file
+                        ref_acceleration=request.ref_acceleration,
+                        step=request.step,
+                        scale=request.scale,
                         seed=request.seed,
-                        api_name="/tryon"
+                        vt_model_type=request.vt_model_type,
+                        vt_garment_type=request.vt_garment_type,
+                        vt_repaint=request.vt_repaint,
+                        api_name="/leffa_predict_vt"
                     )
-                    logger.info(f"Kết quả từ Gradio: {result}")
+                    logger.info(f"Kết quả từ Leffa API: {result}")
 
                     # Xử lý kết quả
-                    if not isinstance(result, tuple) or len(result) == 0:
-                        raise ValueError("Kết quả từ Gradio không hợp lệ")
-
-                    result_path = result[0]
-                    if not os.path.exists(result_path):
-                        raise FileNotFoundError(f"Không tìm thấy file kết quả: {result_path}")
-
-                    with open(result_path, "rb") as result_file:
-                        result_image_data = result_file.read()
-                    logger.info(f"Đã đọc kết quả: {len(result_image_data)} bytes")
-
-                    # Tải lên Supabase Storage
-                    bucket_name = "tryon-temp"
-                    # Dùng UUID đơn giản nếu không có user_id
-                    file_name = f"tryon_{user_id or 'anonymous'}_{uuid.uuid4()}.jpg"
-                    db.storage.from_(bucket_name).upload(file_name, result_image_data)
-                    public_url = db.storage.from_(bucket_name).get_public_url(file_name)
-                    logger.info(f"Đã tải lên: {public_url}")
-
-                    return public_url
+                    if not result or len(result) < 1:
+                        raise ValueError("Kết quả từ Leffa API không hợp lệ")
+                    
+                    # Trích xuất đường dẫn file
+                    generated_image = TryOnService.extract_file_path(result[0]) if len(result) > 0 else None
+                    generated_mask = TryOnService.extract_file_path(result[1]) if len(result) > 1 else None
+                    generated_densepose = TryOnService.extract_file_path(result[2]) if len(result) > 2 else None
+                    
+                    logger.info(f"Đường dẫn kết quả: image={generated_image}, mask={generated_mask}, densepose={generated_densepose}")
+                    
+                    # Tải các file lên Supabase và trả về URL
+                    urls = {}
+                    
+                    if generated_image:
+                        urls["result_url"] = await TryOnService.upload_file_to_storage(
+                            db, generated_image, user_id, "image"
+                        )
+                    else:
+                        raise FileNotFoundError("Không tìm thấy ảnh kết quả từ API")
+                    
+                    if generated_mask:
+                        try:
+                            urls["mask_url"] = await TryOnService.upload_file_to_storage(
+                                db, generated_mask, user_id, "mask"
+                            )
+                        except Exception as e:
+                            logger.warning(f"Không thể tải lên mask: {str(e)}")
+                    
+                    if generated_densepose:
+                        try:
+                            urls["densepose_url"] = await TryOnService.upload_file_to_storage(
+                                db, generated_densepose, user_id, "densepose"
+                            )
+                        except Exception as e:
+                            logger.warning(f"Không thể tải lên densepose: {str(e)}")
+                    
+                    logger.info(f"Đã tải lên: {urls}")
+                    return urls
 
         except Exception as e:
             logger.error(f"Lỗi trong process_tryon: {str(e)}")

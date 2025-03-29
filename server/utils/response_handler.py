@@ -1,5 +1,5 @@
 # utils/response_handler.py
-from typing import Any, Optional
+from typing import Any, Optional, Dict
 from fastapi.responses import JSONResponse
 from datetime import datetime
 
@@ -33,13 +33,21 @@ class ResponseHandler:
         )
     
     @staticmethod
-    def tryon_success(result_url: str, status_code: int = 200) -> JSONResponse:
-        """Phản hồi tùy chỉnh cho API try-on."""
-        return JSONResponse(
-            content={
-                "status": "success",
-                "result_url": result_url,
-                "timestamp": datetime.utcnow().isoformat()
-            },
-            status_code=status_code
-        )
+    def tryon_success(
+        result_url: str, 
+        mask_url: Optional[str] = None, 
+        densepose_url: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Tạo response thành công cho try-on."""
+        response = {
+            "status": "success",
+            "result_url": result_url
+        }
+        
+        # Thêm các URL phụ nếu có
+        if mask_url:
+            response["mask_url"] = mask_url
+        if densepose_url:
+            response["densepose_url"] = densepose_url
+            
+        return response
