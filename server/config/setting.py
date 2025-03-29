@@ -27,18 +27,18 @@ class Settings(BaseSettings):
     
 
 
-    # setting model 
+    # # setting model 
 
-    GEMINI_APIKEY = os.getenv("GEMINI_APIKEY")
-    VISION_GEMINI = "gemini-2.0-flash-exp-image-generation"
-    GEMINI_MODEL = "gemini-2.0-flash"
+    # GEMINI_APIKEY = os.getenv("GEMINI_APIKEY")
+    # VISION_GEMINI = "gemini-2.0-flash-exp-image-generation"
+    # GEMINI_MODEL = "gemini-2.0-flash"
 
-    # tool search 
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
+    # # tool search 
+    # GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    # GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
-    TOOL_TIMEOUT = 30 
-    HISTORY_TOKEN_LIMIT = 1000
+    # TOOL_TIMEOUT = 30 
+    # HISTORY_TOKEN_LIMIT = 1000
 
 
 

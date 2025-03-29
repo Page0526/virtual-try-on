@@ -1,4 +1,3 @@
-# api/product.py
 from fastapi import APIRouter, Depends, HTTPException
 from schemas.product import ProductCreate, ProductUpdate, ProductOut
 from services.product import ProductService
