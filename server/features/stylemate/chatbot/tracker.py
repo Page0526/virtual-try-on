@@ -1,9 +1,4 @@
 
-
-
-
-
-# Add this class to track iterations
 class IterationTracker:
     def __init__(self, max_iterations=3):
         self.iteration_count = 0

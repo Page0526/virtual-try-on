@@ -190,3 +190,4 @@ class StyleMate:
 if __name__ == "__main__": 
     agent = StyleMate()
     agent.chat_simulator()
+1

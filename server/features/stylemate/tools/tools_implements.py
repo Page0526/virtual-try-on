@@ -90,18 +90,9 @@ class ProductSearchTool(CustomTool):
 class WebsearchTool(CustomTool): 
 
     name : str = "web_search"
-    description : str = "Tìm kiếm thông t"
+    description : str = "Search for information sources related to fashion, the latest information, or when unable to provide an answer"
     args_schema : type = WebSearchFunc
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.search = GoogleSearchAPIWrapper(
-            google_api_key= settings.GOOGLE_API_KEY,
-            google_cse_id= settings.GOOGLE_CSE_ID,
-            num_results=5,
-            search_type="web",
-        )
 
     def _run(self, query: str): 
         """
@@ -109,36 +100,20 @@ class WebsearchTool(CustomTool):
         """
         
         logger.info(f"Running web search with query: {query}")
-        
         try: 
-            search_result = self.search.run(query, num_results  = 5)
+            search = GoogleSearchAPIWrapper(google_api_key= settings.GOOGLE_API_KEY,
+                                            google_cse_id= settings.GOOGLE_CSE_ID, k = 3) 
+            search_result = search.run(query)
             if not search_result: 
                 logger.warning("No search results found.")
-                return []
-            
-            final_results = []
-            for idx, result in enumerate(search_result):
-                title = result.get("title", "")
-                snippet = result.get("snippet", "")
-                link = result.get("link", "")
-                final_results.append(f"{idx + 1}. {title} - {snippet} - {link}") 
+                return ""
 
-            self._log_action("Web Search", {"query": query, "results": final_results})
-            return "This is the result of web search: " + "\n".join(final_results)
+            self._log_action("Web Search", {"query": query, "results": search_result})
+            return "This is the result of web search: " + "".join(search_result)
         
         except Exception as e:
             logger.error(f"Error during web search: {str(e)}")
             raise
-
-
-
-    async def _arun(self, query: str): 
-        """
-        Thực hiện tìm kiếm sản phẩm trên web
-        """
-        logger.info(f"Running web search with query: {query}")
-        # Implement web search logic here
-        pass
 
 
 
@@ -360,18 +335,13 @@ class ImageGenerationTool(CustomTool):
         pass
 
 
-
-
-
-
-
 def get_tools() -> List[Dict[str, Any]]:
     """
     Trả về danh sách các tools đã được định nghĩa
     """
     tools = [
         ProductSearchTool(), 
-        # WebsearchTool(),
+        WebsearchTool(),
         # ImageAnalyzerTool(),    
         # ImageGenerationTool()
     ]

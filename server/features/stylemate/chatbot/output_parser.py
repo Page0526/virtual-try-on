@@ -14,6 +14,7 @@ class ReActResponse(BaseModel):
     action_input: Optional[Union[str, dict]] = Field(None, description="Input data for the tool")
     final_answer: Optional[str] = Field(None, description="Final answer if a result is available")
     
+    
     @classmethod
     def parse_json(cls, json_str: str) -> "ReActResponse":
         """Parse a JSON string into a ReActResponse object"""
@@ -28,16 +29,39 @@ class ReActResponse(BaseModel):
         json_content = json_content.strip()
         if not json_content.startswith('{'):
             json_content = '{' + json_content + '}'
-            
-        # Fix potential JSON formatting issues
-        json_content = json_content.replace('\n', ' ')
         
         try:
-            # Parse the JSON content
+            # First attempt to parse as is
             data = json.loads(json_content)
             return cls(**data)
-        except json.JSONDecodeError as e:
-            raise ValueError(f"Invalid JSON format: {e}. Content: {json_content}")
+        except json.JSONDecodeError:
+            # If parsing fails, try to fix unescaped quotes
+            try:
+                # Process content character by character to properly handle quotes
+                in_string = False
+                escaped = False
+                fixed_content = []
+                
+                for char in json_content:
+                    if char == '"' and not escaped:
+                        in_string = not in_string
+                    elif char == '\\':
+                        escaped = not escaped
+                    else:
+                        escaped = False
+                        
+                    # Escape quotes that appear inside values
+                    if char == '"' and in_string and not escaped:
+                        fixed_content.append('\\')
+                    fixed_content.append(char)
+                
+                fixed_json = ''.join(fixed_content)
+                data = json.loads(fixed_json)
+                return cls(**data)
+            except Exception as e:
+                raise ValueError(f"Invalid JSON format: {e}. Content: {json_content}")
+
+
 
     @validator("action", "action_input", "final_answer")
     def check_action_or_answer(cls, v, values, **kwargs):
