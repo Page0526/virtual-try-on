@@ -59,7 +59,7 @@ class KnowledgeDB:
 
         for _, row in data.iterrows():
             text = f"Title : {row['title']} \n Description: {row['description']} \n Brand: {row['brand']} \n Price: {row['price']}"
-            metadata = {col: row[col] for col in data.columns if col not in ['title', 'description', 'brand', 'price']}
+            metadata = {col: row[col] for col in data.columns if col in ['title', 'brand']}
             doc = Document(page_content=text, metadata=metadata)
             documents.append(doc)
 
@@ -92,8 +92,10 @@ class KnowledgeDB:
         
         documents = []
         text_col = 'content' if 'content' in data.columns else 'style_content'
+
         
         for _, row in data.iterrows():
+           
             text = row[text_col]
             metadata = {col: row[col] for col in data.columns if col != text_col}
             doc = Document(page_content=text, metadata=metadata)
@@ -103,9 +105,9 @@ class KnowledgeDB:
             self.vector_store[directory].add_documents(documents)
         else:
             self.vector_store[directory] = Chroma.from_documents(
-            documents,
-            embedding=self.embedding_model,
-            persist_directory=persist_dir
+                documents,
+                embedding=self.embedding_model,
+                persist_directory=persist_dir
             )
         
         # Ensure the vector store is persisted to disk
@@ -176,10 +178,13 @@ class KnowledgeDB:
         Hàm thực hiện load vector store từ disk
         """
         try:
-            with open("./data_collector/raw-data/elle_data.json", "r", encoding="utf-8") as f:
+            # Get the base directory (server directory) for consistent access
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+            
+            with open(os.path.join(base_dir, "features/stylemate/knowledge_db/data_collector/raw-data/elle_data.json"), "r", encoding="utf-8") as f:
                 elle_data = json.load(f)
             
-            with open("./data_collector/raw-data/vogue_data.json", "r", encoding="utf-8") as f:
+            with open(os.path.join(base_dir, "features/stylemate/knowledge_db/data_collector/raw-data/vogue_data.json"), "r", encoding="utf-8") as f:
                 vogue_data = json.load(f)
             
             combined_data = elle_data + vogue_data
@@ -188,19 +193,18 @@ class KnowledgeDB:
             self.update_or_create_vectorstore("news", df)
             print("News vector store created")
 
-            with open("./data_collector/raw-data/styling_data_vs.json", "r", encoding="utf-8") as f:
+            with open(os.path.join(base_dir, "features/stylemate/knowledge_db/data_collector/raw-data/styling_data_vs.json"), "r", encoding="utf-8") as f:
                 styling_data = json.load(f)
             df = pd.DataFrame(styling_data)
             self.update_or_create_vectorstore("style", df)
             print("Style vector store created")
 
-            with open("./data_collector/raw-data/product_data.json", "r", encoding="utf-8") as f:
+            with open(os.path.join(base_dir, "features/stylemate/knowledge_db/data_collector/raw-data/product_data.json"), "r", encoding="utf-8") as f:
                 product_data = json.load(f)
             df = pd.DataFrame(product_data)
             self.update_or_create_productstore("product", df)
         
             print("Product vector store created")
-        
         
         except FileNotFoundError as e:
             print(f"Error: {e}")

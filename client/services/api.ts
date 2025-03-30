@@ -9,13 +9,13 @@ const getApiUrl = () => {
   if (__DEV__) {
     // For Android emulator, localhost points to the emulator itself, not your machine
     if (Platform.OS === 'android') {
-      return 'http://10.0.2.2:8000'; // Special IP for Android emulator to access host machine
+      return 'http://10.0.2.2:8000'; 
     }
     // For iOS simulator
     else if (Platform.OS === 'ios') {
-      return 'http://localhost:8000'; // Works on iOS simulator
+      return 'http://localhost:8000'; //
     }
-    // For web or direct device testing, you might need to use your machine's actual IP
+
     return Constants.expoConfig?.extra?.apiUrl || 'http://127.0.0.1:8000';
   }
   // For production, use a production URL
@@ -23,7 +23,7 @@ const getApiUrl = () => {
 };
 
 const API_URL = getApiUrl();
-console.log('Using API URL:', API_URL); // For debugging
+console.log('Using API URL:', API_URL); 
 
 export const recommendService = {
   async getRecommendations(input: { text?: string; image?: string }) {
