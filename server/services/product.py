@@ -19,6 +19,7 @@ from config.setting import settings
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
 
+
 class ProductService:
     def __init__(self, qdrant: Optional[QdrantClient] = None):
         self.qdrant = qdrant
@@ -51,7 +52,9 @@ class ProductService:
             logger.error(f"Error creating product: {str(e)}")
             raise
 
-    async def get_product_by_id(self, product_id: str) -> Optional[Dict]:
+    @staticmethod
+    async def get_product_by_id(product_id: str) -> Optional[Dict]:
+        """Get product information by ID."""
         try:
             product = Product.get_by_id(product_id)
             if product:
@@ -60,23 +63,27 @@ class ProductService:
                 logger.warning(f"Product with ID {product_id} not found")
             return product
         except ProductException as e:
-            logger.error(f"Error fetching product {product_id}: {str(e)}")
+            logger.error(f"Error retrieving product {product_id}: {str(e)}")
             raise
 
-    async def list_products(self) -> List[Dict]:
+    @staticmethod
+    async def list_products() -> List[Dict]:
+        """Get list of all products."""
         try:
             products = Product.get_all()
-            logger.info("Retrieved all products")
+            logger.info("Retrieved list of all products")
             return products
         except ProductException as e:
-            logger.error(f"Error listing products: {str(e)}")
+            logger.error(f"Error retrieving product list: {str(e)}")
             raise
 
-    async def update_product(self, product_id: str, product_update: ProductUpdate) -> Dict:
+    @staticmethod
+    async def update_product(product_id: str, product_update: ProductUpdate) -> Dict:
+        """Update product information."""
         try:
             existing_product = Product.get_by_id(product_id)
             if not existing_product:
-                raise ValueError("Product not found")
+                raise ValueError("Product does not exist")
 
             update_data = product_update.dict(exclude_unset=True)
             update_data["updated_at"] = datetime.utcnow().isoformat()
@@ -87,35 +94,34 @@ class ProductService:
             logger.error(f"Error updating product {product_id}: {str(e)}")
             raise
 
-    async def delete_product(self, product_id: str) -> None:
+    @staticmethod
+    async def delete_product(product_id: str) -> None:
+        """Delete product from Supabase."""
         try:
             if not Product.get_by_id(product_id):
-                raise ValueError("Product not found")
+                raise ValueError("Product does not exist")
 
             Product.delete(product_id)
             logger.info(f"Deleted product with ID {product_id}")
         except (ValueError, ProductException) as e:
             logger.error(f"Error deleting product {product_id}: {str(e)}")
             raise
-
-    async def add_product_to_qdrant(self, product: Dict) -> None:
-        if not self.qdrant:
-            logger.warning("Qdrant client not available, skipping Qdrant addition")
+    
+    @staticmethod
+    async def add_product_to_qdrant(product: Dict, qdrant: Optional[QdrantClient] = None) -> None:
+        """Add product to Qdrant with vector embedding from CLIP."""
+        if not qdrant:
+            logger.warning("Qdrant client not available, skipping adding to Qdrant")
             return
 
         try:
-            image_url = product["image_urls"][0] if product["image_urls"] else None
-            if not image_url:
-                logger.warning(f"No image_urls for product {product['id']}, skipping.")
-                return
-
-            vector = self._generate_clip_vector(image_url, product["title"])
+            vector = ProductService._generate_clip_vector(product["image_urls"][0], product["name"])
             if vector is None:
-                logger.warning(f"Could not generate vector for product {product['id']}, skipping.")
+                logger.warning(f"Could not create vector for product {product['id']}, skipping.")
                 return
 
-            self.qdrant.upsert(
-                collection_name=self.collection_name,
+            qdrant.upsert(
+                collection_name= ProductService.COLLECTION_NAME,
                 points=[{
                     "id": product["id"],
                     "vector": vector,
@@ -127,19 +133,21 @@ class ProductService:
             logger.error(f"Error adding product {product['id']} to Qdrant: {str(e)}")
             raise
     
-    async def search_products(self, query: str) -> List[Dict]:
-        if not self.qdrant:
+    @staticmethod
+    def search_products(query: str, qdrant: Optional[QdrantClient] = None, limit = 10) -> List[Dict]: 
+        """Search products using vector search with CLIP."""
+        if not qdrant:
             raise ProductException("Qdrant client not available")
 
         try:
-            text = clip.tokenize([query]).to(self.device)
+            text = clip.tokenize([query]).to(ProductService.DEVICE)
             with torch.no_grad():
-                text_vector = self.clip_model.encode_text(text).cpu().tolist()[0]
+                text_vector = ProductService.CLIP_MODEL.encode_text(text).cpu().tolist()[0]
 
-            search_result = self.qdrant.search(
-                collection_name=self.collection_name,
+            search_result = qdrant.search(
+                collection_name=ProductService.COLLECTION_NAME,
                 query_vector=text_vector,
-                limit=10
+                limit= limit, 
             )
 
             product_ids = [hit.id for hit in search_result]
@@ -152,22 +160,25 @@ class ProductService:
             logger.error(f"Error searching products: {str(e)}")
             raise
 
-    def _generate_clip_vector(self, image_url: str, title: str) -> Optional[List[float]]:
+    @staticmethod
+    def _generate_clip_vector(self, image_url: str, name: str) -> Optional[List[float]]:
+        """Create vector embedding from image and product name using CLIP."""
         try:
             response = requests.get(image_url, timeout=5)
             response.raise_for_status()
             image = PILImage.open(BytesIO(response.content)).convert("RGB")
         except requests.exceptions.RequestException as e:
-            logger.error(f"Error downloading image from {image_url}: {e}")
+            logger.error(f"Error loading image from {image_url}: {e}")
             return None
 
         image_input = self.preprocess(image).unsqueeze(0).to(self.device)
-        text_input = clip.tokenize([title]).to(self.device)
+        text_input = clip.tokenize([name]).to(self.device)
 
         with torch.no_grad():
-            image_vector = self.clip_model.encode_image(image_input).cpu().tolist()[0]
-            text_vector = self.clip_model.encode_text(text_input).cpu().tolist()[0]
+            image_vector = ProductService.CLIP_MODEL.encode_image(image_input).cpu().tolist()[0]
+            text_vector = ProductService.CLIP_MODEL.encode_text(text_input).cpu().tolist()[0]
 
+        # Kết hợp vector ảnh và text bằng concatenation
         combined_vector = np.concatenate([image_vector, text_vector]).tolist()
         return combined_vector
         

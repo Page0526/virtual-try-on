@@ -21,18 +21,17 @@ class Product:
     }
 
     @classmethod
-    def create(cls, data: Dict) -> Dict:
+    def create(cls, data: Dict[str, str]) -> Dict:
         """Tạo product trong bảng Products."""
         try:
             product_data = {
                 "id": str(uuid4()),
                 "title": data["title"],
-                "description": data.get("description"),
-                "image_urls": data["image_urls"],  # JSONB, expects a list of URLs
                 "brand": data.get("brand"),
                 "price": data.get("price"),
+                "image_urls": data.get("image_urls", []),
+                "description": data.get("description"),
                 "url": data.get("url"),
-                "created_at": datetime.utcnow().isoformat()
             }
             response = supabase.table(cls.TABLE_NAME).insert(product_data).execute()
             return response.data[0] if response.data else {}
@@ -58,7 +57,7 @@ class Product:
             raise ProductException(f"Không thể lấy danh sách product: {str(e)}")
 
     @classmethod
-    def update(cls, product_id: str, data: Dict) -> Dict:
+    def update(cls, product_id: str, data: Dict[str, any]) -> Dict:
         """Cập nhật thông tin product."""
         try:
             response = supabase.table(cls.TABLE_NAME).update(data).eq("id", product_id).execute()

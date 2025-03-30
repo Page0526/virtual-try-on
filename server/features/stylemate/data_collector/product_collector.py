@@ -18,7 +18,7 @@ import random
 
 class ProductCollector:
 
-    def __init__(self, page_number = 10): 
+    def __init__(self, page_number = 20): 
 
         self.page_number = page_number
         self.header = {
@@ -101,11 +101,15 @@ class ProductCollector:
                 price = soup.find('span', {'data-fs-price': 'true'}).get_text()
                 description = soup.find('div', {'class': 'RenderHtmlStyling_CustomRenderHtmlStyling__1eC6V'}).get_text()
                 brand = soup.find('p', {'data-fs-brand': 'true'}).text
+                image_urls = soup.find_all('img', {'class' : 'image-gallery-thumbnail-image'})
+                image_urls = [img['src'] for img in image_urls if img.has_attr('src')]
+
             
                 inst_data = {
                     "title": title,
                     "brand": brand,
                     "price": price,
+                    "image_urls": image_urls,
                     "description": description, 
                     "url": url
                 }

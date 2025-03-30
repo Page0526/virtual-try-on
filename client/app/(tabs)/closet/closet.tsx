@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
 import { styled } from 'nativewind';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -106,7 +107,7 @@ const CreateClosetModal = ({ visible, onClose, onCreateCloset }: CreateClosetMod
       ]}
     >
       <TouchableWithoutFeedback onPress={handleBackdropPress}>
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+        <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 25}}>
           <TouchableWithoutFeedback onPress={handleContentPress}>
             <Animated.View 
               style={[
@@ -149,26 +150,31 @@ const CreateClosetModal = ({ visible, onClose, onCreateCloset }: CreateClosetMod
                 <StyledView className="mb-4">
                   <StyledText className="text-gray-700 font-medium mb-2">Type</StyledText>
                   <StyledView className="flex-row bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                    <StyledPressable 
-                      onPress={() => setClosetType('user')}
-                      className={`flex-1 py-3 px-4 ${closetType === 'user' ? 'bg-red-500' : ''}`}
+                  <StyledPressable 
+                    onPress={() => setClosetType('user')}
+                    className="flex-1 py-3 px-4"
+                    style={{ backgroundColor: closetType === 'user' ? Colors.PRIMARY : 'transparent' }}
+                  >
+                    <StyledText 
+                      className="text-center font-medium"
+                      style={{ color: closetType === 'user' ? '#FFFFFF' : '#4A4A4A' }}
                     >
-                      <StyledText 
-                        className={`text-center font-medium ${closetType === 'user' ? 'text-white' : 'text-gray-700'}`}
-                      >
-                        User Image
-                      </StyledText>
-                    </StyledPressable>
-                    <StyledPressable 
-                      onPress={() => setClosetType('clothing')}
-                      className={`flex-1 py-3 px-4 ${closetType === 'clothing' ? 'bg-red-500' : ''}`}
+                      User Image
+                    </StyledText>
+                  </StyledPressable>
+
+                  <StyledPressable 
+                    onPress={() => setClosetType('clothing')}
+                    className="flex-1 py-3 px-4"
+                    style={{ backgroundColor: closetType === 'clothing' ? Colors.PRIMARY : 'transparent' }}
+                  >
+                    <StyledText 
+                      className="text-center font-medium"
+                      style={{ color: closetType === 'clothing' ? '#FFFFFF' : '#4A4A4A' }}
                     >
-                      <StyledText 
-                        className={`text-center font-medium ${closetType === 'clothing' ? 'text-white' : 'text-gray-700'}`}
-                      >
-                        Clothing
-                      </StyledText>
-                    </StyledPressable>
+                      Clothing
+                    </StyledText>
+                  </StyledPressable>
                   </StyledView>
                 </StyledView>
 
@@ -215,7 +221,8 @@ const CreateClosetModal = ({ visible, onClose, onCreateCloset }: CreateClosetMod
                       onCreateCloset({ image: closetImage, type: closetType });
                       setClosetImage(null);
                     }}
-                    className="bg-red-500 rounded-lg py-3 px-5 shadow-sm"
+                    className="rounded-lg py-3 px-5 shadow-sm"
+                    style={{backgroundColor: Colors.PRIMARY}}
                   >
                     <StyledText className="text-white font-medium">Create</StyledText>
                   </StyledPressable>
@@ -301,35 +308,45 @@ const VirtualClosetScreen = () => {
       {/* Enhanced Header */}
       <StyledView className="mb-6">
         <StyledView className="flex-row justify-center items-center">
-          <StyledView className="h-0.5 bg-red-400 w-10 mr-4 rounded-full" />
+          <StyledView className="h-0.5 w-10 mr-4 rounded-full" style={{backgroundColor: Colors.PRIMARY}} />
           <StyledText className="text-2xl font-bold tracking-wider text-center">
-            VIRTUAL <StyledText className="text-red-500">CLOSET</StyledText>
+            VIRTUAL <StyledText className="text" style={{color: Colors.PRIMARY}}>CLOSET</StyledText>
           </StyledText>
-          <StyledView className="h-0.5 bg-red-400 w-10 ml-4 rounded-full" />
+          <StyledView className="h-0.5 w-10 ml-4 rounded-full" style={{backgroundColor: Colors.PRIMARY}}/>
         </StyledView>
-        <StyledView className="items-center mt-1">
+        {/* <StyledView className="items-center mt-1">
           <StyledView className="h-0.5 bg-gray-200 w-20 rounded-full" />
-        </StyledView>
+        </StyledView> */}
       </StyledView>
 
       {/* Tabs */}
       <StyledView className="flex-row mb-6 bg-gray-100 rounded-full p-1 mx-4">
-        <StyledPressable
-          onPress={() => setActiveTab('Closet')}
-          className={`flex-1 py-2 ${activeTab === 'Closet' ? 'bg-red-500 rounded-full' : ''}`}
+      <StyledPressable
+        onPress={() => setActiveTab('Closet')}
+        className="flex-1 py-2 rounded-full"
+        style={{ backgroundColor: activeTab === 'Closet' ? Colors.PRIMARY : 'transparent' }} 
+      >
+        <StyledText
+          className="text-center font-medium"
+          style={{ color: activeTab === 'Closet' ? '#FFFFFF' : '#4A4A4A' }}
         >
-          <StyledText className={`text-center font-medium ${activeTab === 'Closet' ? 'text-white' : 'text-gray-700'}`}>
-            Closet
-          </StyledText>
-        </StyledPressable>
-        <StyledPressable
-          onPress={() => setActiveTab('Outfit')}
-          className={`flex-1 py-2 ${activeTab === 'Outfit' ? 'bg-red-500 rounded-full' : ''}`}
+          Closet
+        </StyledText>
+      </StyledPressable>
+
+      <StyledPressable
+        onPress={() => setActiveTab('Outfit')}
+        className="flex-1 py-2 rounded-full"
+        style={{ backgroundColor: activeTab === 'Outfit' ? Colors.PRIMARY : 'transparent' }} 
+      >
+        <StyledText
+          className="text-center font-medium"
+          style={{ color: activeTab === 'Outfit' ? '#FFFFFF' : '#4A4A4A' }} 
         >
-          <StyledText className={`text-center font-medium ${activeTab === 'Outfit' ? 'text-white' : 'text-gray-700'}`}>
-            Outfit
-          </StyledText>
-        </StyledPressable>
+          Outfit
+        </StyledText>
+      </StyledPressable>
+
       </StyledView>
 
       {/* Search Bar */}
@@ -374,7 +391,8 @@ const VirtualClosetScreen = () => {
           <StyledView className="items-center my-6 mb-10">
             <StyledPressable
               onPress={() => setShowCreateModal(true)}
-              className="bg-red-500 rounded-full py-3 px-8 shadow-md flex-row items-center"
+              className="rounded-full py-3 px-8 shadow-md flex-row items-center"
+              style = {{backgroundColor: '#e14e69'}}
             >
               <MaterialIcons name="add" size={18} color="white" style={{marginRight: 4}} />
               <StyledText className="text-white font-medium">Create a closet</StyledText>

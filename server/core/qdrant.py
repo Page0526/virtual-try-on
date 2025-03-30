@@ -16,13 +16,13 @@ try:
         api_key=settings.QDRANT_API_KEY,
         timeout=10.0
     )
-    logger.info("Khởi tạo và kết nối tới Qdrant thành công")
+    logger.info("Successfuly connected to Qdrant")
 except Exception as e:
-    logger.error(f"Lỗi khi khởi tạo client Qdrant: {str(e)}")
+    logger.error(f"Error in connection to Qdrant: {str(e)}")
     raise
 
 def get_qdrant_db() -> QdrantClient:
     """Dependency injection để cung cấp Qdrant client."""
     if qdrant is None:
-        raise RuntimeError("Qdrant client chưa được khởi tạo")
+        raise RuntimeError("Qdrant client haven't been initialized")
     return qdrant

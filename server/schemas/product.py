@@ -1,9 +1,12 @@
 from pydantic import BaseModel, validator
 from uuid import UUID
 from typing import Optional, List
+from typing import Optional, List
 from datetime import datetime
 
 class ProductBase(BaseModel):
+    title: str
+    image_urls: List[str]
     title: str
     image_urls: List[str]
 
@@ -14,6 +17,7 @@ class ProductCreate(ProductBase):
     url: Optional[str] = None
 
 class ProductUpdate(BaseModel):
+    title: Optional[str] = None
     title: Optional[str] = None
     description: Optional[str] = None
     image_urls: Optional[List[str]] = None
