@@ -76,6 +76,7 @@ async def search_products(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
 @router.post("/recommend", response_model=list[ProductOut])
 async def recommend_products(
     recommend_request: RecommendRequest,
@@ -88,3 +89,4 @@ async def recommend_products(
         return await product_service.recommend_products(recommend_request)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+

@@ -39,12 +39,7 @@ const orangeRedTheme = {
   }
 };
 
-// Mock data
-const mockGarments = [
-  { id: '1', name: 'Blue Dress', uri: 'https://miss-rosier.com/cdn/shop/files/2024-7-29_2060.jpg?v=1723779976&width=800' },
-  { id: '2', name: 'Red Shirt', uri: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lu1f8aq8c7xb97.webp' },
-  { id: '3', name: 'Black Pants', uri: 'https://www.mytheresa.com/media/1094/1238/100/d5/P00609825.jpg' },
-];
+const mockGarments = [ { id: '1', name: 'Blue Dress', uri: 'https://via.placeholder.com/100?text=Blue+Dress' }, { id: '2', name: 'Red Shirt', uri: 'https://via.placeholder.com/100?text=Red+Shirt' }, { id: '3', name: 'Black Pants', uri: 'https://via.placeholder.com/100?text=Black+Pants' }, { id: '4', name: 'Green Jacket', uri: 'https://via.placeholder.com/100?text=Green+Jacket' }, { id: '5', name: 'Yellow Skirt', uri: 'https://via.placeholder.com/100?text=Yellow+Skirt' }, ];
 
 const mockModels = [
   { id: '1', name: 'Model 1', uri: 'https://via.placeholder.com/100?text=Model+1' },
@@ -110,6 +105,7 @@ const CaptureScreen = () => {
           <TouchableOpacity 
             style={[styles.permissionButton, { backgroundColor: tintColor }]} 
             onPress={requestPermission}
+            activeOpacity={0.7}  // Added for better iOS feedback
           >
             <Text style={styles.buttonText}>Grant Permission</Text>
           </TouchableOpacity>
@@ -178,6 +174,7 @@ const CaptureScreen = () => {
     <TouchableOpacity 
       style={[styles.item, { borderColor }]} 
       onPress={() => selectItem(item.uri)}
+      activeOpacity={0.7} // Added for better iOS feedback
     >
       <Image source={{ uri: item.uri }} style={styles.itemImage} />
       <Text style={[styles.itemText, { color: textColor }]}>{item.name}</Text>
@@ -208,7 +205,7 @@ const CaptureScreen = () => {
           <View style={[styles.cameraContainer, { borderColor }]}>
             <CameraView style={styles.camera} facing={facing} ref={cameraRef} />
             
-            <View style={styles.cameraOverlay}>
+            <View style={styles.cameraOverlay} pointerEvents="box-none">
               <View style={[styles.cameraGuideFrame, { borderColor: Colors.PRIMARY }]}>
                 {isGarmentMode ? (
                   <Ionicons name="shirt-outline" size={48} color="rgba(225, 78, 105,0.7)" />
@@ -219,8 +216,15 @@ const CaptureScreen = () => {
             </View>
             
             <TouchableOpacity 
-              style={[styles.toggleCameraButton, { backgroundColor: Colors.PRIMARY }]} 
+              style={[
+                styles.toggleCameraButton, 
+                { 
+                  backgroundColor: Colors.PRIMARY, 
+                  zIndex: 5 // Added for iOS
+                }
+              ]} 
               onPress={toggleCameraFacing}
+              activeOpacity={0.7} // Added for better iOS feedback
             >
               <Ionicons name="camera-reverse" size={24} color="#fff" />
             </TouchableOpacity>
@@ -231,23 +235,40 @@ const CaptureScreen = () => {
           </Text>
           
           {/* Gallery, Camera button */}
-          <View style={styles.buttonContainer}>
+          <View style={[styles.buttonContainer, Platform.OS === 'ios' ? { zIndex: 1 } : {}]}>
             <TouchableOpacity 
-              style={[styles.actionButton, { borderColor }]} 
+              style={[
+                styles.actionButton, 
+                { borderColor },
+                Platform.OS === 'ios' ? { zIndex: 1 } : {}
+              ]} 
               onPress={pickImage}
+              activeOpacity={0.7} // Added for better iOS feedback
             >
               <Ionicons name="image" size={20} color={tintColor} />
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+            <TouchableOpacity 
+              style={[
+                styles.captureButton,
+                Platform.OS === 'ios' ? { zIndex: 1 } : {}
+              ]} 
+              onPress={takePicture}
+              activeOpacity={0.7} // Added for better iOS feedback
+            >
               <View style={[styles.captureButtonOuter, { borderColor: tintColor }]}>
                 <View style={[styles.captureButtonInner, { backgroundColor: tintColor }]} />
               </View>
             </TouchableOpacity>
             
             <TouchableOpacity 
-              style={[styles.actionButton, { borderColor }]} 
+              style={[
+                styles.actionButton, 
+                { borderColor },
+                Platform.OS === 'ios' ? { zIndex: 1 } : {}
+              ]} 
               onPress={() => setModalVisible(true)}
+              activeOpacity={0.7} // Added for better iOS feedback
             >
               <Ionicons 
                 name={isGarmentMode ? "shirt" : "person"} 
@@ -258,44 +279,63 @@ const CaptureScreen = () => {
           </View>
         </View>
         
+        {/* Fixed modal implementation for iOS */}
         <Modal 
           animationType="slide" 
           transparent={true} 
           visible={modalVisible} 
           onRequestClose={() => setModalVisible(false)}
         >
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-            <View style={styles.modalOverlay}>
-              <BlurView intensity={50} style={styles.blurOverlay}>
-                <TouchableWithoutFeedback>
-                  <View style={[styles.modalContainer, { backgroundColor: cardColor }]}>
-                    <View style={[styles.modalHandle, { backgroundColor: colorScheme === 'dark' ? '#444' : '#ddd' }]} />
-                    
-                    <Text style={[styles.modalTitle, { color: textColor }]}>
-                      {isGarmentMode ? 'My Clothes Collection' : 'My Models'}
-                    </Text>
-                    
-                    <FlatList
-                      data={isGarmentMode ? mockGarments : mockModels}
-                      renderItem={renderItem}
-                      keyExtractor={(item) => item.id}
-                      style={styles.itemList}
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={styles.itemListContent}
-                    />
-                    
-                    <TouchableOpacity 
-                      style={[styles.closeButton, { backgroundColor: tintColor }]} 
-                      onPress={() => setModalVisible(false)}
-                    >
-                      <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableWithoutFeedback>
-              </BlurView>
-            </View>
-          </TouchableWithoutFeedback>
+          <View style={styles.modalOverlay}>
+            <BlurView 
+              intensity={50} 
+              style={styles.blurOverlay}
+              pointerEvents="box-none" // Allow touches to pass through to children
+            >
+              {/* Remove outer TouchableWithoutFeedback which was causing issues */}
+              <View style={[
+                styles.modalContainer, 
+                { 
+                  backgroundColor: cardColor,
+                  zIndex: Platform.OS === 'ios' ? 999 : undefined
+                }
+              ]}>
+                <View style={[styles.modalHandle, { backgroundColor: colorScheme === 'dark' ? '#444' : '#ddd' }]} />
+                
+                <Text style={[styles.modalTitle, { color: textColor }]}>
+                  {isGarmentMode ? 'My Clothes Collection' : 'My Models'}
+                </Text>
+                
+                <FlatList
+                  data={isGarmentMode ? mockGarments : mockModels}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                  style={styles.itemList}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.itemListContent}
+                />
+                
+                <TouchableOpacity 
+                  style={[styles.closeButton, { backgroundColor: tintColor }]} 
+                  onPress={() => setModalVisible(false)}
+                  activeOpacity={0.7} // Added for better iOS feedback
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Add a separate transparent overlay touch handler */}
+              <TouchableOpacity 
+                style={[
+                  StyleSheet.absoluteFill, 
+                  { backgroundColor: 'transparent', zIndex: Platform.OS === 'ios' ? 998 : undefined }
+                ]}
+                activeOpacity={1}
+                onPress={() => setModalVisible(false)}
+              />
+            </BlurView>
+          </View>
         </Modal>
       </StyledScrollView>
     </SafeAreaView>
@@ -318,13 +358,21 @@ const CustomHeader = ({ title, colorScheme, tintColor, borderColor, onBackPress,
 
   return (
     <View style={[styles.header, { backgroundColor, borderBottomColor: borderColor }]}>
-      <TouchableOpacity style={styles.headerButton} onPress={onBackPress}>
+      <TouchableOpacity 
+        style={[styles.headerButton, Platform.OS === 'ios' ? { zIndex: 1 } : {}]} 
+        onPress={onBackPress}
+        activeOpacity={0.7} // Added for better iOS feedback
+      >
         <Ionicons name="arrow-back" size={24} color={tintColor} />
       </TouchableOpacity>
       
       <Text style={[styles.headerTitle, { color: textColor }]}>{title}</Text>
       
-      <TouchableOpacity style={styles.headerButton} onPress={onClosePress}>
+      <TouchableOpacity 
+        style={[styles.headerButton, Platform.OS === 'ios' ? { zIndex: 1 } : {}]} 
+        onPress={onClosePress}
+        activeOpacity={0.7} // Added for better iOS feedback
+      >
         <Ionicons name="close" size={24} color={tintColor} />
       </TouchableOpacity>
     </View>
@@ -346,6 +394,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: 'space-between',
     borderBottomWidth: 1,
+    ...Platform.select({
+      ios: {
+        zIndex: 10
+      }
+    }),
   },
   headerTitle: {
     fontSize: 18,
@@ -363,7 +416,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingBottom: 30,
-
   },
   permissionContainer: {
     flex: 1,
@@ -388,7 +440,8 @@ const styles = StyleSheet.create({
   },
   cameraContainer: {
     width: '100%',
-    height: '100%',
+    height: undefined,
+    aspectRatio: 1, // Make it square
     borderRadius: 20,
     overflow: 'hidden',
     marginVertical: 20,
@@ -399,6 +452,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    ...Platform.select({
+      ios: {
+        zIndex: 1
+      }
+    }),
   },
   camera: {
     flex: 1,
@@ -407,6 +465,11 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        zIndex: 2
+      }
+    }),
   },
   cameraGuideFrame: {
     width: 200,
@@ -423,6 +486,11 @@ const styles = StyleSheet.create({
     right: 15,
     borderRadius: 30,
     padding: 10,
+    ...Platform.select({
+      ios: {
+        zIndex: 3
+      }
+    }),
   },
   instruction: {
     fontSize: 14,
@@ -539,6 +607,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
+    ...Platform.select({
+      ios: {
+        zIndex: 1000
+      }
+    }),
   },
   itemImage: {
     width: 100,
@@ -561,6 +634,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    ...Platform.select({
+      ios: {
+        zIndex: 1000
+      }
+    }),
   },
   closeButtonText: {
     fontSize: 16,

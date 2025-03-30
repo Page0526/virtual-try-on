@@ -95,11 +95,11 @@ class ProductService:
             raise
 
     @staticmethod
-    async def delete_product(product_id: str) -> None:
-        """Delete product from Supabase."""
+    async def delete_product(self, product_id: str) -> None:
         try:
             if not Product.get_by_id(product_id):
-                raise ValueError("Product does not exist")
+                raise ValueError("Product not found")
+
 
             Product.delete(product_id)
             logger.info(f"Deleted product with ID {product_id}")

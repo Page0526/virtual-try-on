@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     
     GOOGLE_API_KEY: str = Field(..., env="GOOGLE_API_KEY", description="API Key của Gemini")
 
+
     # Gemini API settings
     GEMINI_APIKEY: str | None = Field(default=None, env="GEMINI_APIKEY", description="API Key for Gemini AI models")
     VISION_GEMINI: str = Field(default="gemini-2.0-flash-exp-image-generation", description="Gemini model for vision tasks")
@@ -37,8 +38,10 @@ class Settings(BaseSettings):
     GOOGLE_API_KEY: str | None = Field(default=None, env="GOOGLE_API_KEY", description="Google API key for search functionality")
     GOOGLE_CSE_ID: str | None = Field(default=None, env="GOOGLE_CSE_ID", description="Google Custom Search Engine ID")
 
-    TOOL_TIMEOUT = 30 
-    HISTORY_TOKEN_LIMIT = 1000
+    # Tool settings
+    TOOL_TIMEOUT: int = Field(default=30, description="Timeout in seconds for external tool calls")
+    HISTORY_TOKEN_LIMIT: int = Field(default=1000, description="Maximum number of tokens to store in conversation history")
+    MAX_ITERATIONS: int = Field(default=3, description="Maximum number of iterations for the agent to perform")
 
 
 
