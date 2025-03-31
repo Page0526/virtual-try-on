@@ -29,13 +29,11 @@
 <br />
 <div align="center">
   <a href="https://github.com/Page0526/virtual-try-on">
-    <img src="doc/Logo.png" alt="Logo" width="80" height="80">
+    <img src="doc/Logo.png" alt="Logo" width="150" height="150">
   </a>
 
-  <h3 align="center">EasyFit</h3>
-
   <p align="center">
-    An awesome virtual try-on app built with React Native (Expo)!
+    An awesome virtual try-on app!
     <br />
     <br />
     <a href="https://github.com/Page0526/virtual-try-on">View Demo</a>
@@ -76,7 +74,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 <div align='center'>
-  <img src="doc/system_design.png" width="600">
+  <img src="doc/system_design.png" width="800">
 </div>
 Consumers face difficulties visualizing actual products when shopping for fashion online. Choosing suitable clothing depends not only on preferences but also factors like body shape, personal style, and the ability to coordinate with other items. A suitable choice not only helps reduce return rates but also contributes to increasing sales. EasyFit was created to provide a comprehensive solution to enhance the online shopping experience through features such as:
 
@@ -184,7 +182,7 @@ With these features, EasyFit not only brings a more intuitive experience but als
 
 Get to the try-on screen and start try on whatever clothes you want!
 <div align='center'>
-  <img src="doc/front-end.png" width="600">
+  <img src="doc/front-end.png" width="800">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
