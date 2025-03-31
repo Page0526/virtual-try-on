@@ -4,25 +4,8 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 // Dynamic API URL configuration
-const getApiUrl = () => {
-  // When running in development
-  if (__DEV__) {
-    // For Android emulator, localhost points to the emulator itself, not your machine
-    if (Platform.OS === 'android') {
-      return 'http://10.0.2.2:8000'; 
-    }
-    // For iOS simulator
-    else if (Platform.OS === 'ios') {
-      return 'http://localhost:8000'; //
-    }
 
-    return Constants.expoConfig?.extra?.apiUrl || 'http://127.0.0.1:8000';
-  }
-  // For production, use a production URL
-  return Constants.expoConfig?.extra?.apiUrl || 'https://your-production-api.com';
-};
-
-const API_URL = getApiUrl();
+const API_URL = 'https://orange-tribble-9vp9q5wrrq6cxrxw-8000.app.github.dev/';
 console.log('Using API URL:', API_URL); 
 
 export const recommendService = {

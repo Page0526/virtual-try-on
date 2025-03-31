@@ -29,7 +29,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Page0526/virtual-try-on">
-    <img src="client/assets/images/dress-logo.png" alt="Logo" width="80" height="80">
+    <img src="doc/Logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">EasyFit</h3>
@@ -76,16 +76,16 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 <div align='center'>
-  <img src="client/assets/images/banner.png" width="500">
+  <img src="doc/system_design.png" width="600">
 </div>
+Consumers face difficulties visualizing actual products when shopping for fashion online. Choosing suitable clothing depends not only on preferences but also factors like body shape, personal style, and the ability to coordinate with other items. A suitable choice not only helps reduce return rates but also contributes to increasing sales. EasyFit was created to provide a comprehensive solution to enhance the online shopping experience through features such as:
 
-Người tiêu dùng gặp khó khăn trong việc hình dung sản phẩm thực tế khi mua sắm thời trang online. Việc lựa chọn trang phục phù hợp không chỉ dựa vào sở thích mà còn phải xét đến các yếu tố như vóc dáng, phong cách cá nhân và khả năng kết hợp với các món đồ khác. Một lựa chọn phù hợp không chỉ giúp giảm tỷ lệ đổi trả mà còn góp phần tăng doanh số bán hàng. EasyFit ra đời nhằm cung cấp một giải pháp toàn diện giúp nâng cao trải nghiệm mua sắm trực tuyến thông qua các tính năng: 
-- Phòng thử đồ ảo, cho phép người dùng thử trang phục trên ảnh cá nhân nhờ công nghệ AI mô phỏng chân thực
-- Gợi ý trang phục phù hợp, đưa ra đề xuất sản phẩm dựa trên phong cách thời trang, màu sắc và trang phục hiện có
-- Tích hợp mua sắm, giúp người dùng dễ dàng đặt hàng qua các sàn thương mại điện tử sau khi thử đồ
-- StyleMate, trợ lý ảo AI cung cấp thông tin về xu hướng thời trang, gợi ý cách phối đồ và tối ưu hóa trải nghiệm mua sắm.
+- Virtual fitting room, allowing users to try clothes on personal photos thanks to AI technology that creates realistic simulations
+- Suitable clothing suggestions, providing product recommendations based on fashion style, color, and existing wardrobe
+- Shopping integration, making it easy for users to order through e-commerce platforms after trying on clothes
+- StyleMate, an AI virtual assistant providing information on fashion trends, outfit combination suggestions, and optimizing the shopping experience.
 
-Với những tính năng này, EasyFit không chỉ mang đến trải nghiệm trực quan hơn mà còn tối ưu hóa quy trình từ thử đồ đến mua hàng, giúp người dùng thuận tiện hơn và giảm rủi ro khi mua sắm trực tuyến. 🚀
+With these features, EasyFit not only brings a more intuitive experience but also optimizes the process from trying on clothes to purchasing, making it more convenient for users and reducing risks when shopping online. 🚀
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -184,7 +184,7 @@ Với những tính năng này, EasyFit không chỉ mang đến trải nghiệm
 
 Get to the try-on screen and start try on whatever clothes you want!
 <div align='center'>
-  <img src="client/assets/images/try-on-screen.png" width="400">
+  <img src="doc/front-end.png" width="600">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
